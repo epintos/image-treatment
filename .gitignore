@@ -1,14 +1,6 @@
-<<<<<<< HEAD
 /target/*
 /.classpath
 /.project
 /.settings
 /.DS_Store
-=======
 *.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
->>>>>>> 39869fbd8343465a48cdb7fbad450f75335ee0eb
