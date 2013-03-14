@@ -17,8 +17,8 @@ public class ColorImage implements Image, Cloneable {
 		if (format == null) {
 			throw new IllegalArgumentException("ImageFormat can't be null");
 		}
-		
-		//Initialize a channel for each RGB color
+
+		// Initialize a channel for each RGB color
 		this.red = new Channel(width, height);
 		this.green = new Channel(width, height);
 		this.blue = new Channel(width, height);
@@ -32,7 +32,7 @@ public class ColorImage implements Image, Cloneable {
 		for (int x = 0; x < bi.getWidth(); x++) {
 			for (int y = 0; y < bi.getHeight(); y++) {
 				Color c = new Color(bi.getRGB(x, y));
-				
+
 				red.setPixel(x, y, c.getRed());
 				green.setPixel(x, y, c.getGreen());
 				blue.setPixel(x, y, c.getBlue());
@@ -40,18 +40,14 @@ public class ColorImage implements Image, Cloneable {
 		}
 	}
 
-	/**
-	 * Sets pixel in the correspoding RGB color channel
-	 */
 	public void setRGBPixel(int x, int y, int rgb) {
 		this.setPixel(x, y, ColorChannel.RED, ColorUtilities.getRedFromRGB(rgb));
-		this.setPixel(x, y, ColorChannel.GREEN, ColorUtilities.getGreenFromRGB(rgb));
-		this.setPixel(x, y, ColorChannel.BLUE, ColorUtilities.getBlueFromRGB(rgb));
+		this.setPixel(x, y, ColorChannel.GREEN,
+				ColorUtilities.getGreenFromRGB(rgb));
+		this.setPixel(x, y, ColorChannel.BLUE,
+				ColorUtilities.getBlueFromRGB(rgb));
 	}
 
-	/**
-	 * Sets pixel in the correspoding RGB color channel
-	 */
 	public void setPixel(int x, int y, ColorChannel channel, double color) {
 
 		if (!red.validPixel(x, y)) {
@@ -74,8 +70,8 @@ public class ColorImage implements Image, Cloneable {
 	}
 
 	public int getRGBPixel(int x, int y) {
-		int red = this.red
-				.truncatePixel(getPixelFromChannel(x, y, ColorChannel.RED));
+		int red = this.red.truncatePixel(getPixelFromChannel(x, y,
+				ColorChannel.RED));
 		int green = this.green.truncatePixel(getPixelFromChannel(x, y,
 				ColorChannel.GREEN));
 		int blue = this.blue.truncatePixel(getPixelFromChannel(x, y,

@@ -41,6 +41,10 @@ public class Tp0 extends JMenu {
 
 					try {
 						image = ImageLoader.loadImage(arch);
+					}catch(IllegalArgumentException ex){
+						new MessageFrame("Para cargar una imagen RAW use Cargar imagen Raw");
+					}catch(IllegalStateException ex){
+						new MessageFrame("Extension de imagen no soportado");
 					} catch (ImageReadException ex) {
 						new MessageFrame("No se pudo cargar la imagen");
 					} catch (IOException ex) {
@@ -48,7 +52,10 @@ public class Tp0 extends JMenu {
 					}
 
 					if (image != null) {
+						//Loads the image to the panel
 						panel.loadImage(image);
+						
+						//This will repaint the panel with the previous image loaded
 						panel.repaint();
 					}
 
@@ -147,7 +154,7 @@ public class Tp0 extends JMenu {
 		this.add(loadRaw);
 		this.add(saveImage);
 		this.add(binaryImage);
-		 this.add(degradeBW);
+		this.add(degradeBW);
 		this.add(degradeColor);
 		this.add(new JSeparator());
 		this.add(exit);

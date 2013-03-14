@@ -16,8 +16,14 @@ public interface Image {
 
 	public static final int GRAY_LEVEL_AMOUNT = 256;
 
+	/**
+	 * Sets pixel in the correspoding RGB color channel
+	 */
 	public void setPixel(int x, int y, ColorChannel channel, double color);
 
+	/**
+	 * Sets pixel in the correspoding RGB color channel
+	 */
 	public void setRGBPixel(int x, int y, int rgb);
 
 	public int getRGBPixel(int x, int y);

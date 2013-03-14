@@ -1,4 +1,5 @@
 package app;
+
 import gui.Window;
 
 import javax.swing.JFrame;

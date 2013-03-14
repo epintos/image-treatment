@@ -1,9 +1,7 @@
 package gui;
+
 import app.ImageCreator;
 import model.Image;
-
-
-
 
 public class CreateBinaryImageDialog extends CreateImageDialog {
 

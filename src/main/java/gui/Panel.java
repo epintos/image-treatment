@@ -14,8 +14,10 @@ public class Panel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private Image image = null;
-	private List<Point> mask = null;
 
+	/**
+	 * Paints an image in the panel
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -28,22 +30,15 @@ public class Panel extends JPanel {
 			this.getTopLevelAncestor().setSize(image.getWidth() + 7,
 					image.getHeight() + 53);
 		}
-		if (mask != null) {
-			for (Point p : mask) {
-				g.setColor(Color.GREEN);
-				g.drawRect(p.x, p.y, 1, 1);
-			}
-
-		}
 	}
 
-	public void loadImage(Image imagen) {
-		this.image = imagen;
+	/**
+	 * Loads an image to the panel
+	 * @param image
+	 */
+	public void loadImage(Image image) {
+		this.image = image;
 		((Window) getTopLevelAncestor()).enableTools();
-	}
-
-	public void loadMask(List<Point> mask) {
-		this.mask = mask;
 	}
 
 	public boolean setPixel(String xText, String yText, String colorText) {
@@ -72,20 +67,6 @@ public class Panel extends JPanel {
 
 	public Image getImage() {
 		return image;
-	}
-
-	public List<Point> getMask() {
-		if (mask == null)
-			return null;
-		Point p1 = mask.get(0);
-		Point p2 = mask.get(1);
-		this.mask = new ArrayList<Point>();
-		for (int y = Math.min(p1.y, p2.y); y <= Math.max(p1.y, p2.y); y++) {
-			for (int x = Math.min(p1.x, p2.x); x <= Math.max(p1.x, p2.x); x++) {
-				mask.add(new Point(x, y));
-			}
-		}
-		return mask;
 	}
 
 }

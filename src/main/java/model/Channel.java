@@ -79,11 +79,6 @@ public class Channel implements Cloneable {
 	}
 
 	int truncatePixel(double notTruncatedValue) {
-//		if (notTruncatedValue > Channel.MAX_CHANNEL_COLOR) {
-//			return Channel.MAX_CHANNEL_COLOR;
-//		} else if (notTruncatedValue < Channel.MIN_CHANNEL_COLOR) {
-//			return Channel.MIN_CHANNEL_COLOR;
-//		}
 		return (int) notTruncatedValue;
 	}
 }

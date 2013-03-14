@@ -1,7 +1,5 @@
 package gui;
 
-
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -16,19 +14,18 @@ import javax.swing.JTextField;
 
 import model.Image;
 
-
 public abstract class CreateImageDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
 	public CreateImageDialog(final Panel panel) {
-		
+
 		setTitle("Crear degrade");
 		setBounds(1, 1, 250, 200);
 		Toolkit toolkit = getToolkit();
 		Dimension size = toolkit.getScreenSize();
-		setLocation(size.width/3 - getWidth()/3,
-		size.height/3 - getHeight()/3);
+		setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+				- getHeight() / 3);
 		this.setResizable(false);
 		setLayout(null);
 
@@ -47,28 +44,28 @@ public abstract class CreateImageDialog extends JDialog {
 		JButton okButton = new JButton("OK");
 		okButton.setSize(250, 40);
 		okButton.setBounds(0, 100, 250, 40);
-		okButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
 				int height;
 				int width;
-				
-				try{
+
+				try {
 					height = Integer.valueOf(alto.getText().trim());
-					width = Integer.valueOf(ancho.getText().trim());					
-				} catch(NumberFormatException ex){
+					width = Integer.valueOf(ancho.getText().trim());
+				} catch (NumberFormatException ex) {
 					new MessageFrame("Los datos ingresados son invalidos");
 					return;
 				}
-				
-				if( height <= 0 || width <= 0 ){
+
+				if (height <= 0 || width <= 0) {
 					new MessageFrame("La imagen debe tener al menos tamaño 1x1");
 					return;
 				}
-				
+
 				Image img = createBinaryImage(height, width);
-					
-				if(img != null){
+
+				if (img != null) {
 					panel.loadImage(img);
 					panel.repaint();
 					dispose();
@@ -76,21 +73,20 @@ public abstract class CreateImageDialog extends JDialog {
 					new MessageFrame("Valores ingresados incorrectos.");
 					return;
 				}
-				
+
 			}
 
-
 		});
-		
+
 		pan1.add(altoLabel);
 		pan1.add(alto);
 
 		pan1.add(anchoLabel);
 		pan1.add(ancho);
-		
+
 		this.add(pan1);
 		this.add(okButton);
-		
+
 	};
 
 	protected abstract Image createBinaryImage(int height, int width);
