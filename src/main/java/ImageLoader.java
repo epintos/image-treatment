@@ -73,6 +73,7 @@ public class ImageLoader {
 
 	}
 
+	@SuppressWarnings("resource")
 	public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
         long length = file.length();

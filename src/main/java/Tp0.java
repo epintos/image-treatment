@@ -97,39 +97,31 @@ public class Tp0 extends JMenu {
 			}
 		});
 
-		this.add(loadImage);
-		this.add(loadRaw);
-		this.add(saveImage);
-		this.add(new JSeparator());
-		this.add(exit);
+		JMenuItem degradeBW = new JMenuItem("Degrade de grises");
+		degradeBW.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 
-		// JMenuItem degradeBW = new JMenuItem("Degrade de grises");
-		// degradeBW.addActionListener(new ActionListener() {
-		// @Override
-		// public void actionPerformed(ActionEvent e) {
-		//
-		// Panel panel = (((Window) getTopLevelAncestor()).getPanel());
-		//
-		// JDialog degrade = new DegradeDialog(panel, false);
-		//
-		// degrade.setVisible(true);
-		//
-		// }
-		// });
-		//
-		// JMenuItem degradeColor = new JMenuItem("Degrade de colores");
-		// degradeColor.addActionListener(new ActionListener() {
-		// @Override
-		// public void actionPerformed(ActionEvent e) {
-		//
-		// Panel panel = (((Window) getTopLevelAncestor()).getPanel());
-		//
-		// JDialog degrade = new DegradeDialog(panel, true);
-		//
-		// degrade.setVisible(true);
-		//
-		// }
-		// });
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+
+				JDialog degrade = new DegradeDialog(panel, false);
+
+				degrade.setVisible(true);
+
+			}
+		});
+
+		JMenuItem degradeColor = new JMenuItem("Degrade de colores");
+		degradeColor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+
+				JDialog degrade = new DegradeDialog(panel, true);
+
+				degrade.setVisible(true);
+
+			}
+		});
 
 		JMenuItem binaryImage = new JMenuItem("Imagen binaria");
 		binaryImage.addActionListener(new ActionListener() {
@@ -144,11 +136,14 @@ public class Tp0 extends JMenu {
 			}
 		});
 
-		// this.add(degradeColor);
-		// this.add(degradeBW);
+		this.add(loadImage);
+		this.add(loadRaw);
+		this.add(saveImage);
 		this.add(binaryImage);
-
+		 this.add(degradeBW);
+		this.add(degradeColor);
 		this.add(new JSeparator());
+		this.add(exit);
 
 	}
 
