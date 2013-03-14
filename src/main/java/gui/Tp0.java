@@ -21,6 +21,8 @@ import app.ImageSaver;
 
 public class Tp0 extends JMenu {
 
+	public JMenuItem saveImage = new JMenuItem("Guardar imagen");
+	
 	private static final long serialVersionUID = 1L;
 
 	public Tp0() {
@@ -79,7 +81,7 @@ public class Tp0 extends JMenu {
 				}
 			}
 		});
-		JMenuItem saveImage = new JMenuItem("Guardar imagen");
+		
 		saveImage.setEnabled(false);
 		saveImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

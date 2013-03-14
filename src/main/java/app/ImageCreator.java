@@ -13,10 +13,12 @@ public class ImageCreator {
 		Color blackColor = Color.BLACK;
 		Color whiteColor = Color.WHITE;
 
+		//Generates a black square with a smaller white square inside
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				boolean fitsInSquareByWidth = (x > width / 4 && x < 3 * width / 4);
-				boolean fitsInSquareByHeight = (y > height / 4 && y < 3 * height / 4);
+				//Analyzes if the point is in the black or white square
+				boolean fitsInSquareByWidth = (x > width / 4 && x < 3 * (width / 4));
+				boolean fitsInSquareByHeight = (y > height / 4 && y < 3 * (height / 4));
 				boolean fitsInSquare = (fitsInSquareByWidth && fitsInSquareByHeight);
 				Color colorToApply = fitsInSquare ? whiteColor : blackColor;
 				binaryImage.setRGBPixel(x, y, colorToApply.getRGB());

@@ -35,7 +35,7 @@ public class Window extends JFrame {
 
 	public void enableTools() {
 		menuBar.getComponent(0).setEnabled(true);
-//		 ((Tp0)menuBar.getComponent(0)).saveImage.setEnabled(true);
+		((Tp0) menuBar.getComponent(0)).saveImage.setEnabled(true);
 	}
 
 }

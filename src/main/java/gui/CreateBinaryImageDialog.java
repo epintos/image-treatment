@@ -5,9 +5,6 @@ import model.Image;
 
 public class CreateBinaryImageDialog extends CreateImageDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public CreateBinaryImageDialog(Panel panel) {
