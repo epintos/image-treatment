@@ -15,7 +15,7 @@ public class Window extends JFrame {
 	private MenuTopBar menuBar = new MenuTopBar();
 
 	public Window() {
-		setTitle("TPS ATI");
+		setTitle("TPS Analisis y Tratamiento de Imagenes");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(1, 1, 250, 275);
 		Toolkit toolkit = getToolkit();
@@ -24,7 +24,7 @@ public class Window extends JFrame {
 				- getHeight() / 3);
 		setResizable(false);
 		this.setMinimumSize(new Dimension(600, 600));
-		panel.setBackground(Color.WHITE);
+		panel.setBackground(Color.BLACK);
 		setJMenuBar(menuBar);
 		add(panel);
 	}

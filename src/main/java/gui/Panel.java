@@ -8,14 +8,13 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import model.Coord;
 import model.Image;
 
 public class Panel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private Image image = null;
-	private List<Coord> mask = null;
+	private List<Point> mask = null;
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -43,7 +42,7 @@ public class Panel extends JPanel {
 		((Window) getTopLevelAncestor()).enableTools();
 	}
 
-	public void loadMask(List<Coord> mask) {
+	public void loadMask(List<Point> mask) {
 		this.mask = mask;
 	}
 
@@ -63,9 +62,9 @@ public class Panel extends JPanel {
 		}
 
 		// TODO: Create method to avoid this
-		this.image.setPixel(x, y, Image.Channel.RED, color);
-		this.image.setPixel(x, y, Image.Channel.GREEN, color);
-		this.image.setPixel(x, y, Image.Channel.BLUE, color);
+		this.image.setPixel(x, y, Image.ColorChannel.RED, color);
+		this.image.setPixel(x, y, Image.ColorChannel.GREEN, color);
+		this.image.setPixel(x, y, Image.ColorChannel.BLUE, color);
 
 		this.repaint();
 		return true;
@@ -75,15 +74,15 @@ public class Panel extends JPanel {
 		return image;
 	}
 
-	public List<Coord> getMask() {
+	public List<Point> getMask() {
 		if (mask == null)
 			return null;
-		Coord p1 = mask.get(0);
-		Coord p2 = mask.get(1);
-		this.mask = new ArrayList<Coord>();
+		Point p1 = mask.get(0);
+		Point p2 = mask.get(1);
+		this.mask = new ArrayList<Point>();
 		for (int y = Math.min(p1.y, p2.y); y <= Math.max(p1.y, p2.y); y++) {
 			for (int x = Math.min(p1.x, p2.x); x <= Math.max(p1.x, p2.x); x++) {
-				mask.add(new Coord(x, y));
+				mask.add(new Point(x, y));
 			}
 		}
 		return mask;

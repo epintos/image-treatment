@@ -2,7 +2,7 @@ package model;
 
 public interface Image {
 
-	public static enum Channel {
+	public static enum ColorChannel {
 		RED, GREEN, BLUE
 	}
 
@@ -16,7 +16,7 @@ public interface Image {
 
 	public static final int GRAY_LEVEL_AMOUNT = 256;
 
-	public void setPixel(int x, int y, Channel channel, double color);
+	public void setPixel(int x, int y, ColorChannel channel, double color);
 
 	public void setRGBPixel(int x, int y, int rgb);
 
