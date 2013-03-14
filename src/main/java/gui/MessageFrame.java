@@ -13,7 +13,6 @@ public class MessageFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;	
 
-	
 	public MessageFrame(String mensaje) {
 		setTitle("Error");
 		setLayout(null);

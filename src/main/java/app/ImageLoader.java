@@ -37,7 +37,7 @@ public class ImageLoader {
 		} else if( info.getFormat() == ImageFormat.IMAGE_FORMAT_PPM ){
 			format = Image.ImageFormat.PPM;
 		} else if( info.getFormat() == ImageFormat.IMAGE_FORMAT_UNKNOWN ){
-			//TODO: fix this
+			//TODO: Remove this, because there is a special raw loader
 			format = Image.ImageFormat.RAW;
 			throw new IllegalStateException("Unsupported image format");
 		} else {

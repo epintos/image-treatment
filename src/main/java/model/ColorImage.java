@@ -1,4 +1,5 @@
 package model;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
@@ -12,10 +13,6 @@ public class ColorImage implements Image, Cloneable {
 	private SingleChannel green;
 	private SingleChannel blue;
 
-	private SingleChannel Y;
-	private SingleChannel Cb;
-	private SingleChannel Cr;
-
 	public ColorImage(int height, int width, ImageFormat format, ImageType type) {
 		if (format == null) {
 			throw new IllegalArgumentException("ImageFormat can't be null");
@@ -24,18 +21,14 @@ public class ColorImage implements Image, Cloneable {
 		this.green = new SingleChannel(width, height);
 		this.blue = new SingleChannel(width, height);
 
-		this.Y = new SingleChannel(width, height);
-		this.Cb = new SingleChannel(width, height);
-		this.Cr = new SingleChannel(width, height);
-
 		this.format = format;
 		this.type = type;
 	}
-	
-	public ColorImage(BufferedImage bi, ImageFormat format, ImageType type){
+
+	public ColorImage(BufferedImage bi, ImageFormat format, ImageType type) {
 		this(bi.getHeight(), bi.getWidth(), format, type);
-		for(int x = 0 ; x < bi.getWidth() ; x++){
-			for(int y = 0 ; y < bi.getHeight() ; y++ ){
+		for (int x = 0; x < bi.getWidth(); x++) {
+			for (int y = 0; y < bi.getHeight(); y++) {
 				Color c = new Color(bi.getRGB(x, y));
 				red.setPixel(x, y, c.getRed());
 				green.setPixel(x, y, c.getGreen());
