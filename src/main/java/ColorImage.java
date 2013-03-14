@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 public class ColorImage implements Image, Cloneable {
 
@@ -26,6 +27,18 @@ public class ColorImage implements Image, Cloneable {
 
 		this.format = format;
 		this.type = type;
+	}
+	
+	public ColorImage(BufferedImage bi, ImageFormat format, ImageType type){
+		this(bi.getHeight(), bi.getWidth(), format, type);
+		for(int x = 0 ; x < bi.getWidth() ; x++){
+			for(int y = 0 ; y < bi.getHeight() ; y++ ){
+				Color c = new Color(bi.getRGB(x, y));
+				red.setPixel(x, y, c.getRed());
+				green.setPixel(x, y, c.getGreen());
+				blue.setPixel(x, y, c.getBlue());
+			}
+		}
 	}
 
 	public void setRGBPixel(int x, int y, int rgb) {
@@ -84,6 +97,14 @@ public class ColorImage implements Image, Cloneable {
 
 	public int getWidth() {
 		return red.getWidth();
+	}
+
+	public ImageType getType() {
+		return type;
+	}
+
+	public ImageFormat getImageFormat() {
+		return format;
 	}
 
 }
