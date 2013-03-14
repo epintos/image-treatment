@@ -1,3 +1,7 @@
+package gui;
+import app.ImageCreator;
+import model.Image;
+
 
 
 

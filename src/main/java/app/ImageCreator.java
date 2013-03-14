@@ -1,4 +1,8 @@
+package app;
 import java.awt.Color;
+
+import model.ColorImage;
+import model.Image;
 
 public class ImageCreator {
 

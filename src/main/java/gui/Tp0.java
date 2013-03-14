@@ -1,3 +1,5 @@
+package gui;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -9,8 +11,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
+import model.Image;
+
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.ImageWriteException;
+
+import app.ImageLoader;
+import app.ImageSaver;
 
 public class Tp0 extends JMenu {
 

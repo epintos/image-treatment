@@ -1,5 +1,8 @@
+package model;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+
+import app.ColorUtilities;
 
 public class ColorImage implements Image, Cloneable {
 

@@ -1,8 +1,11 @@
+package app;
 
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import model.Image;
 
 import org.apache.sanselan.ImageFormat;
 import org.apache.sanselan.ImageWriteException;

@@ -1,26 +1,31 @@
+package gui;
+
 
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import app.ImageLoader;
 
-public abstract class CreateImageDialog extends JDialog {
+import model.Image;
+
+public class RawImageDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	public CreateImageDialog(final Panel panel) {
-		
-		setTitle("Crear degrade");
-		setBounds(1, 1, 250, 200);
+	public RawImageDialog(final Panel panel, final File arch){
+		setTitle("Cargar Imagen Raw");
+		setBounds(1, 1, 250, 170);
 		Toolkit toolkit = getToolkit();
 		Dimension size = toolkit.getScreenSize();
 		setLocation(size.width/3 - getWidth()/3,
@@ -29,16 +34,16 @@ public abstract class CreateImageDialog extends JDialog {
 		setLayout(null);
 
 		JPanel pan1 = new JPanel();
-		pan1.setBorder(BorderFactory.createTitledBorder("Tamaño"));
 		pan1.setBounds(0, 0, 250, 50);
+		
 
-		JLabel altoLabel = new JLabel("Alto = ");
-		final JTextField alto = new JTextField("300");
-		alto.setColumns(3);
-
-		JLabel anchoLabel = new JLabel(", Ancho = ");
-		final JTextField ancho = new JTextField("300");
+		JLabel anchoLabel = new JLabel("Ancho = ");
+		final JTextField ancho = new JTextField("0");
 		ancho.setColumns(3);
+		
+		JLabel altoLabel = new JLabel("Alto = ");
+		final JTextField alto = new JTextField("0");
+		alto.setColumns(3);
 
 		JButton okButton = new JButton("OK");
 		okButton.setSize(250, 40);
@@ -46,48 +51,37 @@ public abstract class CreateImageDialog extends JDialog {
 		okButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				
-				int height;
-				int width;
-				
+				int X, Y;
+				Image image = null;
 				try{
-					height = Integer.valueOf(alto.getText().trim());
-					width = Integer.valueOf(ancho.getText().trim());					
+					X = Integer.valueOf(ancho.getText());
+					Y = Integer.valueOf(alto.getText());
 				} catch(NumberFormatException ex){
 					new MessageFrame("Los datos ingresados son invalidos");
 					return;
 				}
 				
-				if( height <= 0 || width <= 0 ){
-					new MessageFrame("La imagen debe tener al menos tamaño 1x1");
-					return;
+				try{
+					image = ImageLoader.loadRaw(arch, X, Y);
+				} catch (IOException ex){
+					new MessageFrame("No se pudo cargar la imagen");
 				}
 				
-				Image img = createBinaryImage(height, width);
-					
-				if(img != null){
-					panel.loadImage(img);
+				if(image != null){
+					panel.loadImage(image);
 					panel.repaint();
-					dispose();
-				} else {
-					new MessageFrame("Valores ingresados incorrectos.");
-					return;
 				}
-				
+				dispose();
 			}
-
-
 		});
 		
-		pan1.add(altoLabel);
-		pan1.add(alto);
-
 		pan1.add(anchoLabel);
 		pan1.add(ancho);
+		pan1.add(altoLabel);
+		pan1.add(alto);
 		
 		this.add(pan1);
 		this.add(okButton);
-		
-	};
+	}
 
-	protected abstract Image createBinaryImage(int height, int width);
 }

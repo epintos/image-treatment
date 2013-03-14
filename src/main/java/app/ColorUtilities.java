@@ -1,5 +1,8 @@
+package app;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+
+import model.Image;
 
 import org.apache.sanselan.ImageFormat;
 

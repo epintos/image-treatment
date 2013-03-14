@@ -1,3 +1,5 @@
+package gui;
+
 
 
 import java.awt.Color;
@@ -12,6 +14,10 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import app.ImageCreator;
+
+import model.Image;
 
 
 public class DegradeDialog extends JDialog {
