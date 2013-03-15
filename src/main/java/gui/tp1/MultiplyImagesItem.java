@@ -11,8 +11,8 @@ public class MultiplyImagesItem extends ImageOperations {
 	}
 
 	@Override
-	protected void doOperation(Image img1, Image img2) {
-		img1.multiply(img2);
+	protected void doOperation(Image panelImage, Image image) {
+		panelImage.multiply(image);
 
 	}
 

@@ -107,10 +107,10 @@ public class ColorImage implements Image, Cloneable {
 	public ImageFormat getImageFormat() {
 		return format;
 	}
-	
+
 	public Image add(Image img) {
-		ColorImage ci = (ColorImage)img;
-		
+		ColorImage ci = (ColorImage) img;
+
 		this.red.add(ci.red);
 		this.green.add(ci.green);
 		this.blue.add(ci.blue);
@@ -118,8 +118,8 @@ public class ColorImage implements Image, Cloneable {
 	}
 
 	public Image multiply(Image img) {
-		ColorImage ci = (ColorImage)img;
-		
+		ColorImage ci = (ColorImage) img;
+
 		this.red.multiply(ci.red);
 		this.green.multiply(ci.green);
 		this.blue.multiply(ci.blue);
@@ -127,12 +127,44 @@ public class ColorImage implements Image, Cloneable {
 	}
 
 	public Image substract(Image img) {
-		ColorImage ci = (ColorImage)img;
-		
+		ColorImage ci = (ColorImage) img;
+
 		this.red.substract(ci.red);
 		this.green.substract(ci.green);
 		this.blue.substract(ci.blue);
 		return this;
 	}
 
+	public void multiply(double scalar) {
+		this.red.multiply(scalar);
+		this.green.multiply(scalar);
+		this.blue.multiply(scalar);
+	}
+
+	public void dynamicRangeCompression() {
+		double max = -Double.MAX_VALUE;
+		double min = Double.MAX_VALUE;
+		for (int i = 0; i < this.getWidth(); i++) {
+			for (int j = 0; j < this.getHeight(); j++) {
+				double redPixel = red.getPixel(i, j);
+				double greenPixel = green.getPixel(i, j);
+				double bluePixel = blue.getPixel(i, j);
+
+				min = Math.min(Math.min(min, redPixel),
+						Math.min(greenPixel, bluePixel));
+				max = Math.max(Math.max(max, redPixel),
+						Math.max(greenPixel, bluePixel));
+			}
+		}
+
+		this.red.dynamicRangeCompression(min, max);
+		this.green.dynamicRangeCompression(min, max);
+		this.blue.dynamicRangeCompression(min, max);
+	}
+
+	public void negative() {
+		this.red.negative();
+		this.blue.negative();
+		this.green.negative();		
+	}
 }

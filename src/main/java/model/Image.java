@@ -37,11 +37,38 @@ public interface Image {
 	public ImageFormat getImageFormat();
 
 	// For TP 1
-
+	/**
+	 * Adds to images of the same size
+	 * 
+	 * @param img
+	 * @return
+	 */
 	public Image add(Image img);
 
+	/**
+	 * Substracts to images of the same size
+	 * 
+	 * @param img
+	 * @return
+	 */
 	public Image substract(Image img);
 
+	/**
+	 * Multiplies to images of the same size
+	 * 
+	 * @param img
+	 * @return
+	 */
 	public Image multiply(Image img);
+	
+	/**
+	 * Multiply image by an scalar
+	 * @param scalar
+	 */
+	public void multiply(double scalar);
+	
+	public void dynamicRangeCompression();
+	
+	public void negative();
 
 }

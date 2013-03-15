@@ -7,12 +7,12 @@ public class AddImagesItem extends ImageOperations {
 	private static final long serialVersionUID = 1L;
 
 	public AddImagesItem(Tp1 t) {
-		super("Sumar Imagen", t);
+		super("Sumar Imagenes", t);
 	}
 
 	@Override
-	protected void doOperation(Image img1, Image img2) {
-		img1.add(img2);
+	protected void doOperation(Image panelImage, Image image) {
+		panelImage.add(image);
 	}
 
 }

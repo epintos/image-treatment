@@ -22,48 +22,54 @@ public abstract class ImageOperations extends JMenuItem {
 	Tp1 tp1Menu;
 	private static final long serialVersionUID = 1L;
 
-	public ImageOperations(String s, final Tp1 t){
+	public ImageOperations(String s, final Tp1 t) {
 		super(s);
 		tp1Menu = t;
-		
+
 		this.addActionListener(new ActionListener() {
-	
-	    	public void actionPerformed(ActionEvent e) {
-	    		
-	    		JFileChooser selector = new JFileChooser();
-	    		selector.showOpenDialog(t);
+
+			public void actionPerformed(ActionEvent e) {
+
+				JFileChooser selector = new JFileChooser();
+				selector.showOpenDialog(t);
 				File arch = selector.getSelectedFile();
-				
+
 				Panel panel = (((Window) t.getTopLevelAncestor()).getPanel());
-				if(arch != null){
+				if (arch != null) {
 					Image image = null;
-					
-					try{
+
+					try {
 						image = ImageLoader.loadImage(arch);
-					} catch (ImageReadException ex){
+					} catch (ImageReadException ex) {
 						new MessageFrame("No se pudo cargar la imagen");
-					} catch (IOException ex){
+					} catch (IOException ex) {
 						new MessageFrame("No se pudo cargar la imagen");
 					}
-					if(image.getHeight() != panel.getImage().getHeight()
-						|| image.getWidth() != panel.getImage().getWidth()) {
-	
-			    		new MessageFrame("Las imagenes deben ser del mismo tamaño");
+
+					Image panelImage = panel.getImage();
+					if (panelImage == null) {
+						new MessageFrame("Debe cargarse una imagen antes");
+						return;
+					}
+					if (image.getHeight() != panelImage.getHeight()
+							|| image.getWidth() != panelImage.getWidth()) {
+
+						new MessageFrame(
+								"Las imagenes deben ser del mismo tamaño");
 						return;
 					}
 					try {
-						doOperation(panel.getImage(), image);	 			    		
-			    		panel.repaint();
-			    	} 
-					catch(IllegalArgumentException i){			    		
-			    		new MessageFrame(i.getMessage());			    		
-			    	}
+						doOperation(panelImage, image);
+						panel.repaint();
+					} catch (IllegalArgumentException i) {
+						new MessageFrame(i.getMessage());
+					}
 				}
-				
+
 			}
 		});
 	}
-	
+
 	protected abstract void doOperation(Image img1, Image img2);
 
 }

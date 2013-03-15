@@ -8,7 +8,8 @@ public class Channel implements Cloneable {
 	private int width;
 	private int height;
 
-	// The matrix is represented by an array, and to get a pixel(x,y) make y * this.getWidth() + x
+	// The matrix is represented by an array, and to get a pixel(x,y) make y *
+	// this.getWidth() + x
 	private double[] channel;
 
 	public Channel(int width, int height) {
@@ -24,6 +25,7 @@ public class Channel implements Cloneable {
 
 	/**
 	 * Indicates whether a coordinate is valid for a pixel
+	 * 
 	 * @param x
 	 * @param y
 	 * @return True if the pixel is valid
@@ -36,6 +38,7 @@ public class Channel implements Cloneable {
 
 	/**
 	 * Returns the Channel height
+	 * 
 	 * @return
 	 */
 	public int getHeight() {
@@ -44,6 +47,7 @@ public class Channel implements Cloneable {
 
 	/**
 	 * Returns the Channel width
+	 * 
 	 * @return
 	 */
 	public int getWidth() {
@@ -52,6 +56,7 @@ public class Channel implements Cloneable {
 
 	/**
 	 * Sets a pixel(x,y) in the channel
+	 * 
 	 * @param x
 	 * @param y
 	 * @param color
@@ -66,6 +71,7 @@ public class Channel implements Cloneable {
 
 	/**
 	 * Returns a pixel in the position x,y
+	 * 
 	 * @param x
 	 * @param y
 	 * @return
@@ -79,33 +85,68 @@ public class Channel implements Cloneable {
 	}
 
 	int truncatePixel(double notTruncatedValue) {
+		if (notTruncatedValue > Channel.MAX_CHANNEL_COLOR) {
+			return Channel.MAX_CHANNEL_COLOR;
+		} else if (notTruncatedValue < Channel.MIN_CHANNEL_COLOR) {
+			return Channel.MIN_CHANNEL_COLOR;
+		}
 		return (int) notTruncatedValue;
 	}
-	
+
 	public void add(Channel otherChannel) {
-		for( int x = 0 ; x < width ; x++ ) {
-			for( int y = 0 ; y < height ; y++) {
-				double color = this.getPixel(x, y) + otherChannel.getPixel(x, y);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double color = this.getPixel(x, y)
+						+ otherChannel.getPixel(x, y);
 				this.setPixel(x, y, color);
 			}
 		}
 	}
-	
+
 	public void substract(Channel otherChannel) {
-		for( int x = 0 ; x < width ; x++ ) {
-			for( int y = 0 ; y < height ; y++) {
-				double color = this.getPixel(x, y) - otherChannel.getPixel(x, y);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double color = this.getPixel(x, y)
+						- otherChannel.getPixel(x, y);
 				this.setPixel(x, y, color);
 			}
 		}
 	}
-	
+
 	public void multiply(Channel otherChannel) {
-		for( int x = 0 ; x < width ; x++ ) {
-			for( int y = 0 ; y < height ; y++) {
-				double color = this.getPixel(x, y) * otherChannel.getPixel(x, y);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double color = this.getPixel(x, y)
+						* otherChannel.getPixel(x, y);
 				this.setPixel(x, y, color);
 			}
 		}
 	}
+
+	public void multiply(double scalar) {
+		for (int i = 0; i < this.channel.length; i++) {
+			this.channel[i] *= scalar;
+		}
+	}
+
+	public void dynamicRangeCompression(double min, double max) {
+		double c = (MAX_CHANNEL_COLOR - 1) / Math.log(1 + max - min);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double color = (double) (c * Math.log(1 + this.getPixel(x, y)
+						- min));
+				this.setPixel(x, y, color);
+			}
+		}
+	}
+
+	public void negative() {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double color = this.getPixel(x, y);
+				this.setPixel(x, y, MAX_CHANNEL_COLOR - color);
+			}
+		}
+	}
+
 }

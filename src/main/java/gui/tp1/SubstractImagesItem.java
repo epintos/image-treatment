@@ -11,8 +11,8 @@ public class SubstractImagesItem extends ImageOperations {
 	}
 
 	@Override
-	protected void doOperation(Image img1, Image img2) {
-		img1.substract(img2);
+	protected void doOperation(Image panelImage, Image image) {
+		panelImage.substract(image);
 
 	}
 
