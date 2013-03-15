@@ -167,4 +167,29 @@ public class ColorImage implements Image, Cloneable {
 		this.blue.negative();
 		this.green.negative();		
 	}
+	
+	public double[] getHistogramPixels() {
+ 		double[] result = new double[this.getHeight()*this.getWidth()];
+ 		
+ 		for(int i = 0 ; i < result.length ; i++){
+ 			result[i] = getGraylevelFromPixel((int)Math.floor(i/this.getWidth()), i % this.getWidth());
+ 		}
+ 		
+		return result;
+	}
+	
+	private double getGraylevelFromPixel(int x, int y) {
+		double red = this.red.getPixel(x, y);
+		double green = this.green.getPixel(x, y);
+		double blue = this.blue.getPixel(x, y);
+		
+		return (red + green + blue)/3.0;
+	}
+	
+	public void threshold(double value) {
+		this.red.threshold(value);
+		this.blue.threshold(value);
+		this.green.threshold(value);
+	}
+	
 }

@@ -148,5 +148,17 @@ public class Channel implements Cloneable {
 			}
 		}
 	}
+	
+	public void threshold(double value) {
+		double black = MIN_CHANNEL_COLOR;
+		double white = MAX_CHANNEL_COLOR;
+		
+		for( int x = 0 ; x < width ; x++ ) {
+			for( int y = 0 ; y < height ; y++) {
+				double colorToApply = this.getPixel(x, y) > value? white : black;
+				this.setPixel(x, y, colorToApply);
+			}
+		}
+	}
 
 }

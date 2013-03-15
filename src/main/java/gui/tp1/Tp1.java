@@ -26,8 +26,8 @@ public class Tp1 extends JMenu{
 	    
 	    JMenuItem multiplication = new MultiplyImagesItem(this);
 	    
-	    JMenuItem multiplyByScalar = new JMenuItem("Multiplicar por escalar");
-	    multiplyByScalar.addActionListener(new ActionListener() {
+	    JMenuItem multiplicationByScalar = new JMenuItem("Multiplicar por escalar");
+	    multiplicationByScalar.addActionListener(new ActionListener() {
 		    	public void actionPerformed(ActionEvent e) {
 		    		Panel panel = (((Window) getTopLevelAncestor()).getPanel());
 		    		JDialog scalarMultiplier = new MultiplyByScalarDialog(panel);
@@ -53,12 +53,34 @@ public class Tp1 extends JMenu{
 				}
 			}); 
 	    
+	    JMenuItem grayLevelsHistogram = new JMenuItem("Histograma");
+	    grayLevelsHistogram.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				JDialog dialog = new HistogramDialog(panel);
+				dialog.setVisible(true);
+			}
+		});
+	    
+	    JMenuItem threshold = new JMenuItem("Umbral");
+	    threshold.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+	    		JDialog umbral = new ThresholdDialog(panel);
+	    		umbral.setVisible(true);
+			}
+		}); 
+	    
 	    this.add(addition);
 	    this.add(substraction);
 	    this.add(multiplication);
-	    this.add(multiplyByScalar);
+	    this.add(multiplicationByScalar);
 	    this.add(dynamicRangeCompression);
 	    this.add(new JSeparator());
 	    this.add(negative);
+	    this.add(new JSeparator());
+	    this.add(grayLevelsHistogram);
+	    this.add(new JSeparator());
+	    this.add(threshold);
 	}
 }

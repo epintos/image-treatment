@@ -109,13 +109,20 @@ public class Tp0 extends JMenu {
 
 			}
 		});
-		JMenuItem exit = new JMenuItem("Salir");
-		exit.addActionListener(new ActionListener() {
-
+		
+		JMenuItem binaryImage = new JMenuItem("Imagen binaria");
+		binaryImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+
+				JDialog binaryImage = new CreateBinaryImageDialog(panel);
+
+				binaryImage.setVisible(true);
+
 			}
 		});
+		
 
 		JMenuItem degradeBW = new JMenuItem("Degrade de grises");
 		degradeBW.addActionListener(new ActionListener() {
@@ -142,17 +149,12 @@ public class Tp0 extends JMenu {
 
 			}
 		});
+		
+		JMenuItem exit = new JMenuItem("Salir");
+		exit.addActionListener(new ActionListener() {
 
-		JMenuItem binaryImage = new JMenuItem("Imagen binaria");
-		binaryImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
-
-				JDialog binaryImage = new CreateBinaryImageDialog(panel);
-
-				binaryImage.setVisible(true);
-
+				System.exit(0);
 			}
 		});
 

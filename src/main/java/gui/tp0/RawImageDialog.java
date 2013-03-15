@@ -50,7 +50,7 @@ public class RawImageDialog extends JDialog {
 
 		JButton okButton = new JButton("OK");
 		okButton.setSize(10, 10);
-		okButton.setBounds(80, 50, 100, 40);
+		okButton.setBounds(0, 100, 250, 40);
 		okButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				

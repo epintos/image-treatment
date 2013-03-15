@@ -60,15 +60,30 @@ public interface Image {
 	 * @return
 	 */
 	public Image multiply(Image img);
-	
+
 	/**
 	 * Multiply image by an scalar
+	 * 
 	 * @param scalar
 	 */
 	public void multiply(double scalar);
-	
+
 	public void dynamicRangeCompression();
-	
+
 	public void negative();
+
+	/**
+	 * Returns gray pixels for drawing an histogram
+	 * 
+	 * @return
+	 */
+	public double[] getHistogramPixels();
+
+	/**
+	 * Threshold effect using value as the transformation value
+	 * 
+	 * @param value
+	 */
+	public void threshold(double value);
 
 }
