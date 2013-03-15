@@ -1,5 +1,7 @@
 package gui;
 
+import gui.tp0.Tp0;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -12,7 +14,7 @@ public class Window extends JFrame {
 
 	private Panel panel = new Panel();
 
-	private MenuTopBar menuBar = new MenuTopBar();
+	private Menu menuBar = new Menu();
 
 	public Window() {
 		setTitle("TPS Analisis y Tratamiento de Imagenes");

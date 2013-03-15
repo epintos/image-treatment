@@ -1,4 +1,8 @@
-package gui;
+package gui.tp0;
+
+import gui.MessageFrame;
+import gui.Panel;
+import gui.Window;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

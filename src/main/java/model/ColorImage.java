@@ -107,5 +107,32 @@ public class ColorImage implements Image, Cloneable {
 	public ImageFormat getImageFormat() {
 		return format;
 	}
+	
+	public Image add(Image img) {
+		ColorImage ci = (ColorImage)img;
+		
+		this.red.add(ci.red);
+		this.green.add(ci.green);
+		this.blue.add(ci.blue);
+		return this;
+	}
+
+	public Image multiply(Image img) {
+		ColorImage ci = (ColorImage)img;
+		
+		this.red.multiply(ci.red);
+		this.green.multiply(ci.green);
+		this.blue.multiply(ci.blue);
+		return this;
+	}
+
+	public Image substract(Image img) {
+		ColorImage ci = (ColorImage)img;
+		
+		this.red.substract(ci.red);
+		this.green.substract(ci.green);
+		this.blue.substract(ci.blue);
+		return this;
+	}
 
 }

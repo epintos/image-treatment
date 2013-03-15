@@ -36,4 +36,12 @@ public interface Image {
 
 	public ImageFormat getImageFormat();
 
+	// For TP 1
+
+	public Image add(Image img);
+
+	public Image substract(Image img);
+
+	public Image multiply(Image img);
+
 }

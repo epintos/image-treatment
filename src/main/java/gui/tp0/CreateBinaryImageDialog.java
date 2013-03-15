@@ -1,5 +1,6 @@
-package gui;
+package gui.tp0;
 
+import gui.Panel;
 import app.ImageCreator;
 import model.Image;
 

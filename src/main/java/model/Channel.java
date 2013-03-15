@@ -81,4 +81,31 @@ public class Channel implements Cloneable {
 	int truncatePixel(double notTruncatedValue) {
 		return (int) notTruncatedValue;
 	}
+	
+	public void add(Channel otherChannel) {
+		for( int x = 0 ; x < width ; x++ ) {
+			for( int y = 0 ; y < height ; y++) {
+				double color = this.getPixel(x, y) + otherChannel.getPixel(x, y);
+				this.setPixel(x, y, color);
+			}
+		}
+	}
+	
+	public void substract(Channel otherChannel) {
+		for( int x = 0 ; x < width ; x++ ) {
+			for( int y = 0 ; y < height ; y++) {
+				double color = this.getPixel(x, y) - otherChannel.getPixel(x, y);
+				this.setPixel(x, y, color);
+			}
+		}
+	}
+	
+	public void multiply(Channel otherChannel) {
+		for( int x = 0 ; x < width ; x++ ) {
+			for( int y = 0 ; y < height ; y++) {
+				double color = this.getPixel(x, y) * otherChannel.getPixel(x, y);
+				this.setPixel(x, y, color);
+			}
+		}
+	}
 }

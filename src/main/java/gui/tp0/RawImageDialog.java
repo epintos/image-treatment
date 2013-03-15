@@ -1,6 +1,9 @@
-package gui;
+package gui.tp0;
 
 
+
+import gui.MessageFrame;
+import gui.Panel;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
