@@ -22,7 +22,7 @@ public class MultiplyByScalarDialog extends JDialog {
 
 	public MultiplyByScalarDialog(final Panel panel) {
 		setTitle("Multiplicación por escalar");
-		setBounds(1, 1, 250, 170);
+		setBounds(1, 1, 250, 120);
 		Toolkit toolkit = getToolkit();
 		Dimension size = toolkit.getScreenSize();
 		setLocation(size.width / 3 - getWidth() / 3, size.height / 3
@@ -39,7 +39,7 @@ public class MultiplyByScalarDialog extends JDialog {
 
 		JButton okButton = new JButton("OK");
 		okButton.setSize(250, 40);
-		okButton.setBounds(0, 100, 250, 40);
+		okButton.setBounds(0, 50, 250, 40);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 

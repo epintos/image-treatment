@@ -23,7 +23,7 @@ private static final long serialVersionUID = 1L;
 	public ThresholdDialog(final Panel panel){
 
 		setTitle("Umbral");
-		setBounds(1, 1, 250, 170);
+		setBounds(1, 1, 250, 120);
 		Toolkit toolkit = getToolkit();
 		Dimension size = toolkit.getScreenSize();
 		setLocation(size.width/3 - getWidth()/3,
@@ -41,7 +41,7 @@ private static final long serialVersionUID = 1L;
 
 		JButton okButton = new JButton("OK");
 		okButton.setSize(250, 40);
-		okButton.setBounds(0, 100, 250, 40);
+		okButton.setBounds(0, 50, 250, 40);
 		okButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				

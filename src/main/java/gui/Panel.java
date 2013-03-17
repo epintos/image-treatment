@@ -2,9 +2,6 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -34,6 +31,7 @@ public class Panel extends JPanel {
 
 	/**
 	 * Loads an image to the panel
+	 * 
 	 * @param image
 	 */
 	public void loadImage(Image image) {
@@ -56,13 +54,16 @@ public class Panel extends JPanel {
 			return false;
 		}
 
-		// TODO: Create method to avoid this
-		this.image.setPixel(x, y, Image.ColorChannel.RED, color);
-		this.image.setPixel(x, y, Image.ColorChannel.GREEN, color);
-		this.image.setPixel(x, y, Image.ColorChannel.BLUE, color);
+		setAllPixels(x, y, color);
 
 		this.repaint();
 		return true;
+	}
+
+	private void setAllPixels(int x, int y, double color) {
+		this.image.setPixel(x, y, Image.ColorChannel.RED, color);
+		this.image.setPixel(x, y, Image.ColorChannel.GREEN, color);
+		this.image.setPixel(x, y, Image.ColorChannel.BLUE, color);
 	}
 
 	public Image getImage() {

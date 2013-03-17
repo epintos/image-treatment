@@ -1,5 +1,6 @@
 package gui.tp0;
 
+import gui.ExtensionFilter;
 import gui.MessageFrame;
 import gui.Panel;
 import gui.Window;
@@ -14,10 +15,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.filechooser.FileFilter;
 
 import model.Image;
 
-import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.ImageWriteException;
 
 import app.ImageLoader;
@@ -26,7 +27,7 @@ import app.ImageSaver;
 public class Tp0 extends JMenu {
 
 	public JMenuItem saveImage = new JMenuItem("Guardar imagen");
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public Tp0() {
@@ -37,9 +38,15 @@ public class Tp0 extends JMenu {
 
 			public void actionPerformed(ActionEvent e) {
 
-				JFileChooser selector = new JFileChooser();
-				selector.showOpenDialog(Tp0.this);
-				File arch = selector.getSelectedFile();
+				JFileChooser chooser = new JFileChooser();
+				FileFilter type = new ExtensionFilter("Imágenes", new String[] {
+						".pgm", ".PGM", ".ppm", ".PPM", ".bmp", ".BMP" });
+				chooser.addChoosableFileFilter(type);
+				chooser.setAcceptAllFileFilterUsed(false);
+				chooser.setFileFilter(type);
+				chooser.showOpenDialog(Tp0.this);
+
+				File arch = chooser.getSelectedFile();
 
 				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
 				if (arch != null) {
@@ -47,21 +54,16 @@ public class Tp0 extends JMenu {
 
 					try {
 						image = ImageLoader.loadImage(arch);
-					}catch(IllegalArgumentException ex){
-						new MessageFrame("Para cargar una imagen RAW use Cargar imagen Raw");
-					}catch(IllegalStateException ex){
-						new MessageFrame("Extension de imagen no soportado");
-					} catch (ImageReadException ex) {
-						new MessageFrame("No se pudo cargar la imagen");
-					} catch (IOException ex) {
+					} catch (Exception ex) {
 						new MessageFrame("No se pudo cargar la imagen");
 					}
-
+					
 					if (image != null) {
-						//Loads the image to the panel
+						// Loads the image to the panel
 						panel.loadImage(image);
-						
-						//This will repaint the panel with the previous image loaded
+
+						// This will repaint the panel with the previous image
+						// loaded
 						panel.repaint();
 					}
 
@@ -74,9 +76,14 @@ public class Tp0 extends JMenu {
 
 			public void actionPerformed(ActionEvent e) {
 
-				JFileChooser selector = new JFileChooser();
-				selector.showOpenDialog(Tp0.this);
-				File arch = selector.getSelectedFile();
+				JFileChooser chooser = new JFileChooser();
+				FileFilter type = new ExtensionFilter("Imágenes RAW",
+						new String[] { ".raw", ".RAW" });
+				chooser.addChoosableFileFilter(type);
+				chooser.setAcceptAllFileFilterUsed(false);
+				chooser.setFileFilter(type);
+				chooser.showOpenDialog(Tp0.this);
+				File arch = chooser.getSelectedFile();
 
 				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
 				if (arch != null) {
@@ -85,7 +92,7 @@ public class Tp0 extends JMenu {
 				}
 			}
 		});
-		
+
 		saveImage.setEnabled(false);
 		saveImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -109,7 +116,7 @@ public class Tp0 extends JMenu {
 
 			}
 		});
-		
+
 		JMenuItem binaryImage = new JMenuItem("Imagen binaria");
 		binaryImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -122,7 +129,6 @@ public class Tp0 extends JMenu {
 
 			}
 		});
-		
 
 		JMenuItem degradeBW = new JMenuItem("Degrade de grises");
 		degradeBW.addActionListener(new ActionListener() {
@@ -149,24 +155,14 @@ public class Tp0 extends JMenu {
 
 			}
 		});
-		
-		JMenuItem exit = new JMenuItem("Salir");
-		exit.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
 
 		this.add(loadImage);
 		this.add(loadRaw);
 		this.add(saveImage);
+		this.add(new JSeparator());
 		this.add(binaryImage);
 		this.add(degradeBW);
 		this.add(degradeColor);
-		this.add(new JSeparator());
-		this.add(exit);
-
 	}
 
 }

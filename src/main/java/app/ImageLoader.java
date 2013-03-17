@@ -35,9 +35,6 @@ public class ImageLoader {
 			format = Image.ImageFormat.PGM;
 		} else if (info.getFormat() == ImageFormat.IMAGE_FORMAT_PPM) {
 			format = Image.ImageFormat.PPM;
-		} else if (info.getFormat() == ImageFormat.IMAGE_FORMAT_UNKNOWN) {
-			format = Image.ImageFormat.RAW;
-			throw new IllegalArgumentException();
 		} else {
 			throw new IllegalStateException();
 		}

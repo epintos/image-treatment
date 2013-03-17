@@ -23,8 +23,8 @@ public abstract class CreateImageDialog extends JDialog {
 
 	public CreateImageDialog(final Panel panel) {
 
-		setTitle("Crear degrade");
-		setBounds(1, 1, 250, 200);
+		setTitle("Crear imagen binaria");
+		setBounds(1, 1, 250, 130);
 		Toolkit toolkit = getToolkit();
 		Dimension size = toolkit.getScreenSize();
 		setLocation(size.width / 3 - getWidth() / 3, size.height / 3
@@ -34,7 +34,7 @@ public abstract class CreateImageDialog extends JDialog {
 
 		JPanel pan1 = new JPanel();
 		pan1.setBorder(BorderFactory.createTitledBorder("Tamaño"));
-		pan1.setBounds(0, 0, 250, 50);
+		pan1.setBounds(0, 0, 250, 60);
 
 		JLabel altoLabel = new JLabel("Alto = ");
 		final JTextField alto = new JTextField("300");
@@ -46,7 +46,7 @@ public abstract class CreateImageDialog extends JDialog {
 
 		JButton okButton = new JButton("OK");
 		okButton.setSize(250, 40);
-		okButton.setBounds(0, 100, 250, 40);
+		okButton.setBounds(0, 60, 250, 40);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 

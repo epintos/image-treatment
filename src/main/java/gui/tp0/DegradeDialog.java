@@ -26,8 +26,7 @@ public class DegradeDialog extends JDialog {
 
 	public DegradeDialog(final Panel panel, final boolean isColor) {
 
-		setTitle("Crear degrade");
-		setBounds(1, 1, 250, 200);
+		setBounds(1, 1, 270, 190);
 		Toolkit toolkit = getToolkit();
 		Dimension size = toolkit.getScreenSize();
 		setLocation(size.width / 3 - getWidth() / 3, size.height / 3
@@ -37,23 +36,27 @@ public class DegradeDialog extends JDialog {
 
 		JPanel pan1 = new JPanel();
 		pan1.setBorder(BorderFactory.createTitledBorder("Tamaño"));
-		pan1.setBounds(0, 0, 250, 50);
+		pan1.setBounds(0, 0, 270, 60);
 
 		JPanel pan2 = new JPanel();
 		pan2.setBorder(BorderFactory.createTitledBorder("Color"));
-		pan2.setBounds(0, 50, 250, 50);
+		pan2.setBounds(0, 60, 270, 60);
 
 		JLabel altoLabel = new JLabel("Alto = ");
 		final JTextField alto = new JTextField("0");
 		alto.setColumns(3);
 
-		JLabel anchoLabel = new JLabel(", Ancho = ");
+		JLabel anchoLabel = new JLabel("Ancho = ");
 		final JTextField ancho = new JTextField("0");
 		ancho.setColumns(3);
 
 		String fieldText = "0";
-		if (isColor)
+		if (isColor){
 			fieldText = "000000";
+			setTitle("Crear degrade de colores");
+		}else{
+			setTitle("Crear degrade de grises");
+		}
 
 		JLabel colorLabel1 = new JLabel("Desde:");
 		final JTextField color1 = new JTextField(fieldText);
@@ -64,8 +67,8 @@ public class DegradeDialog extends JDialog {
 		color2.setColumns(5);
 
 		JButton okButton = new JButton("OK");
-		okButton.setSize(250, 40);
-		okButton.setBounds(0, 100, 250, 40);
+		okButton.setSize(270, 40);
+		okButton.setBounds(0, 120, 270, 40);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 

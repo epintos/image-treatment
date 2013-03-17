@@ -18,7 +18,7 @@ public class MessageFrame extends JFrame {
 		setLayout(null);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		setLocation(450, 400);
+		setLocation(500, 400);
 		setSize(new Dimension(400,140));
 		
 		JLabel label = new JLabel(mensaje);
