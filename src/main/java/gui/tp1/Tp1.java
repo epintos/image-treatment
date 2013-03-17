@@ -11,6 +11,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
+import model.Image;
+
 public class Tp1 extends JMenu{
 
 	private static final long serialVersionUID = 1L;
@@ -71,6 +73,18 @@ public class Tp1 extends JMenu{
 			}
 		}); 
 	    
+	    
+	    JMenuItem equalize = new JMenuItem("Equalizar");
+	    equalize.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				Image panelImage = panel.getImage();
+				panelImage.equalize();
+				panel.repaint();
+			}
+		});
+	    
 	    this.add(addition);
 	    this.add(substraction);
 	    this.add(multiplication);
@@ -82,5 +96,7 @@ public class Tp1 extends JMenu{
 	    this.add(grayLevelsHistogram);
 	    this.add(new JSeparator());
 	    this.add(threshold);
+	    this.add(new JSeparator());
+	    this.add(equalize);
 	}
 }

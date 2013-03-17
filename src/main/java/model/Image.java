@@ -2,19 +2,30 @@ package model;
 
 public interface Image {
 
+	/**
+	 * Color channels
+	 */
 	public static enum ColorChannel {
 		RED, GREEN, BLUE
 	}
 
+	/**
+	 * Image color type
+	 */
 	public static enum ImageType {
 		RGB, GRAYSCALE
 	}
 
+	/**
+	 * Supported image format
+	 */
 	public static enum ImageFormat {
 		BMP, PGM, PPM, RAW
 	}
 
 	public static final int GRAY_LEVEL_AMOUNT = 256;
+
+	/******************** For TP 0 and others ********************/
 
 	/**
 	 * Sets pixel in the correspoding RGB color channel
@@ -26,17 +37,45 @@ public interface Image {
 	 */
 	public void setRGBPixel(int x, int y, int rgb);
 
+	/**
+	 * Returns the RGB of a pixel in x,y
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public int getRGBPixel(int x, int y);
 
+	/**
+	 * Returns the height of the image
+	 * 
+	 * @return
+	 */
 	public int getHeight();
 
+	/**
+	 * Returns the width of the image
+	 * 
+	 * @return
+	 */
 	public int getWidth();
 
+	/**
+	 * Returns the image color type
+	 * 
+	 * @return RGB or GRAYSCALE
+	 */
 	public ImageType getType();
 
+	/**
+	 * Returns the format of the image
+	 * 
+	 * @return BMP, PGM, PPM or RAW
+	 */
 	public ImageFormat getImageFormat();
 
-	// For TP 1
+	/******************** For TP 1 ********************/
+
 	/**
 	 * Adds to images of the same size
 	 * 
@@ -70,6 +109,9 @@ public interface Image {
 
 	public void dynamicRangeCompression();
 
+	/**
+	 * Applies the negative to hte image
+	 */
 	public void negative();
 
 	/**
@@ -85,5 +127,10 @@ public interface Image {
 	 * @param value
 	 */
 	public void threshold(double value);
+
+	/**
+	 * Equalizes the image
+	 */
+	public void equalize();
 
 }

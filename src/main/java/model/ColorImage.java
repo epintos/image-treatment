@@ -192,4 +192,10 @@ public class ColorImage implements Image, Cloneable {
 		this.green.threshold(value);
 	}
 	
+	public void equalize() {
+		this.red.equalize();
+		this.green.equalize();
+		this.blue.equalize();
+	}
+	
 }

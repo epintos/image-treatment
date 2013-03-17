@@ -84,13 +84,19 @@ public class Channel implements Cloneable {
 		return channel[y * this.getWidth() + x];
 	}
 
-	int truncatePixel(double notTruncatedValue) {
-		if (notTruncatedValue > Channel.MAX_CHANNEL_COLOR) {
+	/**
+	 * Truncates a pixel if it is out of vissibly color ranges
+	 * 
+	 * @param originalValue
+	 * @return
+	 */
+	int truncatePixel(double originalValue) {
+		if (originalValue > Channel.MAX_CHANNEL_COLOR) {
 			return Channel.MAX_CHANNEL_COLOR;
-		} else if (notTruncatedValue < Channel.MIN_CHANNEL_COLOR) {
+		} else if (originalValue < Channel.MIN_CHANNEL_COLOR) {
 			return Channel.MIN_CHANNEL_COLOR;
 		}
-		return (int) notTruncatedValue;
+		return (int) originalValue;
 	}
 
 	public void add(Channel otherChannel) {
@@ -148,17 +154,59 @@ public class Channel implements Cloneable {
 			}
 		}
 	}
-	
+
 	public void threshold(double value) {
 		double black = MIN_CHANNEL_COLOR;
 		double white = MAX_CHANNEL_COLOR;
-		
-		for( int x = 0 ; x < width ; x++ ) {
-			for( int y = 0 ; y < height ; y++) {
-				double colorToApply = this.getPixel(x, y) > value? white : black;
+
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double colorToApply = this.getPixel(x, y) > value ? white
+						: black;
 				this.setPixel(x, y, colorToApply);
 			}
 		}
+	}
+
+	/**
+	 * Ocurrences[j] = n_j
+	 * totalPixels = n
+	 * outGrayLevels[k] = s_k
+	 */
+	public void equalize() {
+		int[] ocurrences = this.getColorOccurrences();
+		int totalPixels = this.channel.length;
+		double[] outGrayLevels = new double[totalPixels];
+
+		for (int i = 0; i < outGrayLevels.length; i++) {
+			int grayLevel = truncatePixel((int) Math.floor(this.channel[i]));
+
+			double outGrayLevel = 0;
+			for (int k = 0; k < grayLevel; k++) {
+				outGrayLevel += ocurrences[k];
+			}
+
+			outGrayLevel *= (255.0 / outGrayLevels.length);
+			outGrayLevels[i] = outGrayLevel;
+		}
+
+		this.channel = outGrayLevels;
+	}
+
+	/**
+	 * Returns an array containing the amount of each gray level
+	 * 
+	 * @return
+	 */
+	private int[] getColorOccurrences() {
+		int[] dataset = new int[Image.GRAY_LEVEL_AMOUNT];
+
+		for (int i = 0; i < this.channel.length; i++) {
+			int grayLevel = truncatePixel((int) Math.floor(this.channel[i]));
+			dataset[grayLevel] += 1;
+		}
+
+		return dataset;
 	}
 
 }
