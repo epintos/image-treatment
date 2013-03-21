@@ -135,12 +135,13 @@ public class Channel implements Cloneable {
 		}
 	}
 
-	public void dynamicRangeCompression(double min, double max) {
-		double c = (MAX_CHANNEL_COLOR - 1) / Math.log(1 + max - min);
+	public void dynamicRangeCompression(double R) {
+		double L = MAX_CHANNEL_COLOR;
+		double c = (L - 1) / Math.log(1 + R);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				double color = (double) (c * Math.log(1 + this.getPixel(x, y)
-						- min));
+				double r = this.getPixel(x, y);
+				double color = (double) (c * Math.log(1 + r));
 				this.setPixel(x, y, color);
 			}
 		}
@@ -169,32 +170,39 @@ public class Channel implements Cloneable {
 	}
 
 	/**
-	 * Ocurrences[j] = n_j
-	 * totalPixels = n
-	 * outGrayLevels[k] = s_k
+	 * Ocurrences[j] = n_j totalPixels = n outGrayLevels[k] = s_k
 	 */
 	public void equalize() {
 		int[] ocurrences = this.getColorOccurrences();
 		int totalPixels = this.channel.length;
 		double[] outGrayLevels = new double[totalPixels];
+		double s_min = MAX_CHANNEL_COLOR;
+		double s_max = MIN_CHANNEL_COLOR;
 
 		for (int i = 0; i < outGrayLevels.length; i++) {
-			int grayLevel = truncatePixel((int) Math.floor(this.channel[i]));
+			int grayLevel = (int) Math.floor(this.channel[i]);
 
 			double outGrayLevel = 0;
 			for (int k = 0; k < grayLevel; k++) {
 				outGrayLevel += ocurrences[k];
 			}
 
-			outGrayLevel *= (255.0 / outGrayLevels.length);
-			outGrayLevels[i] = outGrayLevel;
+			outGrayLevels[i] = outGrayLevel / totalPixels;
+			s_min = Math.min(s_min, outGrayLevels[i]);
+			s_max = Math.max(s_max, outGrayLevels[i]);
+			
+		}
+		for (int i = 0; i < outGrayLevels.length; i++) {
+			double aux = 255*(outGrayLevels[i] - s_min) / (s_max - s_min);
+			outGrayLevels[i] = Math.ceil(aux);
 		}
 
 		this.channel = outGrayLevels;
 	}
 
 	/**
-	 * Returns an array containing the amount of each gray level
+	 * Returns an array containing the amount of each gray level. The array is
+	 * ordered
 	 * 
 	 * @return
 	 */
@@ -202,8 +210,8 @@ public class Channel implements Cloneable {
 		int[] dataset = new int[Image.GRAY_LEVEL_AMOUNT];
 
 		for (int i = 0; i < this.channel.length; i++) {
-			int grayLevel = truncatePixel((int) Math.floor(this.channel[i]));
-			dataset[grayLevel] += 1;
+			int grayLevel = (int) Math.floor(this.channel[i]);
+			dataset[grayLevel]++;
 		}
 
 		return dataset;

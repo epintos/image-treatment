@@ -142,60 +142,63 @@ public class ColorImage implements Image, Cloneable {
 	}
 
 	public void dynamicRangeCompression() {
-		double max = -Double.MAX_VALUE;
-		double min = Double.MAX_VALUE;
+		double maxRed = -Double.MAX_VALUE;
+		double maxGreen = -Double.MAX_VALUE;
+		double maxBlue = -Double.MAX_VALUE;
+		
+		//Calculates R
 		for (int i = 0; i < this.getWidth(); i++) {
 			for (int j = 0; j < this.getHeight(); j++) {
 				double redPixel = red.getPixel(i, j);
 				double greenPixel = green.getPixel(i, j);
 				double bluePixel = blue.getPixel(i, j);
 
-				min = Math.min(Math.min(min, redPixel),
-						Math.min(greenPixel, bluePixel));
-				max = Math.max(Math.max(max, redPixel),
-						Math.max(greenPixel, bluePixel));
+				maxRed = Math.max(maxRed, redPixel);
+				maxGreen = Math.max(maxGreen, greenPixel);
+				maxBlue = Math.max(maxBlue, bluePixel);
 			}
 		}
 
-		this.red.dynamicRangeCompression(min, max);
-		this.green.dynamicRangeCompression(min, max);
-		this.blue.dynamicRangeCompression(min, max);
+		this.red.dynamicRangeCompression(maxRed);
+		this.green.dynamicRangeCompression(maxGreen);
+		this.blue.dynamicRangeCompression(maxBlue);
 	}
 
 	public void negative() {
 		this.red.negative();
 		this.blue.negative();
-		this.green.negative();		
+		this.green.negative();
 	}
-	
+
 	public double[] getHistogramPixels() {
- 		double[] result = new double[this.getHeight()*this.getWidth()];
- 		
- 		for(int i = 0 ; i < result.length ; i++){
- 			result[i] = getGraylevelFromPixel((int)Math.floor(i/this.getWidth()), i % this.getWidth());
- 		}
- 		
+		double[] result = new double[this.getHeight() * this.getWidth()];
+
+		for (int i = 0; i < result.length; i++) {
+			result[i] = getGraylevelFromPixel(
+					(int) Math.floor(i / this.getWidth()), i % this.getHeight());
+		}
+
 		return result;
 	}
-	
+
 	private double getGraylevelFromPixel(int x, int y) {
 		double red = this.red.getPixel(x, y);
 		double green = this.green.getPixel(x, y);
 		double blue = this.blue.getPixel(x, y);
-		
-		return (red + green + blue)/3.0;
+
+		return (red + green + blue) / 3.0;
 	}
-	
+
 	public void threshold(double value) {
 		this.red.threshold(value);
 		this.blue.threshold(value);
 		this.green.threshold(value);
 	}
-	
+
 	public void equalize() {
 		this.red.equalize();
 		this.green.equalize();
 		this.blue.equalize();
 	}
-	
+
 }
