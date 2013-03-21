@@ -132,5 +132,14 @@ public interface Image {
 	 * Equalizes the image
 	 */
 	public void equalize();
+	
+	/**
+	 * Increase the contrast
+	 * @param r1
+	 * @param r2
+	 * @param y1
+	 * @param y2
+	 */
+	public void contrast(double r1, double r2, double y1, double y2);
 
 }

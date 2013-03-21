@@ -99,6 +99,18 @@ public class Tp1 extends JMenu {
 			}
 		});
 
+		JMenuItem contrast = new JMenuItem("Contraste");
+		contrast.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog contraste = new ContrastDialog(panel);
+					contraste.setVisible(true);
+				}
+			}
+		});
+
 		this.add(addition);
 		this.add(substraction);
 		this.add(multiplication);
@@ -108,6 +120,8 @@ public class Tp1 extends JMenu {
 		this.add(negative);
 		this.add(new JSeparator());
 		this.add(grayLevelsHistogram);
+		this.add(new JSeparator());
+		this.add(contrast);
 		this.add(new JSeparator());
 		this.add(threshold);
 		this.add(new JSeparator());

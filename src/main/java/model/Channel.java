@@ -217,4 +217,27 @@ public class Channel implements Cloneable {
 		return dataset;
 	}
 
+	public void contrast(double r1, double r2, double y1, double y2) {
+		for( int x = 0 ; x < width ; x++ ){
+			for( int y = 0 ; y < height ; y++){
+				double r = this.getPixel(x, y);
+				
+				double m = 0;
+				double b = 0;
+				if(r < r1) {
+					m = y1 / r1;
+					b = 0;
+				} else if(r > r2) {
+					m = (255 - y2) / (255 - r2);
+					b = y2 - m * r2;
+				} else {
+					m = (y2 - y1) / (r2 - r1);
+					b = y1 - m * r1;
+				}
+				double f = m * r + b;
+				
+				this.setPixel(x, y, f);
+			}
+		}
+	}
 }

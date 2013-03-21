@@ -200,5 +200,11 @@ public class ColorImage implements Image, Cloneable {
 		this.green.equalize();
 		this.blue.equalize();
 	}
+	
+	public void contrast(double r1, double r2, double y1, double y2) {
+		this.red.contrast(r1, r2, y1, y2);
+		this.blue.contrast(r1, r2, y1, y2);
+		this.green.contrast(r1, r2, y1, y2);
+	}
 
 }
