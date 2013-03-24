@@ -1,4 +1,5 @@
 package app;
+
 import java.awt.Color;
 
 import model.ColorImage;
@@ -13,10 +14,10 @@ public class ImageCreator {
 		Color blackColor = Color.BLACK;
 		Color whiteColor = Color.WHITE;
 
-		//Generates a black square with a smaller white square inside
+		// Generates a black square with a smaller white square inside
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				//Analyzes if the point is in the black or white square
+				// Analyzes if the point is in the black or white square
 				boolean fitsInSquareByWidth = (x > width / 4 && x < 3 * (width / 4));
 				boolean fitsInSquareByHeight = (y > height / 4 && y < 3 * (height / 4));
 				boolean fitsInSquare = (fitsInSquareByWidth && fitsInSquareByHeight);
@@ -26,6 +27,21 @@ public class ImageCreator {
 		}
 
 		return binaryImage;
+	}
+
+	public static Image createWhiteImage(int height, int width) {
+		Image whiteImage = new ColorImage(height, width,
+				Image.ImageFormat.BMP, Image.ImageType.GRAYSCALE);
+
+		Color whiteColor = Color.WHITE;
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				whiteImage.setRGBPixel(x, y, whiteColor.getRGB());
+			}
+		}
+
+		return whiteImage;
 	}
 
 	public static Image createDegrade(boolean isColor, int height, int width,

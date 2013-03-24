@@ -1,5 +1,11 @@
 package model;
 
+import java.awt.Point;
+import java.util.Iterator;
+import java.util.TreeSet;
+
+import model.mask.Mask;
+
 public class Channel implements Cloneable {
 
 	static final int MIN_CHANNEL_COLOR = 0;
@@ -239,5 +245,69 @@ public class Channel implements Cloneable {
 				this.setPixel(x, y, f);
 			}
 		}
+	}
+	
+	public void applyMask(Mask mask){
+		Channel newChannel = new Channel(this.width, this.height);
+		for( int x = 0 ; x < width ; x++ ){
+			for( int y = 0 ; y < height ; y++){
+				double newPixel = applyMask(x, y, mask);
+				newChannel.setPixel(x, y, newPixel);
+			}
+		}
+		this.channel = newChannel.channel;
+	}
+	
+	private double applyMask(int x, int y, Mask mask) {
+		boolean ignoreByX = x < mask.getWidth() / 2 || x > this.getWidth() - mask.getWidth() / 2;
+		boolean ignoreByY = y < mask.getHeight() / 2 || y > this.getHeight() - mask.getHeight() / 2;
+		if(ignoreByX || ignoreByY) {
+			return this.getPixel(x, y);
+		}
+		
+		double newColor = 0;
+		for(int i = - mask.getWidth() / 2 ; i <= mask.getWidth() / 2; i++) {
+			for(int j = - mask.getHeight() / 2; j <= mask.getHeight() / 2; j++) {
+				if(this.validPixel(x + i, y + j)) {
+					double oldColor = this.getPixel(x + i, y + j);
+					newColor += oldColor * mask.getValue(i, j);
+				}
+			}
+		}
+		return newColor;
+	}
+	
+	public void applyMedianMask(Point point) {
+		Channel newChannel = new Channel(this.width, this.height);
+		for( int x = 0 ; x < width ; x++ ){
+			for( int y = 0 ; y < height ; y++){
+				double newPixel = applyMedianPixelMask(x, y, point);
+				newChannel.setPixel(x, y, newPixel);
+			}
+		}
+		this.channel = newChannel.channel;
+	}
+	
+	private double applyMedianPixelMask(int x, int y, Point point) {
+		TreeSet<Double> pixelsAffected = new TreeSet<Double>(); 
+		for(int i = - point.x / 2 ; i <= point.x / 2; i++) {
+			for(int j = - point.y / 2; j <= point.y / 2; j++) {
+				if(this.validPixel(x + i, y + j)) {
+					double oldColor = this.getPixel(x + i, y + j); 
+					pixelsAffected.add(oldColor);
+				}
+			}
+		}
+		
+		double valueToReturn = 0;
+		int indexToReturn = pixelsAffected.size() / 2;
+		Iterator<Double> iterator = pixelsAffected.iterator();
+		for(int i = 0; iterator.hasNext(); i++) {
+			double each = iterator.next();
+			if(i == indexToReturn) {
+				valueToReturn = each;
+			}
+		}
+		return valueToReturn;
 	}
 }

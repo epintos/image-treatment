@@ -1,5 +1,9 @@
 package model;
 
+import java.awt.Point;
+
+import model.mask.Mask;
+
 public interface Image {
 
 	/**
@@ -132,14 +136,52 @@ public interface Image {
 	 * Equalizes the image
 	 */
 	public void equalize();
-	
+
 	/**
 	 * Increase the contrast
+	 * 
 	 * @param r1
 	 * @param r2
 	 * @param y1
 	 * @param y2
 	 */
 	public void contrast(double r1, double r2, double y1, double y2);
+
+	/**
+	 * Generates additive Gaussean noise
+	 * @param standardDeviation
+	 */
+	public void gausseanNoise(double mean, double standardDeviation);
+
+	/**
+	 * Generates multiplicative Rayleigh noise
+	 * @param mean
+	 */
+	public void rayleighNoise(double epsilon);
+
+	/**
+	 * Generates multiplicative Exponential noise
+	 * @param mean
+	 */
+	public void exponentialNoise(double mean);
+
+	/**
+	 * Generates Impulsive noise (Salt and Pepper)
+	 * @param po
+	 * @param p1
+	 */
+	public void saltAndPepperNoise(double po, double p1);
+	
+	/**
+	 * Applies a mask
+	 * @param mask
+	 */
+	public void applyMask(Mask mask);
+	
+	/**
+	 * Applies median mask
+	 * @param point
+	 */
+	public void applyMedianMask(Point point);
 
 }

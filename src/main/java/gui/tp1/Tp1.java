@@ -3,6 +3,13 @@ package gui.tp1;
 import gui.MessageFrame;
 import gui.Panel;
 import gui.Window;
+import gui.tp1.filters.EdgeEnhancementDialog;
+import gui.tp1.filters.MeanFilterDialog;
+import gui.tp1.filters.MedianFilterDialog;
+import gui.tp1.noises.ExponentialNoiseDialog;
+import gui.tp1.noises.GaussianNoiseDialog;
+import gui.tp1.noises.RayleighNoiseDialog;
+import gui.tp1.noises.SaltAndPepperNoiseDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +20,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
 import model.Image;
+import app.ImageCreator;
 
 public class Tp1 extends JMenu {
 
@@ -111,6 +119,102 @@ public class Tp1 extends JMenu {
 			}
 		});
 
+		JMenuItem sinteticWhiteImage = new JMenuItem("Imagen sintética 100x100");
+		sinteticWhiteImage.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				Image img = ImageCreator.createWhiteImage(100, 100);
+
+				panel.loadImage(img);
+				panel.repaint();
+			}
+		});
+
+		JMenuItem gaussianNoise = new JMenuItem("Ruido Gaussiano");
+		gaussianNoise.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog askPixel = new GaussianNoiseDialog(panel);
+					askPixel.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem raileyghNoise = new JMenuItem("Ruido Rayleigh");
+		raileyghNoise.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog askPixel = new RayleighNoiseDialog(panel);
+					askPixel.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem exponentialNoise = new JMenuItem("Ruido Exponencial");
+		exponentialNoise.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog askPixel = new ExponentialNoiseDialog(panel);
+					askPixel.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem saltAndPepperNoise = new JMenuItem("Ruido Salt and pepper");
+		saltAndPepperNoise.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog askPixel = new SaltAndPepperNoiseDialog(panel);
+					askPixel.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem meanFilter = new JMenuItem("Filtro de la media");
+		meanFilter.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog mediaDialog = new MeanFilterDialog(panel);
+					mediaDialog.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem medianFilter = new JMenuItem("Filtro de la mediana");
+		medianFilter.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog medianDialog = new MedianFilterDialog(panel);
+					medianDialog.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem edgeEnhancement = new JMenuItem("Realce de bordes");
+		edgeEnhancement.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog pasaAlto = new EdgeEnhancementDialog(panel);
+					pasaAlto.setVisible(true);
+				}
+			}
+		});
+
 		this.add(addition);
 		this.add(substraction);
 		this.add(multiplication);
@@ -126,6 +230,17 @@ public class Tp1 extends JMenu {
 		this.add(threshold);
 		this.add(new JSeparator());
 		this.add(equalize);
+		this.add(new JSeparator());
+		this.add(sinteticWhiteImage);
+		this.add(new JSeparator());
+		this.add(gaussianNoise);
+		this.add(raileyghNoise);
+		this.add(exponentialNoise);
+		this.add(saltAndPepperNoise);
+		this.add(new JSeparator());
+		this.add(meanFilter);
+		this.add(medianFilter);
+		this.add(edgeEnhancement);
 	}
 
 	private boolean imageLoaded(Panel panel) {

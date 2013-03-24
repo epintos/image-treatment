@@ -1,7 +1,10 @@
 package model;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
+
+import model.mask.Mask;
 
 import app.ColorUtilities;
 
@@ -40,6 +43,7 @@ public class ColorImage implements Image, Cloneable {
 		}
 	}
 
+	@Override
 	public void setRGBPixel(int x, int y, int rgb) {
 		this.setPixel(x, y, ColorChannel.RED, ColorUtilities.getRedFromRGB(rgb));
 		this.setPixel(x, y, ColorChannel.GREEN,
@@ -48,6 +52,7 @@ public class ColorImage implements Image, Cloneable {
 				ColorUtilities.getBlueFromRGB(rgb));
 	}
 
+	@Override
 	public void setPixel(int x, int y, ColorChannel channel, double color) {
 
 		if (!red.validPixel(x, y)) {
@@ -69,6 +74,7 @@ public class ColorImage implements Image, Cloneable {
 		throw new IllegalStateException();
 	}
 
+	@Override
 	public int getRGBPixel(int x, int y) {
 		int red = this.red.truncatePixel(getPixelFromChannel(x, y,
 				ColorChannel.RED));
@@ -92,22 +98,27 @@ public class ColorImage implements Image, Cloneable {
 		throw new IllegalStateException();
 	}
 
+	@Override
 	public int getHeight() {
 		return red.getHeight();
 	}
 
+	@Override
 	public int getWidth() {
 		return red.getWidth();
 	}
 
+	@Override
 	public ImageType getType() {
 		return type;
 	}
 
+	@Override
 	public ImageFormat getImageFormat() {
 		return format;
 	}
 
+	@Override
 	public Image add(Image img) {
 		ColorImage ci = (ColorImage) img;
 
@@ -117,6 +128,7 @@ public class ColorImage implements Image, Cloneable {
 		return this;
 	}
 
+	@Override
 	public Image multiply(Image img) {
 		ColorImage ci = (ColorImage) img;
 
@@ -126,6 +138,7 @@ public class ColorImage implements Image, Cloneable {
 		return this;
 	}
 
+	@Override
 	public Image substract(Image img) {
 		ColorImage ci = (ColorImage) img;
 
@@ -135,18 +148,20 @@ public class ColorImage implements Image, Cloneable {
 		return this;
 	}
 
+	@Override
 	public void multiply(double scalar) {
 		this.red.multiply(scalar);
 		this.green.multiply(scalar);
 		this.blue.multiply(scalar);
 	}
 
+	@Override
 	public void dynamicRangeCompression() {
 		double maxRed = -Double.MAX_VALUE;
 		double maxGreen = -Double.MAX_VALUE;
 		double maxBlue = -Double.MAX_VALUE;
-		
-		//Calculates R
+
+		// Calculates R
 		for (int i = 0; i < this.getWidth(); i++) {
 			for (int j = 0; j < this.getHeight(); j++) {
 				double redPixel = red.getPixel(i, j);
@@ -164,12 +179,14 @@ public class ColorImage implements Image, Cloneable {
 		this.blue.dynamicRangeCompression(maxBlue);
 	}
 
+	@Override
 	public void negative() {
 		this.red.negative();
 		this.blue.negative();
 		this.green.negative();
 	}
 
+	@Override
 	public double[] getHistogramPixels() {
 		double[] result = new double[this.getHeight() * this.getWidth()];
 
@@ -189,22 +206,102 @@ public class ColorImage implements Image, Cloneable {
 		return (red + green + blue) / 3.0;
 	}
 
+	@Override
 	public void threshold(double value) {
 		this.red.threshold(value);
 		this.blue.threshold(value);
 		this.green.threshold(value);
 	}
 
+	@Override
 	public void equalize() {
 		this.red.equalize();
 		this.green.equalize();
 		this.blue.equalize();
 	}
-	
+
+	@Override
 	public void contrast(double r1, double r2, double y1, double y2) {
 		this.red.contrast(r1, r2, y1, y2);
 		this.blue.contrast(r1, r2, y1, y2);
 		this.green.contrast(r1, r2, y1, y2);
+	}
+
+	@Override
+	public void gausseanNoise(double mean, double standardDeviation) {
+		Channel noisyChannel = new Channel(this.getWidth(), this.getHeight());
+		for (int x = 0; x < noisyChannel.getWidth(); x++) {
+			for (int y = 0; y < noisyChannel.getHeight(); y++) {
+				double noiseLevel = RandomGenerator.gaussian(mean,
+						Channel.MAX_CHANNEL_COLOR * standardDeviation);
+				noisyChannel.setPixel(x, y, noiseLevel);
+			}
+		}
+		this.red.add(noisyChannel);
+		this.green.add(noisyChannel);
+		this.blue.add(noisyChannel);
+	}
+
+	@Override
+	public void rayleighNoise(double epsilon) {
+		Channel noisyChannel = new Channel(this.getWidth(), this.getHeight());
+		for (int x = 0; x < noisyChannel.getWidth(); x++) {
+			for (int y = 0; y < noisyChannel.getHeight(); y++) {
+				double noiseLevel = RandomGenerator.rayleigh(epsilon);
+				noisyChannel.setPixel(x, y, noiseLevel);
+			}
+		}
+		this.red.multiply(noisyChannel);
+		this.green.multiply(noisyChannel);
+		this.blue.multiply(noisyChannel);
+	}
+
+	@Override
+	public void exponentialNoise(double mean) {
+		Channel noisyChannel = new Channel(this.getWidth(), this.getHeight());
+		for (int x = 0; x < noisyChannel.getWidth(); x++) {
+			for (int y = 0; y < noisyChannel.getHeight(); y++) {
+				double noiseLevel = RandomGenerator.exponential(mean);
+				noisyChannel.setPixel(x, y, noiseLevel);
+			}
+		}
+		this.red.multiply(noisyChannel);
+		this.green.multiply(noisyChannel);
+		this.blue.multiply(noisyChannel);
+	}
+
+	@Override
+	public void saltAndPepperNoise(double po, double p1) {
+		for (int x = 0; x < this.getWidth(); x++) {
+			for (int y = 0; y < this.getHeight(); y++) {
+				double random = RandomGenerator.uniform(0, 1);
+				if (random <= po) {
+					double noiseLevel = Channel.MIN_CHANNEL_COLOR;
+					this.red.setPixel(x, y, noiseLevel);
+					this.green.setPixel(x, y, noiseLevel);
+					this.blue.setPixel(x, y, noiseLevel);
+				} else if (random >= p1) {
+					double noiseLevel = Channel.MAX_CHANNEL_COLOR;
+					this.red.setPixel(x, y, noiseLevel);
+					this.green.setPixel(x, y, noiseLevel);
+					this.blue.setPixel(x, y, noiseLevel);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void applyMask(Mask mask) {
+		this.red.applyMask(mask);
+		this.green.applyMask(mask);
+		this.blue.applyMask(mask);
+	}
+
+	@Override
+	public void applyMedianMask(Point point) {
+		this.red.applyMedianMask(point);
+		this.green.applyMedianMask(point);
+		this.blue.applyMedianMask(point);
 	}
 
 }
