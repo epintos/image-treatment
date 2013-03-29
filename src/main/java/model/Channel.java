@@ -120,6 +120,7 @@ public class Channel implements Cloneable {
 			for (int y = 0; y < height; y++) {
 				double color = this.getPixel(x, y)
 						- otherChannel.getPixel(x, y);
+				color = Math.abs(color);
 				this.setPixel(x, y, color);
 			}
 		}
