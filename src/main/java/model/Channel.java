@@ -260,19 +260,26 @@ public class Channel implements Cloneable {
 	}
 	
 	private double applyMask(int x, int y, Mask mask) {
-		boolean ignoreByX = x < mask.getWidth() / 2 || x > this.getWidth() - mask.getWidth() / 2;
-		boolean ignoreByY = y < mask.getHeight() / 2 || y > this.getHeight() - mask.getHeight() / 2;
-		if(ignoreByX || ignoreByY) {
-			return this.getPixel(x, y);
-		}
+//		boolean ignoreByX = x < mask.getWidth() / 2 || x > this.getWidth() - mask.getWidth() / 2;
+//		boolean ignoreByY = y < mask.getHeight() / 2 || y > this.getHeight() - mask.getHeight() / 2;
+//		if(ignoreByX || ignoreByY) {
+//			return this.getPixel(x, y);
+//		}
 		
 		double newColor = 0;
+		double previousColor = 255;
 		for(int i = - mask.getWidth() / 2 ; i <= mask.getWidth() / 2; i++) {
 			for(int j = - mask.getHeight() / 2; j <= mask.getHeight() / 2; j++) {
-				if(this.validPixel(x + i, y + j)) {
-					double oldColor = this.getPixel(x + i, y + j);
+//				if(this.validPixel(x + i, y + j)) {
+				double oldColor = previousColor;
+				try {
+					oldColor = this.getPixel(x + i, y + j);
+					previousColor = oldColor;
+					newColor += oldColor * mask.getValue(i, j);
+				} catch (IndexOutOfBoundsException e) {
 					newColor += oldColor * mask.getValue(i, j);
 				}
+//				}
 			}
 		}
 		return newColor;
