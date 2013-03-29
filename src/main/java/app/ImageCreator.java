@@ -54,7 +54,7 @@ public class ImageCreator {
 					Image.ImageType.RGB);
 		} else {
 			degrade = new ColorImage(height, width, Image.ImageFormat.BMP,
-					Image.ImageType.RGB);
+					Image.ImageType.GRAYSCALE);
 		}
 
 		Color c1 = new Color(color1);
