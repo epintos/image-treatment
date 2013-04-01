@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import model.mask.Mask;
-
 import app.ColorUtilities;
 
 public class ColorImage implements Image, Cloneable {
@@ -302,6 +301,16 @@ public class ColorImage implements Image, Cloneable {
 		this.red.applyMedianMask(point);
 		this.green.applyMedianMask(point);
 		this.blue.applyMedianMask(point);
+	}
+	
+	@Override
+	public Image clone() {
+		
+		BufferedImage bi = new BufferedImage(this.getWidth(), this.getHeight(), 
+				ColorUtilities.toBufferedImageType(this.getType()));
+		ColorUtilities.populateEmptyBufferedImage(bi, this);
+		
+		return new ColorImage(bi, format, type);
 	}
 
 }

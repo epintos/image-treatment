@@ -68,7 +68,7 @@ public class MeanFilterDialog extends JDialog {
 					return;
 				}
 
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 				panelImage.applyMask(MaskFactory.buildMeanMask(x, y));
 				panel.repaint();
 				dispose();

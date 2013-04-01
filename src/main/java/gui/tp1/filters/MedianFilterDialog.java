@@ -58,7 +58,7 @@ public class MedianFilterDialog extends JDialog {
 					return;
 				}
 
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 				panelImage.applyMedianMask(new Point(x, y));
 				panel.repaint();
 				dispose();

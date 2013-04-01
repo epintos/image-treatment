@@ -58,7 +58,7 @@ public class EdgeEnhancementDialog extends JDialog {
 					return;
 				}
 
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 				panelImage.applyMask(MaskFactory.buildEdgeEnhancementMask(x, y));
 				panel.repaint();
 				dispose();

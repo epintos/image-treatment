@@ -31,7 +31,7 @@ public class HistogramDialog extends JDialog {
 		this.setResizable(false);
 		setLayout(null);
 		
-		final BufferedImage histogram = ColorUtilities.generateHistogram(panel.getImage());
+		final BufferedImage histogram = ColorUtilities.generateHistogram(panel.getWorkingImage());
 		
 		JPanel p1 = new JPanel();
 

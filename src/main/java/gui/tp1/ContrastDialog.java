@@ -84,7 +84,7 @@ public class ContrastDialog extends JDialog {
 					return;
 				}
 
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 				panelImage.contrast(r1, r2, y1, y2);
 				panel.repaint();
 				dispose();

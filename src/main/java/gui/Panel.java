@@ -10,6 +10,7 @@ import model.Image;
 public class Panel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	private Image workingImage = null;
 	private Image image = null;
 
 	/**
@@ -18,14 +19,14 @@ public class Panel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		if (image != null) {
-			for (int i = 0; i < image.getWidth(); i++)
-				for (int j = 0; j < image.getHeight(); j++) {
-					g.setColor(new Color(image.getRGBPixel(i, j)));
+		if (workingImage != null) {
+			for (int i = 0; i < workingImage.getWidth(); i++)
+				for (int j = 0; j < workingImage.getHeight(); j++) {
+					g.setColor(new Color(workingImage.getRGBPixel(i, j)));
 					g.drawRect(i, j, 1, 1);
 				}
-			this.getTopLevelAncestor().setSize(image.getWidth() + 7,
-					image.getHeight() + 53);
+			this.getTopLevelAncestor().setSize(workingImage.getWidth() + 7,
+					workingImage.getHeight() + 53);
 		}
 	}
 
@@ -35,6 +36,7 @@ public class Panel extends JPanel {
 	 * @param image
 	 */
 	public void loadImage(Image image) {
+		this.workingImage = image;
 		this.image = image;
 		((Window) getTopLevelAncestor()).enableTools();
 	}
@@ -61,13 +63,26 @@ public class Panel extends JPanel {
 	}
 
 	private void setAllPixels(int x, int y, double color) {
-		this.image.setPixel(x, y, Image.ColorChannel.RED, color);
-		this.image.setPixel(x, y, Image.ColorChannel.GREEN, color);
-		this.image.setPixel(x, y, Image.ColorChannel.BLUE, color);
+		this.workingImage.setPixel(x, y, Image.ColorChannel.RED, color);
+		this.workingImage.setPixel(x, y, Image.ColorChannel.GREEN, color);
+		this.workingImage.setPixel(x, y, Image.ColorChannel.BLUE, color);
 	}
 
+	public Image getWorkingImage() {
+		return workingImage;
+	}
+	
 	public Image getImage() {
 		return image;
+	}
+	
+	public void setImage(Image image) {
+		this.workingImage = image;
+		this.image = image;
+	}
+	
+	public void setWorkingImage(Image workingImage) {
+		this.workingImage = workingImage;
 	}
 
 }

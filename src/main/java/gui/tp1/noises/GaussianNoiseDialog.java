@@ -58,7 +58,7 @@ public class GaussianNoiseDialog extends JDialog {
 					return;
 				}
 				
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 	    		panelImage.gausseanNoise(mean,standardDeviation);
 	    		panel.repaint();
 	    		dispose();

@@ -104,7 +104,7 @@ public class Tp0 extends JMenu {
 
 				if (arch != null) {
 					Image image = (((Window) getTopLevelAncestor()).getPanel()
-							.getImage());
+							.getWorkingImage());
 					try {
 						ImageSaver.saveImage(arch, image);
 					} catch (ImageWriteException ex) {

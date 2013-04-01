@@ -50,7 +50,7 @@ public class ExponentialNoiseDialog extends JDialog {
 					new MessageFrame("Los valores ingresados son incorrectos");
 					return;
 				}
-				Image panelImage = panel.getImage(); 
+				Image panelImage = panel.getWorkingImage(); 
 	    		panelImage.exponentialNoise(mean);
 	    		panel.repaint();
 	    		dispose();

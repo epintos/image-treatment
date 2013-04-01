@@ -183,5 +183,7 @@ public interface Image {
 	 * @param point
 	 */
 	public void applyMedianMask(Point point);
+	
+	public Image clone();
 
 }

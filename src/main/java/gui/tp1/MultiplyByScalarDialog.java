@@ -51,7 +51,7 @@ public class MultiplyByScalarDialog extends JDialog {
 					new MessageFrame("Los datos ingresados son invalidos");
 					return;
 				}
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 
 				panelImage.multiply(scalar);
 				panel.repaint();

@@ -54,7 +54,7 @@ public class Tp1 extends JMenu {
 			public void actionPerformed(ActionEvent arg0) {
 				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
 				if (imageLoaded(panel)) {
-					panel.getImage().dynamicRangeCompression();
+					panel.getWorkingImage().dynamicRangeCompression();
 					panel.repaint();
 				}
 			}
@@ -65,7 +65,7 @@ public class Tp1 extends JMenu {
 			public void actionPerformed(ActionEvent e) {
 				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
 				if (imageLoaded(panel)) {
-					panel.getImage().negative();
+					panel.getWorkingImage().negative();
 					panel.repaint();
 				}
 			}
@@ -100,7 +100,7 @@ public class Tp1 extends JMenu {
 			public void actionPerformed(ActionEvent arg0) {
 				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
 				if (imageLoaded(panel)) {
-					Image panelImage = panel.getImage();
+					Image panelImage = panel.getWorkingImage();
 					panelImage.equalize();
 					panel.repaint();
 				}
@@ -244,7 +244,7 @@ public class Tp1 extends JMenu {
 	}
 
 	private boolean imageLoaded(Panel panel) {
-		Image panelImage = panel.getImage();
+		Image panelImage = panel.getWorkingImage();
 		if (panelImage == null) {
 			new MessageFrame("Debe cargarse una imagen antes");
 			return false;

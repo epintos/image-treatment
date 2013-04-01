@@ -62,7 +62,7 @@ public class SaltAndPepperNoiseDialog extends JDialog {
 					new MessageFrame("Los valores ingresados son incorrectos");
 					return;
 				}
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 				panelImage.saltAndPepperNoise(min, max);
 				panel.repaint();
 				dispose();

@@ -30,7 +30,7 @@ public abstract class ImageOperations extends JMenuItem {
 
 				JFileChooser chooser = new JFileChooser();
 				Panel panel = (((Window) t.getTopLevelAncestor()).getPanel());
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 				if (panelImage == null) {
 					new MessageFrame("Debe cargarse una imagen antes");
 					return;
