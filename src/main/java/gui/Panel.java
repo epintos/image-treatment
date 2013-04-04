@@ -1,17 +1,18 @@
 package gui;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
-import javax.swing.JPanel;
-
 import model.Image;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class Panel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private Image workingImage = null;
 	private Image image = null;
+    private Image lastImg = null;
 
 	/**
 	 * Paints an image in the panel
@@ -36,8 +37,8 @@ public class Panel extends JPanel {
 	 * @param image
 	 */
 	public void loadImage(Image image) {
-		this.workingImage = image;
-		this.image = image;
+		this.workingImage = image.clone();
+		this.image = image.clone();
 		((Window) getTopLevelAncestor()).enableTools();
 	}
 
@@ -77,12 +78,40 @@ public class Panel extends JPanel {
 	}
 	
 	public void setImage(Image image) {
-		this.workingImage = image;
-		this.image = image;
+		this.workingImage = image.clone();
+		this.image = image.clone();
 	}
 	
 	public void setWorkingImage(Image workingImage) {
-		this.workingImage = workingImage;
+		this.workingImage = workingImage.clone();
 	}
 
+    public void initKeyBindings() {
+        String UNDO = "Undo action key";
+        String REDO = "Redo action key";
+        Action undoAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                setWorkingImage(getImage());
+                repaint();
+            }
+        };
+        Action redoAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        };
+
+        getActionMap().put(UNDO, undoAction);
+        getActionMap().put(REDO, redoAction);
+
+        InputMap[] inputMaps = new InputMap[] {
+                getInputMap(JComponent.WHEN_FOCUSED),
+                getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT),
+                getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW),
+        };
+        for(InputMap i : inputMaps) {
+            i.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), UNDO);
+            i.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), REDO);
+        }
+    }
 }

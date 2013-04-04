@@ -1,5 +1,6 @@
 package gui.tp1;
 
+import app.ImageCreator;
 import gui.MessageFrame;
 import gui.Panel;
 import gui.Window;
@@ -10,17 +11,11 @@ import gui.tp1.noises.ExponentialNoiseDialog;
 import gui.tp1.noises.GaussianNoiseDialog;
 import gui.tp1.noises.RayleighNoiseDialog;
 import gui.tp1.noises.SaltAndPepperNoiseDialog;
+import model.Image;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JDialog;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
-
-import model.Image;
-import app.ImageCreator;
 
 public class Tp1 extends JMenu {
 

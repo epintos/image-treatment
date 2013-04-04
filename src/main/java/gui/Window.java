@@ -2,11 +2,8 @@ package gui;
 
 import gui.tp0.Tp0;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
 
 public class Window extends JFrame {
 
@@ -27,8 +24,13 @@ public class Window extends JFrame {
 		this.setMinimumSize(new Dimension(600, 600));
 		panel.setBackground(Color.BLACK);
 		setJMenuBar(menuBar);
+        panel.initKeyBindings();
 		add(panel);
+
+
 	}
+
+
 
 	public Panel getPanel() {
 		return panel;
