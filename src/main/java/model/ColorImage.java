@@ -1,11 +1,10 @@
 package model;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-
-import model.mask.Mask;
 import app.ColorUtilities;
+import model.mask.Mask;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class ColorImage implements Image, Cloneable {
 
@@ -231,8 +230,7 @@ public class ColorImage implements Image, Cloneable {
 		Channel noisyChannel = new Channel(this.getWidth(), this.getHeight());
 		for (int x = 0; x < noisyChannel.getWidth(); x++) {
 			for (int y = 0; y < noisyChannel.getHeight(); y++) {
-				double noiseLevel = RandomGenerator.gaussian(mean,
-						Channel.MAX_CHANNEL_COLOR * standardDeviation);
+				double noiseLevel = RandomGenerator.gaussian(mean, standardDeviation);
 				noisyChannel.setPixel(x, y, noiseLevel);
 			}
 		}
