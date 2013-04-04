@@ -91,7 +91,6 @@ public class Panel extends JPanel {
         String REDO = "Redo action key";
         Action undoAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Undo attempt " + getWorkingImage().toString() + " " + getImage().toString());
                 setWorkingImage(getImage());
                 repaint();
             }

@@ -1,25 +1,16 @@
 package gui.tp1;
 
-import gui.MessageFrame;
 import gui.Panel;
+import model.Image;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import model.Image;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ThresholdDialog extends JDialog implements ChangeListener {
 
@@ -40,48 +31,9 @@ public class ThresholdDialog extends JDialog implements ChangeListener {
 		JPanel pan1 = new JPanel();
 		pan1.setBounds(0, 0, 250, 50);
 		
-		this.addWindowListener(new WindowListener() {
-			
-			@Override
-			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
+		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				panel.setWorkingImage(panel.getImage());
 				panel.repaint();
-			}
-			
-			@Override
-			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		
@@ -99,7 +51,7 @@ public class ThresholdDialog extends JDialog implements ChangeListener {
 		okButton.setBounds(0, 50, 250, 40);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel.setImage(panel.getWorkingImage());
+                panel.repaint();
 				dispose();
 			}
 		});
