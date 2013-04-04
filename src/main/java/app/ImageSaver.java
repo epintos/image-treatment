@@ -1,15 +1,16 @@
 package app;
 
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
+import ij.ImagePlus;
+import ij.io.FileSaver;
 import model.Image;
-
 import org.apache.sanselan.ImageFormat;
 import org.apache.sanselan.ImageWriteException;
 import org.apache.sanselan.Sanselan;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class ImageSaver {
 	
@@ -18,21 +19,20 @@ public class ImageSaver {
 		String[] cadena = (arch.getName()).split("\\.");
 		String extension = cadena[cadena.length-1];
 
-		BufferedImage bi = null;
-		ImageFormat format = null;
-		
-		if(!extension.equals("raw")){
-			bi = new BufferedImage(image.getWidth(), image.getHeight(), 
-					ColorUtilities.toBufferedImageType(image.getType()));
+        BufferedImage bi;
+        ImageFormat format;
+
+        bi = new BufferedImage(image.getWidth(), image.getHeight(), ColorUtilities.toBufferedImageType(image.getType()));
+        ColorUtilities.populateEmptyBufferedImage(bi, image);
+        if(!extension.equals("raw")){
 			format = ColorUtilities.toSanselanImageFormat(image.getImageFormat());
-		} else {
-			throw new UnsupportedOperationException("Still not supporting saving raw");
+            Sanselan.writeImage(bi, arch, format, null);
+        } else {
+            new FileSaver(new ImagePlus("", bi)).saveAsRaw(arch.getAbsoluteFile().toString());
+//			throw new UnsupportedOperationException("Still not supporting saving raw");
 		}
-		
-		ColorUtilities.populateEmptyBufferedImage(bi, image);
-		
-		Sanselan.writeImage(bi, arch, format, null);
-		
+
+
 	}
 
 }
