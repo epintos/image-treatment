@@ -1,6 +1,7 @@
 package model;
 
 import app.ColorUtilities;
+import model.borderDetector.BorderDetector;
 import model.mask.Mask;
 
 import java.awt.*;
@@ -230,7 +231,8 @@ public class ColorImage implements Image, Cloneable {
 		Channel noisyChannel = new Channel(this.getWidth(), this.getHeight());
 		for (int x = 0; x < noisyChannel.getWidth(); x++) {
 			for (int y = 0; y < noisyChannel.getHeight(); y++) {
-				double noiseLevel = RandomGenerator.gaussian(mean, standardDeviation);
+				double noiseLevel = RandomGenerator.gaussian(mean,
+						standardDeviation);
 				noisyChannel.setPixel(x, y, noiseLevel);
 			}
 		}
@@ -300,15 +302,21 @@ public class ColorImage implements Image, Cloneable {
 		this.green.applyMedianMask(point);
 		this.blue.applyMedianMask(point);
 	}
-	
+
 	@Override
 	public Image clone() {
-		
-		BufferedImage bi = new BufferedImage(this.getWidth(), this.getHeight(), 
+		BufferedImage bi = new BufferedImage(this.getWidth(), this.getHeight(),
 				ColorUtilities.toBufferedImageType(this.getType()));
 		ColorUtilities.populateEmptyBufferedImage(bi, this);
-		
+
 		return new ColorImage(bi, format, type);
+	}
+
+	@Override
+	public void applyAnisotropicDiffusion(int iterations, BorderDetector bd) {
+		this.red.applyAnisotropicDiffusion(iterations, bd);
+		this.green.applyAnisotropicDiffusion(iterations, bd);
+		this.red.applyAnisotropicDiffusion(iterations, bd);
 	}
 
 }

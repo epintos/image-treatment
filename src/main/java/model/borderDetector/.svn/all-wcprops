@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/ati-gks/!svn/ver/24/ATI/src/model/borderDetector
+END
+LeclercBorderDetector.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/ati-gks/!svn/ver/24/ATI/src/model/borderDetector/LeclercBorderDetector.java
+END
+LorentzBorderDetector.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/ati-gks/!svn/ver/24/ATI/src/model/borderDetector/LorentzBorderDetector.java
+END
+BorderDetector.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/ati-gks/!svn/ver/24/ATI/src/model/borderDetector/BorderDetector.java
+END

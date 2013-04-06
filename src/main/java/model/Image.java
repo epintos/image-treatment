@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Point;
 
+import model.borderDetector.BorderDetector;
 import model.mask.Mask;
 
 public interface Image {
@@ -185,5 +186,10 @@ public interface Image {
 	public void applyMedianMask(Point point);
 	
 	public Image clone();
+	
+	/******************** For TP 2 ********************/
+	
+	public void applyAnisotropicDiffusion(int iterations, BorderDetector bd);
+	
 
 }

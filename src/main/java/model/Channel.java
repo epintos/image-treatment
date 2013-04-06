@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import model.borderDetector.BorderDetector;
 import model.mask.Mask;
 
 public class Channel implements Cloneable {
@@ -197,10 +198,10 @@ public class Channel implements Cloneable {
 			outGrayLevels[i] = outGrayLevel / totalPixels;
 			s_min = Math.min(s_min, outGrayLevels[i]);
 			s_max = Math.max(s_max, outGrayLevels[i]);
-			
+
 		}
 		for (int i = 0; i < outGrayLevels.length; i++) {
-			double aux = 255*(outGrayLevels[i] - s_min) / (s_max - s_min);
+			double aux = 255 * (outGrayLevels[i] - s_min) / (s_max - s_min);
 			outGrayLevels[i] = Math.ceil(aux);
 		}
 
@@ -225,16 +226,16 @@ public class Channel implements Cloneable {
 	}
 
 	public void contrast(double r1, double r2, double y1, double y2) {
-		for( int x = 0 ; x < width ; x++ ){
-			for( int y = 0 ; y < height ; y++){
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				double r = this.getPixel(x, y);
-				
+
 				double m = 0;
 				double b = 0;
-				if(r < r1) {
+				if (r < r1) {
 					m = y1 / r1;
 					b = 0;
-				} else if(r > r2) {
+				} else if (r > r2) {
 					m = (255 - y2) / (255 - r2);
 					b = y2 - m * r2;
 				} else {
@@ -242,35 +243,37 @@ public class Channel implements Cloneable {
 					b = y1 - m * r1;
 				}
 				double f = m * r + b;
-				
+
 				this.setPixel(x, y, f);
 			}
 		}
 	}
-	
-	public void applyMask(Mask mask){
+
+	public void applyMask(Mask mask) {
 		Channel newChannel = new Channel(this.width, this.height);
-		for( int x = 0 ; x < width ; x++ ){
-			for( int y = 0 ; y < height ; y++){
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				double newPixel = applyMask(x, y, mask);
 				newChannel.setPixel(x, y, newPixel);
 			}
 		}
 		this.channel = newChannel.channel;
 	}
-	
+
 	private double applyMask(int x, int y, Mask mask) {
-//		boolean ignoreByX = x < mask.getWidth() / 2 || x > this.getWidth() - mask.getWidth() / 2;
-//		boolean ignoreByY = y < mask.getHeight() / 2 || y > this.getHeight() - mask.getHeight() / 2;
-//		if(ignoreByX || ignoreByY) {
-//			return this.getPixel(x, y);
-//		}
-		
+		// boolean ignoreByX = x < mask.getWidth() / 2 || x > this.getWidth() -
+		// mask.getWidth() / 2;
+		// boolean ignoreByY = y < mask.getHeight() / 2 || y > this.getHeight()
+		// - mask.getHeight() / 2;
+		// if(ignoreByX || ignoreByY) {
+		// return this.getPixel(x, y);
+		// }
+
 		double newColor = 0;
 		double previousColor = 255;
-		for(int i = - mask.getWidth() / 2 ; i <= mask.getWidth() / 2; i++) {
-			for(int j = - mask.getHeight() / 2; j <= mask.getHeight() / 2; j++) {
-//				if(this.validPixel(x + i, y + j)) {
+		for (int i = -mask.getWidth() / 2; i <= mask.getWidth() / 2; i++) {
+			for (int j = -mask.getHeight() / 2; j <= mask.getHeight() / 2; j++) {
+				// if(this.validPixel(x + i, y + j)) {
 				double oldColor = previousColor;
 				try {
 					oldColor = this.getPixel(x + i, y + j);
@@ -279,43 +282,108 @@ public class Channel implements Cloneable {
 				} catch (IndexOutOfBoundsException e) {
 					newColor += oldColor * mask.getValue(i, j);
 				}
-//				}
+				// }
 			}
 		}
 		return newColor;
 	}
-	
+
 	public void applyMedianMask(Point point) {
 		Channel newChannel = new Channel(this.width, this.height);
-		for( int x = 0 ; x < width ; x++ ){
-			for( int y = 0 ; y < height ; y++){
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				double newPixel = applyMedianPixelMask(x, y, point);
 				newChannel.setPixel(x, y, newPixel);
 			}
 		}
 		this.channel = newChannel.channel;
 	}
-	
+
 	private double applyMedianPixelMask(int x, int y, Point point) {
-		TreeSet<Double> pixelsAffected = new TreeSet<Double>(); 
-		for(int i = - point.x / 2 ; i <= point.x / 2; i++) {
-			for(int j = - point.y / 2; j <= point.y / 2; j++) {
-				if(this.validPixel(x + i, y + j)) {
-					double oldColor = this.getPixel(x + i, y + j); 
+		TreeSet<Double> pixelsAffected = new TreeSet<Double>();
+		for (int i = -point.x / 2; i <= point.x / 2; i++) {
+			for (int j = -point.y / 2; j <= point.y / 2; j++) {
+				if (this.validPixel(x + i, y + j)) {
+					double oldColor = this.getPixel(x + i, y + j);
 					pixelsAffected.add(oldColor);
 				}
 			}
 		}
-		
+
 		double valueToReturn = 0;
 		int indexToReturn = pixelsAffected.size() / 2;
 		Iterator<Double> iterator = pixelsAffected.iterator();
-		for(int i = 0; iterator.hasNext(); i++) {
+		for (int i = 0; iterator.hasNext(); i++) {
 			double each = iterator.next();
-			if(i == indexToReturn) {
+			if (i == indexToReturn) {
 				valueToReturn = each;
 			}
 		}
 		return valueToReturn;
+	}
+
+	public void applyAnisotropicDiffusion(int iterations, BorderDetector bd) {
+		Channel auxiliarChannel = clone();
+
+		for (int n = 0; n < iterations; n++) {
+			auxiliarChannel = applyAnisotropicDiffusion(auxiliarChannel, bd);
+		}
+		this.channel = auxiliarChannel.channel;
+	}
+
+	private Channel applyAnisotropicDiffusion(Channel oldChannel,
+			BorderDetector bd) {
+		Channel modifiedChannel = new Channel(width, height);
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				double oldValueIJ = oldChannel.getPixel(i, j);
+
+				double DnIij = 0;
+				double DsIij = 0;
+				double DeIij = 0;
+				double DoIij = 0;
+
+				if (i > 0) {
+					DnIij = oldChannel.getPixel(i - 1, j) - oldValueIJ;
+				}
+				if (i < width - 1) {
+					DsIij = oldChannel.getPixel(i + 1, j) - oldValueIJ;
+				}
+				if (j < height - 1) {
+					DeIij = oldChannel.getPixel(i, j + 1) - oldValueIJ;
+				}
+				if (j > 0) {
+					DoIij = oldChannel.getPixel(i, j - 1) - oldValueIJ;
+				}
+
+				double Cnij = bd.g(DnIij);
+				double Csij = bd.g(DsIij);
+				double Ceij = bd.g(DeIij);
+				double Coij = bd.g(DoIij);
+
+				double DnIijCnij = DnIij * Cnij;
+				double DsIijCsij = DsIij * Csij;
+				double DeIijCeij = DeIij * Ceij;
+				double DoIijCoij = DoIij * Coij;
+
+				double resultColor = oldValueIJ + 0.25
+						* (DnIijCnij + DsIijCsij + DeIijCeij + DoIijCoij);
+				modifiedChannel.setPixel(i, j, resultColor);
+			}
+		}
+
+		return modifiedChannel;
+	}
+
+	@Override
+	public Channel clone() {
+		Channel newChannel = new Channel(width, height);
+
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				newChannel.setPixel(i, j, this.getPixel(i, j));
+			}
+		}
+		return newChannel;
 	}
 }
