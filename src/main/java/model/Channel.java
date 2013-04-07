@@ -325,7 +325,7 @@ public class Channel implements Cloneable {
 	public void applyAnisotropicDiffusion(int iterations, BorderDetector bd) {
 		Channel auxiliarChannel = clone();
 
-		for (int n = 0; n < iterations; n++) {
+		for (int t = 0; t < iterations; t++) {
 			auxiliarChannel = applyAnisotropicDiffusion(auxiliarChannel, bd);
 		}
 		this.channel = auxiliarChannel.channel;
@@ -338,10 +338,7 @@ public class Channel implements Cloneable {
 			for (int j = 0; j < height; j++) {
 				double oldValueIJ = oldChannel.getPixel(i, j);
 
-				double DnIij = 0;
-				double DsIij = 0;
-				double DeIij = 0;
-				double DoIij = 0;
+				double DnIij = oldValueIJ, DsIij = oldValueIJ, DeIij = oldValueIJ, DoIij = oldValueIJ;
 
 				if (i > 0) {
 					DnIij = oldChannel.getPixel(i - 1, j) - oldValueIJ;
@@ -366,9 +363,10 @@ public class Channel implements Cloneable {
 				double DeIijCeij = DeIij * Ceij;
 				double DoIijCoij = DoIij * Coij;
 
-				double resultColor = oldValueIJ + 0.25
+				double lambda = 0.25;
+				double newValueIJ = oldValueIJ + lambda
 						* (DnIijCnij + DsIijCsij + DeIijCeij + DoIijCoij);
-				modifiedChannel.setPixel(i, j, resultColor);
+				modifiedChannel.setPixel(i, j, newValueIJ);
 			}
 		}
 

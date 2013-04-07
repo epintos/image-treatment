@@ -189,6 +189,11 @@ public interface Image {
 	
 	/******************** For TP 2 ********************/
 	
+	/**
+	 * Anisotropic difussion with lambda = 0.25
+	 * @param iterations
+	 * @param bd
+	 */
 	public void applyAnisotropicDiffusion(int iterations, BorderDetector bd);
 	
 
