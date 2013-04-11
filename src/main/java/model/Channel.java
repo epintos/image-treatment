@@ -338,20 +338,14 @@ public class Channel implements Cloneable {
 			for (int j = 0; j < height; j++) {
 				double oldValueIJ = oldChannel.getPixel(i, j);
 
-				double DnIij = oldValueIJ, DsIij = oldValueIJ, DeIij = oldValueIJ, DoIij = oldValueIJ;
-
-				if (i > 0) {
-					DnIij = oldChannel.getPixel(i - 1, j) - oldValueIJ;
-				}
-				if (i < width - 1) {
-					DsIij = oldChannel.getPixel(i + 1, j) - oldValueIJ;
-				}
-				if (j < height - 1) {
-					DeIij = oldChannel.getPixel(i, j + 1) - oldValueIJ;
-				}
-				if (j > 0) {
-					DoIij = oldChannel.getPixel(i, j - 1) - oldValueIJ;
-				}
+				double DnIij = i > 0 ? oldChannel.getPixel(i - 1, j)
+						- oldValueIJ : oldValueIJ;
+				double DsIij = i < width - 1 ? oldChannel.getPixel(i + 1, j)
+						- oldValueIJ : oldValueIJ;
+				double DeIij = j < height - 1 ? oldChannel.getPixel(i, j + 1)
+						- oldValueIJ : oldValueIJ;
+				double DoIij = j > 0 ? oldChannel.getPixel(i, j - 1)
+						- oldValueIJ : oldValueIJ;
 
 				double Cnij = bd.g(DnIij);
 				double Csij = bd.g(DsIij);
