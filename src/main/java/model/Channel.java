@@ -438,8 +438,9 @@ public class Channel implements Cloneable {
 	private void synthesize(SynthesizationFunction fn, Channel... chnls) {
 		double[] result = new double[width * height];
 
-		//Iterates through all the pixels of the channel
-		//In every loop takes the i pixel from all the channels and apply the synth function
+		// Iterates through all the pixels of the channel
+		// In every loop takes the i pixel from all the channels and apply the
+		// synth function
 		for (int i = 0; i < channel.length; i++) {
 			double[] colors = new double[chnls.length + 1];
 			colors[0] = this.channel[i];
@@ -449,5 +450,52 @@ public class Channel implements Cloneable {
 			result[i] = fn.synth(colors);
 		}
 		this.channel = result;
+	}
+
+	public void localVarianceEvaluation(int variance) {
+		Channel chnl = new Channel(this.width, this.height);
+		for (int i = 1; i < this.channel.length; i++) {
+			double n1 = channel[i - 1];
+			double n2 = channel[i];
+			if (n1 > 0 && n2 < 0 && Math.abs(n1 - n2) > variance) {
+				chnl.channel[i] = MAX_CHANNEL_COLOR;
+			} else if (n1 < 0 && n2 > 0 && Math.abs(-n1 + n2) > variance) {
+				chnl.channel[i] = MAX_CHANNEL_COLOR;
+			} else {
+				chnl.channel[i] = MIN_CHANNEL_COLOR;
+			}
+		}
+		this.channel = chnl.channel;
+	}
+
+	public void zeroCross(double threshold) {
+
+		double[] resultChannel = new double[channel.length];
+
+		for (int x = 0; x < this.getWidth(); x++) {
+			for (int y = 0; y < this.getHeight(); y++) {
+
+				double max = Double.MIN_VALUE;
+				double min = Double.MAX_VALUE;
+
+				for (int i = -1; i <= 1; i++) {
+					for (int j = -1; j <= 1; j++) {
+						if (validPixel(x + i, y + j) && !(i == 0 && j == 0)) {
+							max = Math.max(max, this.getPixel(x + i, y + j));
+							min = Math.min(min, this.getPixel(x + i, y + j));
+						}
+					}
+				}
+
+				if (min < -threshold && max > threshold) {
+					resultChannel[y * this.getWidth() + x] = MAX_CHANNEL_COLOR;
+				} else {
+					resultChannel[y * this.getWidth() + x] = MIN_CHANNEL_COLOR;
+				}
+
+			}
+		}
+
+		this.channel = resultChannel;
 	}
 }

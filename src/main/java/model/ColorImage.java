@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import model.borderDetector.BorderDetector;
+import model.mask.FourMaskContainer;
 import model.mask.Mask;
 import model.mask.MaskFactory;
 import model.mask.TwoMaskContainer;
@@ -367,6 +368,72 @@ public class ColorImage implements Image, Cloneable {
 		this.red.synthesize(st, redChnls);
 		this.green.synthesize(st, greenChnls);
 		this.blue.synthesize(st, blueChnls);
+	}
+
+	@Override
+	public void applyAOperatorBorderDetection(SynthesizationType st) {
+		FourMaskContainer maskContainer = MaskFactory.buildMaskA();
+		applyFourMasksAndSynth(maskContainer, st);
+	}
+
+	@Override
+	public void applyKirshBorderDetection(SynthesizationType st) {
+		FourMaskContainer maskContainer = MaskFactory.buildMaskBKirsh();
+		applyFourMasksAndSynth(maskContainer, st);
+	}
+
+	@Override
+	public void applyCOperatorBorderDetection(SynthesizationType st) {
+		FourMaskContainer maskContainer = MaskFactory.buildMaskC();
+		applyFourMasksAndSynth(maskContainer, st);
+	}
+
+	@Override
+	public void applyDOperatorBorderDetection(SynthesizationType st) {
+		FourMaskContainer maskContainer = MaskFactory.buildMaskD();
+		applyFourMasksAndSynth(maskContainer, st);
+	}
+
+	private void applyFourMasksAndSynth(FourMaskContainer maskContainer,
+			SynthesizationType st) {
+		ColorImage imageCopy1 = clone();
+		ColorImage imageCopy2 = clone();
+		ColorImage imageCopy3 = clone();
+
+		this.applyMask(maskContainer.getMask0());
+		imageCopy1.applyMask(maskContainer.getMask45());
+		imageCopy2.applyMask(maskContainer.getMask90());
+		imageCopy3.applyMask(maskContainer.getMask135());
+
+		this.synthesize(st, imageCopy1, imageCopy2, imageCopy3);
+	}
+
+	
+
+	@Override
+	public void applyLaplaceMask(){
+		this.applyMask(MaskFactory.buildLaplaceMask());
+	}
+	
+	@Override
+	public void applyLaplaceVarianceMask(int variance) {
+		this.applyMask(MaskFactory.buildLaplaceMask());
+
+		this.red.localVarianceEvaluation(variance);
+		this.green.localVarianceEvaluation(variance);
+		this.blue.localVarianceEvaluation(variance);
+	}
+	
+	@Override
+	public void applyLaplaceGaussianMask(int maskSize, double sigma) {
+		this.applyMask(MaskFactory.buildLaplaceGaussianMask(maskSize, sigma));
+	}
+	
+	@Override
+	public void applyZeroCrossing(double threshold){
+		this.red.zeroCross(threshold);
+		this.green.zeroCross(threshold);
+		this.blue.zeroCross(threshold);
 	}
 
 }

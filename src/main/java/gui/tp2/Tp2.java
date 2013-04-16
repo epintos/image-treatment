@@ -86,6 +86,71 @@ public class Tp2 extends JMenu {
 			}
 		});
 
+		JMenuItem aOperator = new JMenuItem("Detector de bordes Operador A");
+		aOperator.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog maskABorderDetectorDialog = new AOperatorBorderDetectorDialog(
+							panel);
+					maskABorderDetectorDialog.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem kirshOperator = new JMenuItem("Detector de bordes Kirsh");
+		kirshOperator.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog maskBKirshBorderDetectorDialog = new KirshOperatorBorderDetectorDialog(
+							panel);
+					maskBKirshBorderDetectorDialog.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem cOperator = new JMenuItem("Detector de bordes Operador C");
+		cOperator.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog maskCBorderDetectorDialog = new COperatorBorderDetectorDialog(
+							panel);
+					maskCBorderDetectorDialog.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem dOperator = new JMenuItem("Detector de bordes Operador D");
+		dOperator.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog maskDBorderDetectorDialog = new DOperatorBorderDetectorDialog(
+							panel);
+					maskDBorderDetectorDialog.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem laplacian = new JMenuItem("Laplaciano");
+		laplacian.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog laplaceBorderDetectorDialog = new LaplaceBorderDetectorDialog(
+							panel, "Laplaciano");
+					laplaceBorderDetectorDialog.setVisible(true);
+				}
+			}
+		});
+
 		this.add(gaussianFilter);
 		this.add(new JSeparator());
 		this.add(anisotropicDiffusion);
@@ -94,6 +159,12 @@ public class Tp2 extends JMenu {
 		this.add(prewitt);
 		this.add(sobel);
 		this.add(new JSeparator());
+		this.add(aOperator);
+		this.add(kirshOperator);
+		this.add(cOperator);
+		this.add(dOperator);
+		this.add(new JSeparator());
+		this.add(laplacian);
 	}
 
 	private boolean imageLoaded(Panel panel) {

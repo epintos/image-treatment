@@ -150,58 +150,81 @@ public interface Image {
 
 	/**
 	 * Generates additive Gaussean noise
+	 * 
 	 * @param standardDeviation
 	 */
 	public void gausseanNoise(double mean, double standardDeviation);
 
 	/**
 	 * Generates multiplicative Rayleigh noise
+	 * 
 	 * @param mean
 	 */
 	public void rayleighNoise(double epsilon);
 
 	/**
 	 * Generates multiplicative Exponential noise
+	 * 
 	 * @param mean
 	 */
 	public void exponentialNoise(double mean);
 
 	/**
 	 * Generates Impulsive noise (Salt and Pepper)
+	 * 
 	 * @param po
 	 * @param p1
 	 */
 	public void saltAndPepperNoise(double po, double p1);
-	
+
 	/**
 	 * Applies a mask
+	 * 
 	 * @param mask
 	 */
 	public void applyMask(Mask mask);
-	
+
 	/**
 	 * Applies median mask
+	 * 
 	 * @param point
 	 */
 	public void applyMedianMask(Point point);
-	
+
 	public Image clone();
-	
+
 	/******************** For TP 2 ********************/
-	
+
 	/**
 	 * Anisotropic difussion with lambda = 0.25
+	 * 
 	 * @param iterations
 	 * @param bd
 	 */
 	public void applyAnisotropicDiffusion(int iterations, BorderDetector bd);
 
 	public void applyRobertsBorderDetection(SynthesizationType st);
-	
+
 	public void applyPrewittBorderDetection(SynthesizationType st);
-	
+
 	public void applySobelBorderDetection(SynthesizationType st);
-	
-	public void synthesize(SynthesizationType st, Image ... chnls);
+
+	public void applyAOperatorBorderDetection(SynthesizationType st);
+
+	public void applyKirshBorderDetection(SynthesizationType st);
+
+	public void applyCOperatorBorderDetection(SynthesizationType st);
+
+	public void applyDOperatorBorderDetection(SynthesizationType st);
+
+	public void synthesize(SynthesizationType st, Image... chnls);
+
+	public void applyLaplaceMask();
+
+	public void applyLaplaceVarianceMask(int varianceThreshold);
+
+	public void applyLaplaceGaussianMask(int maskSize, double sigma);
+
+	public void applyZeroCrossing(double threshold);
 
 }
