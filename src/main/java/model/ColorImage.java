@@ -1,11 +1,14 @@
 package model;
 
-import app.ColorUtilities;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+
 import model.borderDetector.BorderDetector;
 import model.mask.Mask;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import model.mask.MaskFactory;
+import model.mask.TwoMaskContainer;
+import app.ColorUtilities;
 
 public class ColorImage implements Image, Cloneable {
 
@@ -304,7 +307,7 @@ public class ColorImage implements Image, Cloneable {
 	}
 
 	@Override
-	public Image clone() {
+	public ColorImage clone() {
 		BufferedImage bi = new BufferedImage(this.getWidth(), this.getHeight(),
 				ColorUtilities.toBufferedImageType(this.getType()));
 		ColorUtilities.populateEmptyBufferedImage(bi, this);
@@ -317,6 +320,53 @@ public class ColorImage implements Image, Cloneable {
 		this.red.applyAnisotropicDiffusion(iterations, bd);
 		this.green.applyAnisotropicDiffusion(iterations, bd);
 		this.red.applyAnisotropicDiffusion(iterations, bd);
+	}
+
+	@Override
+	public void applyRobertsBorderDetection(SynthesizationType st) {
+		TwoMaskContainer maskContainer = MaskFactory.buildRobertsMasks();
+		applyTwoMasksAndSynth(maskContainer, st);
+	}
+
+	@Override
+	public void applyPrewittBorderDetection(SynthesizationType st) {
+		TwoMaskContainer maskContainer = MaskFactory.buildPrewittMasks();
+		applyTwoMasksAndSynth(maskContainer, st);
+	}
+
+	@Override
+	public void applySobelBorderDetection(SynthesizationType st) {
+		TwoMaskContainer maskContainer = MaskFactory.buildSobelMasks();
+		applyTwoMasksAndSynth(maskContainer, st);
+	}
+
+	private void applyTwoMasksAndSynth(TwoMaskContainer maskContainer,
+			SynthesizationType st) {
+		ColorImage copy = clone();
+
+		this.applyMask(maskContainer.getDXMask());
+		copy.applyMask(maskContainer.getDYMask());
+
+		this.synthesize(st, copy);
+	}
+
+	@Override
+	public void synthesize(SynthesizationType st, Image... imgs) {
+		Image[] cimgs = imgs;
+
+		Channel[] redChnls = new Channel[cimgs.length];
+		Channel[] greenChnls = new Channel[cimgs.length];
+		Channel[] blueChnls = new Channel[cimgs.length];
+
+		for (int i = 0; i < cimgs.length; i++) {
+			redChnls[i] = ((ColorImage) cimgs[i]).red;
+			greenChnls[i] = ((ColorImage) cimgs[i]).green;
+			blueChnls[i] = ((ColorImage) cimgs[i]).blue;
+		}
+
+		this.red.synthesize(st, redChnls);
+		this.green.synthesize(st, greenChnls);
+		this.blue.synthesize(st, blueChnls);
 	}
 
 }

@@ -22,6 +22,18 @@ public class Tp2 extends JMenu {
 		super("TP 2");
 		this.setEnabled(true);
 
+		JMenuItem gaussianFilter = new JMenuItem("Filtro Gaussiano");
+		gaussianFilter.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog mediaDialog = new GaussianFilter(panel);
+					mediaDialog.setVisible(true);
+				}
+			}
+		});
+
 		JMenuItem anisotropicDiffusion = new JMenuItem("Difusión Anisotrópica");
 		anisotropicDiffusion.addActionListener(new ActionListener() {
 			@Override
@@ -34,7 +46,53 @@ public class Tp2 extends JMenu {
 				}
 			}
 		});
+
+		JMenuItem roberts = new JMenuItem("Detección de bordes Roberts");
+		roberts.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog robertsBorderDetectorDialog = new RobertsBorderDetectorDialog(
+							panel);
+					robertsBorderDetectorDialog.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem prewitt = new JMenuItem("Detección de bordes Prewitt");
+		prewitt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog prewittBorderDetectorDialog = new PrewittBorderDetectorDialog(
+							panel);
+					prewittBorderDetectorDialog.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem sobel = new JMenuItem("Detección de bordes Sobel");
+		sobel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog sobelBorderDetectorDialog = new SobelBorderDetectorDialog(
+							panel);
+					sobelBorderDetectorDialog.setVisible(true);
+				}
+			}
+		});
+
+		this.add(gaussianFilter);
+		this.add(new JSeparator());
 		this.add(anisotropicDiffusion);
+		this.add(new JSeparator());
+		this.add(roberts);
+		this.add(prewitt);
+		this.add(sobel);
 		this.add(new JSeparator());
 	}
 

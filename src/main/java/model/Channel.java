@@ -378,4 +378,76 @@ public class Channel implements Cloneable {
 		}
 		return newChannel;
 	}
+
+	public void synthesize(SynthesizationType st, Channel... chnls) {
+		if (st == SynthesizationType.MAX) {
+			synthesize(new SynthesizationFunction() {
+				@Override
+				public double synth(double... color) {
+					double max = color[0];
+					for (double d : color) {
+						max = Math.max(max, d);
+					}
+					return max;
+				}
+			}, chnls);
+			return;
+		}
+		if (st == SynthesizationType.MIN) {
+			synthesize(new SynthesizationFunction() {
+				@Override
+				public double synth(double... color) {
+					double min = color[0];
+					for (double d : color) {
+						min = Math.min(min, d);
+					}
+					return min;
+				}
+			}, chnls);
+			return;
+		}
+		if (st == SynthesizationType.AVG) {
+			synthesize(new SynthesizationFunction() {
+				@Override
+				public double synth(double... color) {
+					double sum = 0;
+					for (double d : color) {
+						sum += d;
+					}
+					return sum / 2;
+				}
+			}, chnls);
+			return;
+		}
+		if (st == SynthesizationType.ABS) {
+			synthesize(new SynthesizationFunction() {
+				@Override
+				public double synth(double... color) {
+					double sum = 0;
+					for (double d : color) {
+						sum += Math.pow(d, 2);
+					}
+					return Math.sqrt(sum);
+				}
+			}, chnls);
+			return;
+		}
+		throw new IllegalStateException();
+	}
+
+	private void synthesize(SynthesizationFunction fn, Channel... chnls) {
+		double[] result = new double[width * height];
+
+		//Iterates through all the pixels of the channel
+		//In every loop takes the i pixel from all the channels and apply the synth function
+		for (int i = 0; i < channel.length; i++) {
+			double[] colors = new double[chnls.length + 1];
+			colors[0] = this.channel[i];
+			for (int j = 1; j < chnls.length; j++) {
+				colors[j] = chnls[j - 1].channel[i];
+			}
+			result[i] = fn.synth(colors);
+		}
+		this.channel = result;
+	}
 }

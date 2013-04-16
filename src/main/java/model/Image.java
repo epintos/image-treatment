@@ -195,6 +195,13 @@ public interface Image {
 	 * @param bd
 	 */
 	public void applyAnisotropicDiffusion(int iterations, BorderDetector bd);
+
+	public void applyRobertsBorderDetection(SynthesizationType st);
 	
+	public void applyPrewittBorderDetection(SynthesizationType st);
+	
+	public void applySobelBorderDetection(SynthesizationType st);
+	
+	public void synthesize(SynthesizationType st, Image ... chnls);
 
 }
