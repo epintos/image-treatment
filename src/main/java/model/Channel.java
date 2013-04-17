@@ -505,18 +505,29 @@ public class Channel implements Cloneable {
 	}
 
 	private double getGlobalThresholdValue() {
-		double maxDeltaThresholdAllowed = 1;
+		double deltaT = 1;
+		// Step 1
 		double currentT = 128;
-		double previousT = currentT + 2 * maxDeltaThresholdAllowed;
+		double previousT = 0;
 
-		while (Math.abs((currentT - previousT)) > maxDeltaThresholdAllowed) {
+		// Step 5
+		int i = 0;
+		do {
 			previousT = currentT;
 			currentT = getAdjustedThreshold(currentT);
-		}
-
+			i++;
+		} while (Math.abs((currentT - previousT)) >= deltaT);
+		System.out.println("Iteraciones: " + i);
+		System.out.println("T: " + currentT);
 		return currentT;
 	}
 
+	/**
+	 * Calculates de new T.
+	 * 
+	 * @param previousThreshold
+	 * @return new threshold
+	 */
 	private double getAdjustedThreshold(double previousThreshold) {
 		double amountOfHigher = 0;
 		double amountOfLower = 0;
@@ -524,6 +535,7 @@ public class Channel implements Cloneable {
 		double sumOfHigher = 0;
 		double sumOfLower = 0;
 
+		// Step 3
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				double aPixel = this.getPixel(x, y);
@@ -537,10 +549,12 @@ public class Channel implements Cloneable {
 				}
 			}
 		}
+		double n1 = amountOfHigher;
+		double n2 = amountOfLower;
+		double m1 = (1 / n1) * sumOfHigher;
+		double m2 = (1 / n2) * sumOfLower;
 
-		double m1 = (1 / amountOfHigher) * sumOfHigher;
-		double m2 = (1 / amountOfLower) * sumOfLower;
-
+		// Step 4
 		return 0.5 * (m1 + m2);
 	}
 
