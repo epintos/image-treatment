@@ -150,6 +150,7 @@ public class Tp2 extends JMenu {
 				}
 			}
 		});
+		
 
 		this.add(gaussianFilter);
 		this.add(new JSeparator());

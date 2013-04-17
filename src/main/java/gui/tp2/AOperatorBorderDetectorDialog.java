@@ -14,7 +14,7 @@ public class AOperatorBorderDetectorDialog extends AbstractBorderDetector {
 	
 	@Override
 	void applyFunction(SynthesizationType synthesizationType) {
-		Image panelImage = panel.getImage();
+		Image panelImage = panel.getWorkingImage();
 		panelImage.applyAOperatorBorderDetection(synthesizationType);
 		panel.repaint();
 		dispose();

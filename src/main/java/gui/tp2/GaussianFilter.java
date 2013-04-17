@@ -61,7 +61,7 @@ public class GaussianFilter extends JDialog {
 					new MessageFrame("Los datos ingresados son invalidos");
 					return;
 				}
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 				panelImage.applyMask(MaskFactory.buildGaussianMask(x,sigma));
 				panel.repaint();		
 				dispose();

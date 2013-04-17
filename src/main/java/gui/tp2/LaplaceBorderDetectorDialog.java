@@ -148,7 +148,7 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 				if (laplacianRadioButton.isSelected()) {
 					panelImage.applyLaplaceMask();
 				} else if (laplacianVarianceRadioButton.isSelected()) {

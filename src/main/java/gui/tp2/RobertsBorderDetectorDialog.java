@@ -13,7 +13,7 @@ public class RobertsBorderDetectorDialog extends AbstractBorderDetector {
 	}
 	
 	public void applyFunction(SynthesizationType synthesizationType) {
-		Image panelImage = panel.getImage();
+		Image panelImage = panel.getWorkingImage();
 		panelImage.applyRobertsBorderDetection(synthesizationType);
 		panel.repaint();
 		dispose();

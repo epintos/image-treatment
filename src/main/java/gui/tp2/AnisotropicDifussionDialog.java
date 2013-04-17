@@ -95,7 +95,7 @@ public class AnisotropicDifussionDialog extends JDialog {
 					throw new IllegalStateException();
 				}
 				
-				Image panelImage = panel.getImage();
+				Image panelImage = panel.getWorkingImage();
 				panelImage.applyAnisotropicDiffusion(iterations, borderDetector);
 				panel.repaint();
 				dispose();

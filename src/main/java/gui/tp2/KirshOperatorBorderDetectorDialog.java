@@ -14,7 +14,7 @@ public class KirshOperatorBorderDetectorDialog extends AbstractBorderDetector {
 	
 	@Override
 	void applyFunction(SynthesizationType synthesizationType) {
-		Image panelImage = panel.getImage();
+		Image panelImage = panel.getWorkingImage();
 		panelImage.applyKirshBorderDetection(synthesizationType);
 		panel.repaint();
 		dispose();

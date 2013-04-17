@@ -13,7 +13,7 @@ public class PrewittBorderDetectorDialog extends AbstractBorderDetector {
 	}
 	
 	public void applyFunction(SynthesizationType synthesizationType) {
-		Image panelImage = panel.getImage();
+		Image panelImage = panel.getWorkingImage();
 		panelImage.applyPrewittBorderDetection(synthesizationType);
 		panel.repaint();
 		dispose();

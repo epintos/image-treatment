@@ -13,7 +13,7 @@ public class SobelBorderDetectorDialog extends AbstractBorderDetector {
 	}
 
 	public void applyFunction(SynthesizationType synthesizationType) {
-		Image panelImage = panel.getImage();
+		Image panelImage = panel.getWorkingImage();
 		panelImage.applySobelBorderDetection(synthesizationType);
 		panel.repaint();
 		dispose();
