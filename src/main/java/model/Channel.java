@@ -498,4 +498,110 @@ public class Channel implements Cloneable {
 
 		this.channel = resultChannel;
 	}
+
+	public void globalThreshold() {
+		double globalThreshold = getGlobalThresholdValue();
+		threshold(globalThreshold);
+	}
+
+	private double getGlobalThresholdValue() {
+		double maxDeltaThresholdAllowed = 1;
+		double currentT = 128;
+		double previousT = currentT + 2 * maxDeltaThresholdAllowed;
+
+		while (Math.abs((currentT - previousT)) > maxDeltaThresholdAllowed) {
+			previousT = currentT;
+			currentT = getAdjustedThreshold(currentT);
+		}
+
+		return currentT;
+	}
+
+	private double getAdjustedThreshold(double previousThreshold) {
+		double amountOfHigher = 0;
+		double amountOfLower = 0;
+
+		double sumOfHigher = 0;
+		double sumOfLower = 0;
+
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double aPixel = this.getPixel(x, y);
+				if (aPixel >= previousThreshold) {
+					amountOfHigher += 1;
+					sumOfHigher += aPixel;
+				}
+				if (aPixel < previousThreshold) {
+					amountOfLower += 1;
+					sumOfLower += aPixel;
+				}
+			}
+		}
+
+		double m1 = (1 / amountOfHigher) * sumOfHigher;
+		double m2 = (1 / amountOfLower) * sumOfLower;
+
+		return 0.5 * (m1 + m2);
+	}
+
+	public void otsuThreshold() {
+		double maxSigma = 0;
+		int threshold = 0;
+		double[] probabilities = getProbabilitiesOfEachColorLevel();
+		for (int i = 0; i < MAX_CHANNEL_COLOR; i++) {
+			double aSigma = getSigma(i, probabilities);
+			if (aSigma > maxSigma) {
+				maxSigma = aSigma;
+				threshold = i;
+			}
+		}
+		threshold(threshold);
+	}
+
+	private double getSigma(int threshold, double[] probabilities) {
+		double w1 = 0;
+		double w2 = 0;
+		for (int i = 0; i < probabilities.length; i++) {
+			if (i <= threshold) {
+				w1 += probabilities[i];
+			} else {
+				w2 += probabilities[i];
+			}
+		}
+
+		if (w1 == 0 || w2 == 0) {
+			return 0;
+		}
+
+		double mu1 = 0;
+		double mu2 = 0;
+		for (int i = 0; i < probabilities.length; i++) {
+			if (i <= threshold) {
+				mu1 += i * probabilities[i] / w1;
+			} else {
+				mu2 += i * probabilities[i] / w2;
+			}
+		}
+
+		double mu_t = mu1 * w1 + mu2 * w2;
+		double sigma_B = w1 * Math.pow((mu1 - mu_t), 2) + w2
+				* Math.pow((mu2 - mu_t), 2);
+		return sigma_B;
+	}
+
+	private double[] getProbabilitiesOfEachColorLevel() {
+		double[] probabilities = new double[MAX_CHANNEL_COLOR];
+
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				int aColorPixel = (int) this.getPixel(x, y);
+				probabilities[aColorPixel] += 1;
+			}
+		}
+		for (int i = 0; i < probabilities.length; i++) {
+			probabilities[i] /= (width * height);
+		}
+
+		return probabilities;
+	}
 }

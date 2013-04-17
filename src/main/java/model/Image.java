@@ -227,4 +227,7 @@ public interface Image {
 
 	public void applyZeroCrossing(double threshold);
 
+	public void globalThreshold();
+
+	public void otsuThreshold();
 }

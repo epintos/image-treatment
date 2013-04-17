@@ -435,5 +435,19 @@ public class ColorImage implements Image, Cloneable {
 		this.green.zeroCross(threshold);
 		this.blue.zeroCross(threshold);
 	}
+	
+	@Override
+	public void globalThreshold() {
+		this.red.globalThreshold();
+		this.green.globalThreshold();
+		this.blue.globalThreshold();
+	}
+	
+	@Override
+	public void otsuThreshold() {
+		this.red.otsuThreshold();
+		this.green.otsuThreshold();
+		this.blue.otsuThreshold();
+	}
 
 }

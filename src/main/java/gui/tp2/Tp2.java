@@ -150,7 +150,30 @@ public class Tp2 extends JMenu {
 				}
 			}
 		});
-		
+
+		JMenuItem automaticThreshold = new JMenuItem("Umbralización Global");
+		automaticThreshold.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					panel.getWorkingImage().globalThreshold();
+					panel.repaint();
+				}
+			}
+		});
+
+		JMenuItem otsuThreshold = new JMenuItem("Umbralización de Otsu");
+		otsuThreshold.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					panel.getWorkingImage().otsuThreshold();
+					panel.repaint();
+				}
+			}
+		});
 
 		this.add(gaussianFilter);
 		this.add(new JSeparator());
@@ -166,6 +189,10 @@ public class Tp2 extends JMenu {
 		this.add(dOperator);
 		this.add(new JSeparator());
 		this.add(laplacian);
+		this.add(new JSeparator());
+		this.add(automaticThreshold);
+		this.add(otsuThreshold);
+
 	}
 
 	private boolean imageLoaded(Panel panel) {
