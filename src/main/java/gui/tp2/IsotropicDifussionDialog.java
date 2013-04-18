@@ -14,67 +14,61 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import model.mask.MaskFactory;
+import model.Image;
+import model.borderDetector.BorderDetector;
 
 public class IsotropicDifussionDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	public IsotropicDifussionDialog(final Panel panel){
+	public IsotropicDifussionDialog(final Panel panel) {
 		setTitle("Difusión Isotrópica");
-		setBounds(1, 1, 250, 170);
+		setBounds(1, 1, 250, 120);
 		Dimension size = getToolkit().getScreenSize();
-		setLocation(size.width/3 - getWidth()/3, size.height/3 - getHeight()/3);
+		setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+				- getHeight() / 3);
 		this.setResizable(false);
 		setLayout(null);
 
 		JPanel pan1 = new JPanel();
-		pan1.setBorder(BorderFactory.createTitledBorder("Tamaño mascara"));
+		pan1.setBorder(BorderFactory.createTitledBorder("Parametros"));
 		pan1.setBounds(0, 0, 250, 50);
 
-		JPanel pan2 = new JPanel();
-		pan2.setBorder(BorderFactory.createTitledBorder("Sigma"));
-		pan2.setBounds(0, 50, 250, 50);
-
-		JLabel coordLabel1 = new JLabel("Tamaño = ");
-		final JTextField coordX = new JTextField("7");
-		coordX.setColumns(3);
-
-		JLabel colorLabel = new JLabel("S= ");
-		final JTextField sigma = new JTextField("1");
-		sigma.setColumns(3);
-		sigma.setAlignmentX(LEFT_ALIGNMENT);
+		JLabel iterationsLabel = new JLabel("Iteraciones ");
+		final JTextField iterationsField = new JTextField("7");
+		iterationsField.setColumns(3);
 
 		JButton okButton = new JButton("OK");
 		okButton.setSize(250, 40);
-		okButton.setBounds(0, 100, 250, 40);
-		okButton.addActionListener(new ActionListener(){
+		okButton.setBounds(0, 50, 250, 40);
+		okButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e){
-				int x = 0;
-				double s = 0;
-				try{
-					x = Integer.valueOf(coordX.getText());
-					s = Double.valueOf(sigma.getText());
+			public void actionPerformed(ActionEvent e) {
+				int iterations = 0;
+				try {
+					iterations = Integer.valueOf(iterationsField.getText());
 
-				} catch(NumberFormatException ex){
+				} catch (NumberFormatException ex) {
 					new MessageFrame("Los datos ingresados son invalidos");
 					return;
 				}
-				panel.getImage().applyMask(MaskFactory.buildGaussianMask(x, s));
+				Image panelImage = panel.getWorkingImage();
+				panelImage.applyAnisotropicDiffusion(iterations,
+						new BorderDetector() {
+							@Override
+							public double g(double x) {
+								return 1;
+							}
+						});
 				panel.repaint();
 				dispose();
 			}
 		});
 
-		pan1.add(coordLabel1);
-		pan1.add(coordX);
-
-		pan2.add(colorLabel);
-		pan2.add(sigma);
+		pan1.add(iterationsLabel);
+		pan1.add(iterationsField);
 
 		this.add(pan1);
-		this.add(pan2);
 		this.add(okButton);
 
 	};

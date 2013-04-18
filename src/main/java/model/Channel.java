@@ -339,13 +339,13 @@ public class Channel implements Cloneable {
 				double oldValueIJ = oldChannel.getPixel(i, j);
 
 				double DnIij = i > 0 ? oldChannel.getPixel(i - 1, j)
-						- oldValueIJ : oldValueIJ;
+						- oldValueIJ : 0;
 				double DsIij = i < width - 1 ? oldChannel.getPixel(i + 1, j)
-						- oldValueIJ : oldValueIJ;
+						- oldValueIJ : 0;
 				double DeIij = j < height - 1 ? oldChannel.getPixel(i, j + 1)
-						- oldValueIJ : oldValueIJ;
+						- oldValueIJ : 0;
 				double DoIij = j > 0 ? oldChannel.getPixel(i, j - 1)
-						- oldValueIJ : oldValueIJ;
+						- oldValueIJ : 0;
 
 				double Cnij = bd.g(DnIij);
 				double Csij = bd.g(DsIij);

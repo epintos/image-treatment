@@ -33,6 +33,20 @@ public class Tp2 extends JMenu {
 				}
 			}
 		});
+		
+		JMenuItem isotropicDiffusion = new JMenuItem("Difusión Isotrópica");
+		isotropicDiffusion.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog anisotropicDifussionDialog = new IsotropicDifussionDialog(
+							panel);
+					anisotropicDifussionDialog.setVisible(true);
+				}
+			}
+		});
+
 
 		JMenuItem anisotropicDiffusion = new JMenuItem("Difusión Anisotrópica");
 		anisotropicDiffusion.addActionListener(new ActionListener() {
@@ -177,6 +191,7 @@ public class Tp2 extends JMenu {
 
 		this.add(gaussianFilter);
 		this.add(new JSeparator());
+		this.add(isotropicDiffusion);
 		this.add(anisotropicDiffusion);
 		this.add(new JSeparator());
 		this.add(roberts);
