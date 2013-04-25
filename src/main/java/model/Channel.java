@@ -472,31 +472,50 @@ public class Channel implements Cloneable {
 
 		double[] resultChannel = new double[channel.length];
 
+		double[] hChannel = new double[channel.length];
+		double[] vChannel = new double[channel.length];
+
+		int i = 0;
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getHeight(); y++) {
-
-				double max = Double.MIN_VALUE;
-				double min = Double.MAX_VALUE;
-
-				for (int i = -1; i <= 1; i++) {
-					for (int j = -1; j <= 1; j++) {
-						if (validPixel(x + i, y + j) && !(i == 0 && j == 0)) {
-							max = Math.max(max, this.getPixel(x + i, y + j));
-							min = Math.min(min, this.getPixel(x + i, y + j));
-						}
+				double next = 0;
+				if (x + 1 < width) {
+					next = this.getPixel(x + 1, y);
+					if ((this.getPixel(x, y) > 0 && next < 0)
+							|| this.getPixel(x, y) < 0 && next > 0) {
+						hChannel[y * this.getWidth() + x]  = MAX_CHANNEL_COLOR;
+						
 					}
 				}
-
-				if (min < -threshold && max > threshold) {
-					resultChannel[y * this.getWidth() + x] = MAX_CHANNEL_COLOR;
-				} else {
-					resultChannel[y * this.getWidth() + x] = MIN_CHANNEL_COLOR;
+				i++;
+			}
+		}
+		i = 0;
+		for (int x = 0; x < this.getWidth(); x++) {
+			for (int y = 0; y < this.getHeight(); y++) {
+				double next = 0;
+				if (y + 1 < height) {
+					next = this.getPixel(x, y + 1);
+					if ((this.getPixel(x, y) > 0 && next < 0)
+							|| this.getPixel(x, y) < 0 && next > 0) {
+						vChannel[y * this.getWidth() + x] = MAX_CHANNEL_COLOR;
+					}
 				}
-
+				i++;
+			}
+		}
+i=0;
+		for (int x = 0; x < this.getWidth(); x++) {
+			for (int y = 0; y < this.getHeight(); y++) {
+				vChannel[y * this.getWidth() + x] = +hChannel[y * this.getWidth() + x];
+				if (vChannel[y * this.getWidth() + x] == 510){
+					vChannel[y * this.getWidth() + x] = 255;
+				}
+				i++;
 			}
 		}
 
-		this.channel = resultChannel;
+		this.channel = vChannel;
 	}
 
 	public void globalThreshold() {
@@ -609,6 +628,7 @@ public class Channel implements Cloneable {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				int aColorPixel = (int) this.getPixel(x, y);
+				
 				probabilities[aColorPixel] += 1;
 			}
 		}

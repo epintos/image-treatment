@@ -41,8 +41,8 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 
 		final JRadioButton laplacianRadioButton = new JRadioButton(
 				"Laplaciano", true);
-		final JRadioButton laplacianVarianceRadioButton = new JRadioButton(
-				"Laplaciano con evaluación local de la varianza");
+//		final JRadioButton laplacianVarianceRadioButton = new JRadioButton(
+//				"Laplaciano con evaluación local de la varianza");
 		final JRadioButton laplacianGaussianRadioButton = new JRadioButton(
 				"Laplaciano del Gaussiano (Marr-Hildreth)");
 		final JCheckBox zeroCrossingCheckBox = new JCheckBox("Cruzar por cero");
@@ -91,8 +91,8 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				laplacianRadioButton.setSelected(true);
-				laplacianVarianceRadioButton.setSelected(!laplacianRadioButton
-						.isSelected());
+//				laplacianVarianceRadioButton.setSelected(!laplacianRadioButton
+//						.isSelected());
 				laplacianGaussianRadioButton.setSelected(!laplacianRadioButton
 						.isSelected());
 				varianceThreshold.setEnabled(false);
@@ -102,22 +102,22 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 			}
 		});
 
-		laplacianVarianceRadioButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				laplacianVarianceRadioButton.setSelected(true);
-				laplacianRadioButton.setSelected(!laplacianVarianceRadioButton
-						.isSelected());
-				laplacianGaussianRadioButton
-						.setSelected(!laplacianVarianceRadioButton.isSelected());
-				varianceThreshold.setEnabled(true);
-				maskSize.setEnabled(false);
-				sigma.setEnabled(false);
-				zeroCrossingCheckBox.setSelected(false);
-				zeroCrossingCheckBox.setEnabled(false);
-				zeroCrossingThreshold.setEnabled(false);
-			}
-		});
+//		laplacianVarianceRadioButton.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				laplacianVarianceRadioButton.setSelected(true);
+//				laplacianRadioButton.setSelected(!laplacianVarianceRadioButton
+//						.isSelected());
+//				laplacianGaussianRadioButton
+//						.setSelected(!laplacianVarianceRadioButton.isSelected());
+//				varianceThreshold.setEnabled(true);
+//				maskSize.setEnabled(false);
+//				sigma.setEnabled(false);
+//				zeroCrossingCheckBox.setSelected(false);
+//				zeroCrossingCheckBox.setEnabled(false);
+//				zeroCrossingThreshold.setEnabled(false);
+//			}
+//		});
 
 		laplacianGaussianRadioButton.addActionListener(new ActionListener() {
 			@Override
@@ -125,8 +125,8 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 				laplacianGaussianRadioButton.setSelected(true);
 				laplacianRadioButton.setSelected(!laplacianGaussianRadioButton
 						.isSelected());
-				laplacianVarianceRadioButton
-						.setSelected(!laplacianGaussianRadioButton.isSelected());
+//				laplacianVarianceRadioButton
+//						.setSelected(!laplacianGaussianRadioButton.isSelected());
 				varianceThreshold.setEnabled(false);
 				maskSize.setEnabled(true);
 				sigma.setEnabled(true);
@@ -151,7 +151,7 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 				Image panelImage = panel.getWorkingImage();
 				if (laplacianRadioButton.isSelected()) {
 					panelImage.applyLaplaceMask();
-				} else if (laplacianVarianceRadioButton.isSelected()) {
+				} /*else if (laplacianVarianceRadioButton.isSelected()) {
 
 					String varianceStr = varianceThreshold.getText();
 					int variance = 0;
@@ -162,7 +162,7 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 						return;
 					}
 					panelImage.applyLaplaceVarianceMask(variance);
-				} else if (laplacianGaussianRadioButton.isSelected()) {
+				} */else if (laplacianGaussianRadioButton.isSelected()) {
 
 					String maskSizeStr = maskSize.getText();
 					String sigmaStr = sigma.getText();
@@ -200,7 +200,7 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 		});
 
 		laplaceTypePanel.add(laplacianRadioButton);
-		laplaceTypePanel.add(laplacianVarianceRadioButton);
+//		laplaceTypePanel.add(laplacianVarianceRadioButton);
 		laplaceTypePanel.add(laplacianGaussianRadioButton);
 		laplaceTypePanel.add(zeroCrossingCheckBox);
 
