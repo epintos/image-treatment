@@ -2,21 +2,12 @@ package gui.tp2;
 
 import gui.MessageFrame;
 import gui.Panel;
+import model.Image;
 
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-
-import model.Image;
 
 public class LaplaceBorderDetectorDialog extends JDialog {
 
@@ -74,7 +65,7 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 		final JTextField zeroCrossingThreshold = new JTextField("40");
 		final JTextField varianceThreshold = new JTextField("10");
 
-		JLabel zeroCrossingThresholdLabel = new JLabel("Cruces por cero");
+		JLabel zeroCrossingThresholdLabel = new JLabel("Cruces por cero (threshold)");
 		JLabel varianceThresholdLabel = new JLabel("Varianza:");
 
 		zeroCrossingThreshold.setColumns(3);

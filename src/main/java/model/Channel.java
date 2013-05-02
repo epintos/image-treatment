@@ -1,11 +1,11 @@
 package model;
 
-import java.awt.Point;
-import java.util.Iterator;
-import java.util.TreeSet;
-
 import model.borderDetector.BorderDetector;
 import model.mask.Mask;
+
+import java.awt.*;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 public class Channel implements Cloneable {
 
@@ -623,7 +623,7 @@ i=0;
 	}
 
 	private double[] getProbabilitiesOfEachColorLevel() {
-		double[] probabilities = new double[MAX_CHANNEL_COLOR];
+		double[] probabilities = new double[MAX_CHANNEL_COLOR + 1];
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
