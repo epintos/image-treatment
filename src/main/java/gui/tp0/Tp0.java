@@ -32,7 +32,7 @@ public class Tp0 extends JMenu {
 
 				JFileChooser chooser = new JFileChooser();
 				FileFilter type = new ExtensionFilter("Imágenes", new String[] {
-						".pgm", ".PGM", ".ppm", ".PPM", ".bmp", ".BMP", ".png", ".PNG" });
+						".pgm", ".PGM", ".ppm", ".PPM", ".bmp", ".BMP" });
 				chooser.addChoosableFileFilter(type);
 				chooser.setAcceptAllFileFilterUsed(false);
 				chooser.setFileFilter(type);

@@ -63,20 +63,20 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 		valuePanel.setBounds(0, 100, 450, 70);
 
 		final JTextField zeroCrossingThreshold = new JTextField("40");
-		final JTextField varianceThreshold = new JTextField("10");
+//		final JTextField varianceThreshold = new JTextField("10");
 
 		JLabel zeroCrossingThresholdLabel = new JLabel("Cruces por cero (threshold)");
-		JLabel varianceThresholdLabel = new JLabel("Varianza:");
+//		JLabel varianceThresholdLabel = new JLabel("Varianza:");
 
 		zeroCrossingThreshold.setColumns(3);
 		zeroCrossingThreshold.setEnabled(false);
-		varianceThreshold.setColumns(3);
-		varianceThreshold.setEnabled(false);
+//		varianceThreshold.setColumns(3);
+//		varianceThreshold.setEnabled(false);
 
 		valuePanel.add(zeroCrossingThresholdLabel);
 		valuePanel.add(zeroCrossingThreshold);
-		valuePanel.add(varianceThresholdLabel);
-		valuePanel.add(varianceThreshold);
+//		valuePanel.add(varianceThresholdLabel);
+//		valuePanel.add(varianceThreshold);
 
 		laplacianRadioButton.addActionListener(new ActionListener() {
 			@Override
@@ -86,7 +86,7 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 //						.isSelected());
 				laplacianGaussianRadioButton.setSelected(!laplacianRadioButton
 						.isSelected());
-				varianceThreshold.setEnabled(false);
+//				varianceThreshold.setEnabled(false);
 				maskSize.setEnabled(false);
 				sigma.setEnabled(false);
 				zeroCrossingCheckBox.setEnabled(true);
@@ -118,7 +118,7 @@ public class LaplaceBorderDetectorDialog extends JDialog {
 						.isSelected());
 //				laplacianVarianceRadioButton
 //						.setSelected(!laplacianGaussianRadioButton.isSelected());
-				varianceThreshold.setEnabled(false);
+//				varianceThreshold.setEnabled(false);
 				maskSize.setEnabled(true);
 				sigma.setEnabled(true);
 				zeroCrossingCheckBox.setEnabled(true);

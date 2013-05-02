@@ -476,39 +476,54 @@ public class Channel implements Cloneable {
 		double[] vChannel = new double[channel.length];
 
 		int i = 0;
+        double last;
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getHeight(); y++) {
-				double next = 0;
-				if (x + 1 < width) {
-					next = this.getPixel(x + 1, y);
-					if ((this.getPixel(x, y) > 0 && next < 0)
-							|| this.getPixel(x, y) < 0 && next > 0) {
-						hChannel[y * this.getWidth() + x]  = MAX_CHANNEL_COLOR;
-						
-					}
-				}
+                double past = 0;
+                double current = 0;
+
+                if (x + 1 < width) {
+                    current = this.getPixel(x + 1, y);
+                    last = past;
+                    past = this.getPixel(x, y);
+
+                    if (past == 0 && x > 0) {
+                        past = last;
+                    }
+
+                    if (((current < 0 && past > 0) || (current > 0 && past < 0)) && Math.abs(current - past) > threshold) {
+                        vChannel[y * this.getWidth() + x] = MAX_CHANNEL_COLOR;
+                    }
+                }
 				i++;
 			}
 		}
 		i = 0;
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getHeight(); y++) {
-				double next = 0;
+				double past = 0;
+                double current = 0;
 				if (y + 1 < height) {
-					next = this.getPixel(x, y + 1);
-					if ((this.getPixel(x, y) > 0 && next < 0)
-							|| this.getPixel(x, y) < 0 && next > 0) {
+                    current = this.getPixel(x, y + 1);
+                    last = past;
+                    past = this.getPixel(x, y);
+
+                    if (past == 0 && x > 0) {
+                        past = last;
+                    }
+
+                    if (((current < 0 && past > 0) || (current > 0 && past < 0)) && Math.abs(current - past) > threshold) {
 						vChannel[y * this.getWidth() + x] = MAX_CHANNEL_COLOR;
 					}
 				}
 				i++;
 			}
 		}
-i=0;
+        i=0;
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getHeight(); y++) {
-				vChannel[y * this.getWidth() + x] = +hChannel[y * this.getWidth() + x];
-				if (vChannel[y * this.getWidth() + x] == 510){
+				vChannel[y * this.getWidth() + x] += hChannel[y * this.getWidth() + x];
+				if (vChannel[y * this.getWidth() + x] > 255){
 					vChannel[y * this.getWidth() + x] = 255;
 				}
 				i++;
