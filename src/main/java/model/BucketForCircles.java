@@ -4,13 +4,13 @@ public class BucketForCircles implements Comparable<BucketForCircles> {
 	double a;
 	double b;
 	double r;
-	int hits;
+	int votes;
 
-	public BucketForCircles(double a, double b, double r, int hits) {
+	public BucketForCircles(double a, double b, double r, int votes) {
 		this.a = a;
 		this.b = b;
 		this.r = r;
-		this.hits = hits;
+		this.votes = votes;
 	}
 
 	@Override
@@ -28,12 +28,7 @@ public class BucketForCircles implements Comparable<BucketForCircles> {
 
 	@Override
 	public int compareTo(BucketForCircles obj) {
-		return obj.hits - hits;
-	}
-
-	@Override
-	public String toString() {
-		return "A: " + a + " B: " + b + " R: " + r + " Hits: " + hits;
+		return obj.votes - votes;
 	}
 
 }

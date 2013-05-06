@@ -2,7 +2,7 @@ package model;
 
 /**
  * Given a ro and a theta, saves the quantity of votes in that position.
- *
+ * 
  */
 public class BucketForLines implements Comparable<BucketForLines> {
 	double ro;
@@ -29,11 +29,6 @@ public class BucketForLines implements Comparable<BucketForLines> {
 	@Override
 	public int compareTo(BucketForLines obj) {
 		return obj.votes - votes;
-	}
-
-	@Override
-	public String toString() {
-		return "Ro: " + ro + " Theta: " + theta + " Hits: " + votes;
 	}
 
 }

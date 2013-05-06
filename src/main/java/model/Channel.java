@@ -744,21 +744,19 @@ public class Channel implements Cloneable {
 		this.channel = newChannel.channel;
 	}
 
-	public void houghTransformForCircles(double eps, double aDiscretization,
-			double bDiscretization, double rDiscretization) {
+	public void houghTransformForCircles(double epsilon) {
 
 		double whiteColor = MAX_CHANNEL_COLOR;
 		Range aRange = new Range(0, width);
 		Range bRange = new Range(0, height);
-		double maxRad = Math.min(width, height);
-		Range rRange = new Range(5, maxRad);
+		
+		//TODO: Verificar si no es el min aca
+		double maxRad = Math.max(width, height);
+		Range rRange = new Range(epsilon, maxRad);
 
-		int aSize = (int) (Math.abs(aRange.getUpperBound()
-				- aRange.getLowerBound()) / aDiscretization);
-		int bSize = (int) (Math.abs(bRange.getUpperBound()
-				- bRange.getLowerBound()) / bDiscretization);
-		int rSize = (int) (Math.abs(rRange.getUpperBound()
-				- rRange.getLowerBound()) / rDiscretization);
+		int aSize = (int) (Math.abs(aRange.getLength()));
+		int bSize = (int) (Math.abs(bRange.getLength()));
+		int rSize = (int) (Math.abs(rRange.getLength()));
 		int[][][] A = new int[aSize][bSize][rSize];
 
 		for (int x = 0; x < width; x++) {
@@ -766,19 +764,16 @@ public class Channel implements Cloneable {
 				double pixel = getPixel(x, y);
 				if (pixel == whiteColor) {
 					for (int a = 0; a < aSize; a++) {
-						double aValue = aRange.getLowerBound() + a
-								* aDiscretization;
+						double aValue = aRange.getLowerBound() + a;
 						double aTerm = Math.pow(x - aValue, 2);
 						for (int b = 0; b < bSize; b++) {
-							double bValue = bRange.getLowerBound() + b
-									* bDiscretization;
+							double bValue = bRange.getLowerBound() + b;
 							double bTerm = Math.pow(y - bValue, 2);
 							for (int r = 0; r < rSize; r++) {
-								double rValue = rRange.getLowerBound() + r
-										* rDiscretization;
+								double rValue = rRange.getLowerBound() + r;
 								double rTerm = Math.pow(rValue, 2);
 								double total = rTerm - aTerm - bTerm;
-								if (Math.abs(total) < eps) {
+								if (Math.abs(total) < epsilon) {
 									A[a][b][r] += 1;
 								}
 							}
@@ -809,37 +804,23 @@ public class Channel implements Cloneable {
 		Collections.sort(allBucketsAsList);
 
 		Channel newChannel = new Channel(width, height);
-		int maxHits = allBucketsAsList.get(0).hits;
+		int maxHits = allBucketsAsList.get(0).votes;
 		if (maxHits > 2)
 			for (BucketForCircles b : allBucketsAsList) {
-				if (b.hits < maxHits) {
+				if (b.votes < maxHits) {
 					break;
 				}
-				double aValue = aRange.getLowerBound() + b.a * aDiscretization/*
-																			 * +
-																			 * aDiscretization
-																			 * /
-																			 * 2
-																			 */;
-				double bValue = bRange.getLowerBound() + b.b * bDiscretization /*
-																				 * +
-																				 * bDiscretization
-																				 * /
-																				 * 2
-																				 */;
-				double rValue = rRange.getLowerBound() + b.r * rDiscretization/*
-																			 * +
-																			 * rDiscretization
-																			 * /
-																			 * 2
-																			 */;
+				double aValue = aRange.getLowerBound() + b.a;
+
+				double bValue = bRange.getLowerBound() + b.b;
+				double rValue = rRange.getLowerBound() + b.r;
 				for (int x = 0; x < width; x++) {
 					for (int y = 0; y < height; y++) {
 						double aTerm = Math.pow(x - aValue, 2);
 						double bTerm = Math.pow(y - bValue, 2);
 						double rTerm = Math.pow(rValue, 2);
 						double total = rTerm - aTerm - bTerm;
-						if (Math.abs(total) < 10 * eps && validPixel(x, y)) {
+						if (Math.abs(total) < 10 * epsilon && validPixel(x, y)) {
 							newChannel.setPixel(x, y, whiteColor);
 						}
 					}
@@ -849,5 +830,4 @@ public class Channel implements Cloneable {
 
 		this.channel = newChannel.channel;
 	}
-
 }

@@ -4,6 +4,8 @@ import java.awt.Color;
 
 import model.ColorImage;
 import model.Image;
+import model.Image.ImageFormat;
+import model.Image.ImageType;
 
 public class ImageCreator {
 
@@ -83,6 +85,26 @@ public class ImageCreator {
 		}
 
 		return degrade;
+	}
+	
+	public static Image circle(int height, int width) {
+		Image binaryImage = new ColorImage(height, width, ImageFormat.BMP, ImageType.GRAYSCALE);
+		
+		Color blackColor = Color.BLACK;
+		Color whiteColor = Color.WHITE;
+		
+		for(int y = 0; y < height; y++) {
+			for(int x = 0; x < width ; x++) {
+				double aTerm = Math.pow(x - width/2, 2);
+				double bTerm = Math.pow(y - height/2, 2);
+				double rTerm = Math.pow(30, 2);
+				boolean fitsInCircle = (aTerm + bTerm) <= rTerm;
+				Color colorToApply = fitsInCircle? whiteColor : blackColor;
+				binaryImage.setRGBPixel(x, y, colorToApply.getRGB());
+			}					
+		}
+		
+		return binaryImage;
 	}
 
 }

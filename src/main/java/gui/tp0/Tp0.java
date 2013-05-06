@@ -1,5 +1,6 @@
 package gui.tp0;
 
+import app.ImageCreator;
 import app.ImageLoader;
 import app.ImageSaver;
 import gui.ExtensionFilter;
@@ -49,7 +50,7 @@ public class Tp0 extends JMenu {
 					} catch (Exception ex) {
 						new MessageFrame("No se pudo cargar la imagen");
 					}
-					
+
 					if (image != null) {
 						// Loads the image to the panel
 						panel.loadImage(image);
@@ -121,6 +122,23 @@ public class Tp0 extends JMenu {
 			}
 		});
 
+		JMenuItem circleBinaryImage = new JMenuItem("Imagen binaria círculo");
+		circleBinaryImage.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+
+				Image img = ImageCreator.circle(300, 300);
+
+				if (img != null) {
+					panel.loadImage(img);
+					panel.repaint();
+				}
+
+			}
+		});
+
 		JMenuItem degradeBW = new JMenuItem("Degrade de grises");
 		degradeBW.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -152,6 +170,7 @@ public class Tp0 extends JMenu {
 		this.add(saveImage);
 		this.add(new JSeparator());
 		this.add(binaryImage);
+		this.add(circleBinaryImage);
 		this.add(degradeBW);
 		this.add(degradeColor);
 	}

@@ -1,14 +1,12 @@
 package gui.tp3;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import gui.MessageFrame;
 import gui.Panel;
 import gui.Window;
-import gui.tp2.GaussianFilter;
 
-import javax.swing.JDialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
