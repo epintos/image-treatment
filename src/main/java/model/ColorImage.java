@@ -3,12 +3,20 @@ package model;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import model.borderDetector.BorderDetector;
 import model.mask.FourMaskContainer;
 import model.mask.Mask;
 import model.mask.MaskFactory;
 import model.mask.TwoMaskContainer;
+
+import org.jfree.data.Range;
+
 import app.ColorUtilities;
 
 public class ColorImage implements Image, Cloneable {
@@ -448,6 +456,29 @@ public class ColorImage implements Image, Cloneable {
 		this.red.otsuThreshold();
 		this.green.otsuThreshold();
 		this.blue.otsuThreshold();
+	}
+	
+	@Override
+	public void houghTransformForLines() {
+		ColorImage backup = clone();
+		
+		this.red.houghTransformForLines(0.75);
+		this.green = this.red;
+		this.blue = this.red;
+		
+		this.add(backup);
+	}
+	
+
+	@Override
+	public void houghTransformForCircles() {
+		ColorImage backup = clone();
+		
+		this.red.houghTransformForCircles(5, 1, 1, 2);
+		this.green = this.red;
+		this.blue = this.red;
+		
+		this.add(backup);
 	}
 
 }

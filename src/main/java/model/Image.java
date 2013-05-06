@@ -230,4 +230,10 @@ public interface Image {
 	public void globalThreshold();
 
 	public void otsuThreshold();
+
+	/*********************** TP3 ************************/
+
+	public void houghTransformForLines();
+
+	public void houghTransformForCircles();
 }

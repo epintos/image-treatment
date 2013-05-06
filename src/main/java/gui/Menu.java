@@ -3,6 +3,7 @@ package gui;
 import gui.tp0.Tp0;
 import gui.tp1.Tp1;
 import gui.tp2.Tp2;
+import gui.tp3.Tp3;
 
 import javax.swing.JMenuBar;
 
@@ -20,6 +21,9 @@ public class Menu extends JMenuBar {
 
 		// Menu for TP2
 		this.add(new Tp2());
+		
+		// Menu for TP3
+		this.add(new Tp3());
 	}
 
 }

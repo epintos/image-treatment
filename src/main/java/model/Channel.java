@@ -1,11 +1,18 @@
 package model;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import model.borderDetector.BorderDetector;
 import model.mask.Mask;
 
-import java.awt.*;
-import java.util.Iterator;
-import java.util.TreeSet;
+import org.jfree.data.Range;
 
 public class Channel implements Cloneable {
 
@@ -470,63 +477,58 @@ public class Channel implements Cloneable {
 
 	public void zeroCross(double threshold) {
 
-		double[] resultChannel = new double[channel.length];
-
 		double[] hChannel = new double[channel.length];
 		double[] vChannel = new double[channel.length];
 
-		int i = 0;
-        double last;
-		for (int x = 0; x < this.getWidth(); x++) {
-			for (int y = 0; y < this.getHeight(); y++) {
-                double past = 0;
-                double current = 0;
-
-                if (x + 1 < width) {
-                    current = this.getPixel(x + 1, y);
-                    last = past;
-                    past = this.getPixel(x, y);
-
-                    if (past == 0 && x > 0) {
-                        past = last;
-                    }
-
-                    if (((current < 0 && past > 0) || (current > 0 && past < 0)) && Math.abs(current - past) > threshold) {
-                        vChannel[y * this.getWidth() + x] = MAX_CHANNEL_COLOR;
-                    }
-                }
-				i++;
-			}
-		}
-		i = 0;
+		double last;
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getHeight(); y++) {
 				double past = 0;
-                double current = 0;
-				if (y + 1 < height) {
-                    current = this.getPixel(x, y + 1);
-                    last = past;
-                    past = this.getPixel(x, y);
+				double current = 0;
 
-                    if (past == 0 && x > 0) {
-                        past = last;
-                    }
+				if (x + 1 < width) {
+					current = this.getPixel(x + 1, y);
+					last = past;
+					past = this.getPixel(x, y);
 
-                    if (((current < 0 && past > 0) || (current > 0 && past < 0)) && Math.abs(current - past) > threshold) {
+					if (past == 0 && x > 0) {
+						past = last;
+					}
+
+					if (((current < 0 && past > 0) || (current > 0 && past < 0))
+							&& Math.abs(current - past) > threshold) {
 						vChannel[y * this.getWidth() + x] = MAX_CHANNEL_COLOR;
 					}
 				}
-				i++;
 			}
 		}
-        i=0;
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getHeight(); y++) {
-				vChannel[y * this.getWidth() + x] += hChannel[y * this.getWidth() + x];
-				if (vChannel[y * this.getWidth() + x] > 255){
+				double past = 0;
+				double current = 0;
+				if (y + 1 < height) {
+					current = this.getPixel(x, y + 1);
+					last = past;
+					past = this.getPixel(x, y);
+
+					if (past == 0 && x > 0) {
+						past = last;
+					}
+
+					if (((current < 0 && past > 0) || (current > 0 && past < 0))
+							&& Math.abs(current - past) > threshold) {
+						vChannel[y * this.getWidth() + x] = MAX_CHANNEL_COLOR;
+					}
+				}
+			}
+		}
+		for (int x = 0; x < this.getWidth(); x++) {
+			for (int y = 0; y < this.getHeight(); y++) {
+				vChannel[y * this.getWidth() + x] += hChannel[y
+						* this.getWidth() + x];
+				if (vChannel[y * this.getWidth() + x] > 255) {
 					vChannel[y * this.getWidth() + x] = 255;
 				}
-				i++;
 			}
 		}
 
@@ -643,7 +645,7 @@ public class Channel implements Cloneable {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				int aColorPixel = (int) this.getPixel(x, y);
-				
+
 				probabilities[aColorPixel] += 1;
 			}
 		}
@@ -653,4 +655,199 @@ public class Channel implements Cloneable {
 
 		return probabilities;
 	}
+
+	public void houghTransformForLines(double epsilon) {
+
+		double whiteColor = MAX_CHANNEL_COLOR;
+		double D = Math.max(width, height);
+		Range roRange = new Range(-Math.sqrt(2) * D, Math.sqrt(2) * D);
+		Range thetaRange = new Range(-90, 90);
+		int roSize = (int) (Math.abs(roRange.getLength()));
+		int thetaSize = (int) (Math.abs(thetaRange.getLength()));
+		int[][] A = new int[roSize][thetaSize];
+
+		// Step 3
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double pixel = getPixel(x, y);
+				if (pixel == whiteColor) {
+
+					// Iterates theta (j) from 1 to m
+					for (int theta = 0; theta < thetaSize; theta++) {
+						double thetaValue = thetaRange.getLowerBound() + theta;
+						double thetaTerm = x
+								* Math.cos(thetaValue * Math.PI / 180) - y
+								* Math.sin(thetaValue * Math.PI / 180);
+
+						// Iterates ro (i) from 1 to n
+						for (int ro = 0; ro < roSize; ro++) {
+							double roValue = roRange.getLowerBound() + ro;
+							double total = roValue - thetaTerm;
+							// If verifies the normal equation of the line, add
+							// 1 to the acumulator
+							// Step 4
+							if (Math.abs(total) < epsilon) {
+								// The maximum values from this vector, gives
+								// the most voted positions.
+								A[ro][theta] += 1;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Step 5
+		Set<BucketForLines> allBuckets = new HashSet<BucketForLines>();
+		for (int ro = 0; ro < roSize; ro++) {
+			for (int theta = 0; theta < thetaSize; theta++) {
+				BucketForLines newBucket = new BucketForLines(ro, theta,
+						A[ro][theta]);
+				allBuckets.add(newBucket);
+			}
+		}
+
+		// Generates a descending sorted list.
+		List<BucketForLines> allBucketsAsList = new ArrayList<BucketForLines>(
+				allBuckets);
+		Collections.sort(allBucketsAsList);
+
+		Channel newChannel = new Channel(width, height);
+		// Gets the max vote number
+		int maxVotes = allBucketsAsList.get(0).votes;
+		if (maxVotes > 1) {
+			for (BucketForLines b : allBucketsAsList) {
+
+				// Only for those with max votes
+				if (b.votes < maxVotes) {
+					break;
+				}
+
+				double roValue = roRange.getLowerBound() + b.ro;
+				double thetaValue = thetaRange.getLowerBound() + b.theta;
+
+				for (int x = 0; x < width; x++) {
+					for (int y = 0; y < height; y++) {
+						double thetaTerm = x
+								* Math.cos(thetaValue * Math.PI / 180) - y
+								* Math.sin(thetaValue * Math.PI / 180);
+						double total = roValue - thetaTerm;
+						// Step 6
+						if (Math.abs(total) < epsilon && validPixel(x, y)) {
+							newChannel.setPixel(x, y, whiteColor);
+						}
+					}
+				}
+
+			}
+		}
+		this.channel = newChannel.channel;
+	}
+
+	public void houghTransformForCircles(double eps, double aDiscretization,
+			double bDiscretization, double rDiscretization) {
+
+		double whiteColor = MAX_CHANNEL_COLOR;
+		Range aRange = new Range(0, width);
+		Range bRange = new Range(0, height);
+		double maxRad = Math.min(width, height);
+		Range rRange = new Range(5, maxRad);
+
+		int aSize = (int) (Math.abs(aRange.getUpperBound()
+				- aRange.getLowerBound()) / aDiscretization);
+		int bSize = (int) (Math.abs(bRange.getUpperBound()
+				- bRange.getLowerBound()) / bDiscretization);
+		int rSize = (int) (Math.abs(rRange.getUpperBound()
+				- rRange.getLowerBound()) / rDiscretization);
+		int[][][] A = new int[aSize][bSize][rSize];
+
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double pixel = getPixel(x, y);
+				if (pixel == whiteColor) {
+					for (int a = 0; a < aSize; a++) {
+						double aValue = aRange.getLowerBound() + a
+								* aDiscretization;
+						double aTerm = Math.pow(x - aValue, 2);
+						for (int b = 0; b < bSize; b++) {
+							double bValue = bRange.getLowerBound() + b
+									* bDiscretization;
+							double bTerm = Math.pow(y - bValue, 2);
+							for (int r = 0; r < rSize; r++) {
+								double rValue = rRange.getLowerBound() + r
+										* rDiscretization;
+								double rTerm = Math.pow(rValue, 2);
+								double total = rTerm - aTerm - bTerm;
+								if (Math.abs(total) < eps) {
+									A[a][b][r] += 1;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		Set<BucketForCircles> allBuckets = new HashSet<BucketForCircles>();
+		for (int a = 0; a < aSize; a++) {
+			for (int b = 0; b < bSize; b++) {
+				for (int r = 0; r < rSize; r++) {
+					if (A[a][b][r] > 0) {
+						BucketForCircles newBucket = new BucketForCircles(a, b,
+								r, A[a][b][r]);
+						allBuckets.add(newBucket);
+					}
+				}
+			}
+		}
+
+		if (allBuckets.isEmpty())
+			return;
+
+		List<BucketForCircles> allBucketsAsList = new ArrayList<BucketForCircles>(
+				allBuckets);
+		Collections.sort(allBucketsAsList);
+
+		Channel newChannel = new Channel(width, height);
+		int maxHits = allBucketsAsList.get(0).hits;
+		if (maxHits > 2)
+			for (BucketForCircles b : allBucketsAsList) {
+				if (b.hits < maxHits) {
+					break;
+				}
+				double aValue = aRange.getLowerBound() + b.a * aDiscretization/*
+																			 * +
+																			 * aDiscretization
+																			 * /
+																			 * 2
+																			 */;
+				double bValue = bRange.getLowerBound() + b.b * bDiscretization /*
+																				 * +
+																				 * bDiscretization
+																				 * /
+																				 * 2
+																				 */;
+				double rValue = rRange.getLowerBound() + b.r * rDiscretization/*
+																			 * +
+																			 * rDiscretization
+																			 * /
+																			 * 2
+																			 */;
+				for (int x = 0; x < width; x++) {
+					for (int y = 0; y < height; y++) {
+						double aTerm = Math.pow(x - aValue, 2);
+						double bTerm = Math.pow(y - bValue, 2);
+						double rTerm = Math.pow(rValue, 2);
+						double total = rTerm - aTerm - bTerm;
+						if (Math.abs(total) < 10 * eps && validPixel(x, y)) {
+							newChannel.setPixel(x, y, whiteColor);
+						}
+					}
+				}
+
+			}
+
+		this.channel = newChannel.channel;
+	}
+
 }
