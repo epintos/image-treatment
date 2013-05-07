@@ -239,6 +239,8 @@ public interface Image {
 	
 	public void applyCannyBorderDetection();
 	
+	public void applySusanMask(boolean detectBorders, boolean detectCorners);
+	
 	public void houghTransformForLines();
 
 	public void houghTransformForCircles();

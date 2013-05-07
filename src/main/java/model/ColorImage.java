@@ -490,5 +490,13 @@ public class ColorImage implements Image, Cloneable {
 		this.green.applyCannyBorderDetection();
 		this.blue.applyCannyBorderDetection();
 	}
+	
+	@Override
+	public void applySusanMask(boolean detectBorders, boolean detectCorners) {
+		this.red.applySusanMask(detectBorders, detectCorners);
+		this.green.applySusanMask(detectBorders, detectCorners);
+		this.blue.applySusanMask(detectBorders, detectCorners);
+	}
+	
 
 }

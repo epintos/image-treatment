@@ -975,4 +975,66 @@ public class Channel implements Cloneable {
 
 		this.channel = thresholdedChannelInBetween.channel;
 	}
+	
+	public void applySusanMask(boolean detectBorders, boolean detectCorners) {
+		double blackColor = MIN_CHANNEL_COLOR;
+		double whiteColor = MAX_CHANNEL_COLOR;
+		
+		Mask mask = MaskFactory.buildSusanMask();
+		Channel newChannel = new Channel(this.width, this.height);
+		for( int x = 0 ; x < width ; x++ ){
+			for( int y = 0 ; y < height ; y++){
+				double newPixelValue = blackColor;
+				double s_ro = applySusanPixelMask(x, y, mask);
+				if(detectBorders && isBorder(s_ro) || detectCorners && isCorner(s_ro)) {
+					newPixelValue = whiteColor;
+				}
+				newChannel.setPixel(x, y, newPixelValue);
+			}
+		}
+		this.channel = newChannel.channel;
+	}
+	
+	//S_ro ~= 0.5
+	private boolean isBorder(double s_ro) {
+		double lowLimit = 0.5 - (0.75 - 0.5) / 2;
+		double highLimit = 0.5 + (0.75 - 0.5) / 2;
+		
+		return s_ro > lowLimit && s_ro <= highLimit;
+	}
+	
+	//S_ro ~= 0.75
+	private boolean isCorner(double s_ro) {
+		double lowLimit = 0.75 - (0.75 - 0.5) / 2;
+		double highLimit = 0.75 + (0.75 - 0.5) / 2;
+		
+		return s_ro > lowLimit && s_ro <= highLimit;
+	}
+	
+	private double applySusanPixelMask(int x, int y, Mask mask) {
+		boolean ignoreByX = x < mask.getWidth() / 2 || x > this.getWidth() - mask.getWidth() / 2;
+		boolean ignoreByY = y < mask.getHeight() / 2 || y > this.getHeight() - mask.getHeight() / 2;
+		if(ignoreByX || ignoreByY) {
+			return this.getPixel(x, y);
+		}
+		
+		//Step 2.
+		final int threshold = 27;
+		int n_ro = 0;
+		double ro = this.getPixel(x, y);
+		for(int i = - mask.getWidth() / 2 ; i <= mask.getWidth() / 2; i++) {
+			for(int j = - mask.getHeight() / 2; j <= mask.getHeight() / 2; j++) {
+				if(this.validPixel(x + i, y + j) && mask.getValue(i, j) == 1) {
+					double eachPixel = this.getPixel(x + i, y + j);
+					if(Math.abs(ro - eachPixel) < threshold) {
+						n_ro += 1;
+					}
+				}
+			}
+		}
+		
+		final double N = 37.0;
+		double s_ro = 1 - n_ro / N;
+		return s_ro;
+	}
 }

@@ -328,5 +328,37 @@ public class MaskFactory {
 		}
 		return mask;
 	}
+	
+	/**
+	 * Build "circular" Susan mask
+	 * @return
+	 */
+	public static Mask buildSusanMask() {
+		Mask mask = new Mask(7);
+		
+		for(int i = - mask.getWidth() / 2 ; i <= mask.getWidth() / 2; i++) {
+			for(int j = - mask.getHeight() / 2; j <= mask.getHeight() / 2; j++) {
+				mask.setPixel(i, j, 1);
+			}
+		}
+		
+		mask.setPixel(-3, -3, 0);
+		mask.setPixel(-3, -2, 0);
+		mask.setPixel(-3, 2, 0);
+		mask.setPixel(-3, 3, 0);
+		
+		mask.setPixel(-2, -3, 0);
+		mask.setPixel(-2, 3, 0);
+		
+		mask.setPixel(2, -3, 0);
+		mask.setPixel(2, 3, 0);
+		
+		mask.setPixel(3, -3, 0);
+		mask.setPixel(3, -2, 0);
+		mask.setPixel(3, 2, 0);
+		mask.setPixel(3, 3, 0);
+		
+		return mask;
+	}
 
 }

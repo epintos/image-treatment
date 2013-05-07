@@ -60,6 +60,19 @@ public class Tp3 extends JMenu {
 			}
 		});
 
+		JMenuItem susan = new JMenuItem("Susan");
+		susan.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog susanBorderDetectorDialog = new SusanBorderDetectorDialog(
+							panel);
+					susanBorderDetectorDialog.setVisible(true);
+				}
+			}
+		});
+
 		JMenuItem houghForLines = new JMenuItem("Hough para Líneas");
 		houghForLines.addActionListener(new ActionListener() {
 			@Override
@@ -90,6 +103,8 @@ public class Tp3 extends JMenu {
 		this.add(thresholdWithHysteresis);
 		this.add(new JSeparator());
 		this.add(canny);
+		this.add(new JSeparator());
+		this.add(susan);
 		this.add(new JSeparator());
 		this.add(houghForLines);
 		this.add(houghForCircles);
