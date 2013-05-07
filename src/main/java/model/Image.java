@@ -233,6 +233,10 @@ public interface Image {
 
 	/*********************** TP3 ************************/
 
+	public void thresholdWithHysteresis(double t1, double t2);
+	
+	public void applyCannyBorderDetection();
+	
 	public void houghTransformForLines();
 
 	public void houghTransformForCircles();

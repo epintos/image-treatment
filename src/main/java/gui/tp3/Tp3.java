@@ -7,6 +7,7 @@ import gui.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
@@ -20,6 +21,32 @@ public class Tp3 extends JMenu {
 	public Tp3() {
 		super("TP 3");
 		this.setEnabled(true);
+
+		JMenuItem thresholdWithHysteresis = new JMenuItem(
+				"Umbral con histéresis");
+		thresholdWithHysteresis.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					JDialog thresholdWithHysteresisDialog = new ThresholdWithHysteresisDialog(
+							panel);
+					thresholdWithHysteresisDialog.setVisible(true);
+				}
+			}
+		});
+
+		JMenuItem canny = new JMenuItem("Canny");
+		canny.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					panel.getWorkingImage().applyCannyBorderDetection();
+					panel.repaint();
+				}
+			}
+		});
 
 		JMenuItem houghForLines = new JMenuItem("Hough para Líneas");
 		houghForLines.addActionListener(new ActionListener() {
@@ -45,7 +72,10 @@ public class Tp3 extends JMenu {
 				}
 			}
 		});
-
+		this.add(thresholdWithHysteresis);
+		this.add(new JSeparator());
+		this.add(canny);
+		this.add(new JSeparator());
 		this.add(houghForLines);
 		this.add(houghForCircles);
 		this.add(new JSeparator());

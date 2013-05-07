@@ -408,13 +408,11 @@ public class ColorImage implements Image, Cloneable {
 		this.synthesize(st, imageCopy1, imageCopy2, imageCopy3);
 	}
 
-	
-
 	@Override
-	public void applyLaplaceMask(){
+	public void applyLaplaceMask() {
 		this.applyMask(MaskFactory.buildLaplaceMask());
 	}
-	
+
 	@Override
 	public void applyLaplaceVarianceMask(int variance) {
 		this.applyMask(MaskFactory.buildLaplaceMask());
@@ -423,54 +421,68 @@ public class ColorImage implements Image, Cloneable {
 		this.green.localVarianceEvaluation(variance);
 		this.blue.localVarianceEvaluation(variance);
 	}
-	
+
 	@Override
 	public void applyLaplaceGaussianMask(int maskSize, double sigma) {
 		this.applyMask(MaskFactory.buildLaplaceGaussianMask(maskSize, sigma));
 	}
-	
+
 	@Override
-	public void applyZeroCrossing(double threshold){
+	public void applyZeroCrossing(double threshold) {
 		this.red.zeroCross(threshold);
 		this.green.zeroCross(threshold);
 		this.blue.zeroCross(threshold);
 	}
-	
+
 	@Override
 	public void globalThreshold() {
 		this.red.globalThreshold();
 		this.green.globalThreshold();
 		this.blue.globalThreshold();
 	}
-	
+
 	@Override
 	public void otsuThreshold() {
 		this.red.otsuThreshold();
 		this.green.otsuThreshold();
 		this.blue.otsuThreshold();
 	}
-	
+
 	@Override
 	public void houghTransformForLines() {
 		ColorImage backup = clone();
-		
+
 		this.red.houghTransformForLines(0.75);
 		this.green = this.red;
 		this.blue = this.red;
-		
+
 		this.add(backup);
 	}
-	
 
 	@Override
 	public void houghTransformForCircles() {
 		ColorImage backup = clone();
-		
+
 		this.red.houghTransformForCircles(5);
 		this.green = this.red;
 		this.blue = this.red;
-		
+
 		this.add(backup);
+	}
+
+	@Override
+	public void thresholdWithHysteresis(double t1,
+			double t2) {
+		this.red.thresholdWithHysteresis(t1, t2);
+		this.green.thresholdWithHysteresis(t1, t2);
+		this.blue.thresholdWithHysteresis(t1, t2);
+	}
+
+	@Override
+	public void applyCannyBorderDetection() {
+		this.red.applyCannyBorderDetection();
+		this.green.applyCannyBorderDetection();
+		this.blue.applyCannyBorderDetection();
 	}
 
 }

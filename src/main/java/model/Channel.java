@@ -11,6 +11,8 @@ import java.util.TreeSet;
 
 import model.borderDetector.BorderDetector;
 import model.mask.Mask;
+import model.mask.MaskFactory;
+import model.mask.TwoMaskContainer;
 
 import org.jfree.data.Range;
 
@@ -749,8 +751,8 @@ public class Channel implements Cloneable {
 		double whiteColor = MAX_CHANNEL_COLOR;
 		Range aRange = new Range(0, width);
 		Range bRange = new Range(0, height);
-		
-		//TODO: Verificar si no es el min aca
+
+		// TODO: Verificar si no es el min aca
 		double maxRad = Math.max(width, height);
 		Range rRange = new Range(epsilon, maxRad);
 
@@ -829,5 +831,129 @@ public class Channel implements Cloneable {
 			}
 
 		this.channel = newChannel.channel;
+	}
+
+	public void applyCannyBorderDetection() {
+		List<Channel> channelList = new ArrayList<Channel>();
+		for (int maskSize = 3; maskSize <= 5; maskSize += 2) {
+			for (double sigma = 0.05; sigma <= 0.25; sigma += 0.05) {
+				Channel each = applyCannyBorderDetection(maskSize, sigma);
+				channelList.add(each);
+			}
+		}
+
+		Channel initialChannel = channelList.get(0);
+		Channel[] restOfChannels = channelList.subList(1, channelList.size())
+				.toArray(new Channel[channelList.size() - 1]);
+		initialChannel.synthesize(SynthesizationType.MAX, restOfChannels);
+		this.channel = initialChannel.channel;
+	}
+
+	private Channel applyCannyBorderDetection(int maskSize, double sigma) {
+		Channel channelToModify = clone();
+		channelToModify.applyMask(MaskFactory
+				.buildGaussianMask(maskSize, sigma));
+
+		TwoMaskContainer mc = MaskFactory.buildSobelMasks();
+		Channel G1 = channelToModify.clone();
+		G1.applyMask(mc.getDXMask());
+		Channel G2 = channelToModify.clone();
+		G2.applyMask(mc.getDYMask());
+
+		Channel direction = new Channel(width, height);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double pxG1 = G1.getPixel(x, y);
+				double pxG2 = G2.getPixel(x, y);
+				double anAngle = 0;
+				if (pxG2 != 0) {
+					anAngle = Math.atan(pxG1 / pxG2);
+				}
+				anAngle *= (180 / Math.PI);
+				direction.setPixel(x, y, anAngle);
+			}
+		}
+
+		G1.synthesize(SynthesizationType.ABS, G2);
+		channelToModify.channel = G1.channel;
+		channelToModify.suppressNoMaxs(direction);
+		double globalThresholdValue = channelToModify.getGlobalThresholdValue();
+		channelToModify.thresholdWithHysteresis(globalThresholdValue,
+				globalThresholdValue + 30);
+		return channelToModify;
+	}
+
+	private void suppressNoMaxs(Channel directionChannel) {
+		for (int x = 1; x < width - 1; x++) {
+			for (int y = 1; y < height - 1; y++) {
+				double pixel = getPixel(x, y);
+				if (pixel == MIN_CHANNEL_COLOR) {
+					continue;
+				}
+
+				double direction = directionChannel.getPixel(x, y);
+				double neighbor1 = 0;
+				double neighbor2 = 0;
+				if (direction >= -90 && direction < -45) {
+					neighbor1 = getPixel(x, y - 1);
+					neighbor2 = getPixel(x, y + 1);
+				} else if (direction >= -45 && direction < 0) {
+					neighbor1 = getPixel(x + 1, y - 1);
+					neighbor2 = getPixel(x - 1, y + 1);
+				} else if (direction >= 0 && direction < 45) {
+					neighbor1 = getPixel(x + 1, y);
+					neighbor2 = getPixel(x - 1, y);
+				} else if (direction >= 45 && direction <= 90) {
+					neighbor1 = getPixel(x + 1, y + 1);
+					neighbor2 = getPixel(x - 1, y - 1);
+				}
+
+				if (neighbor1 > pixel || neighbor2 > pixel) {
+					setPixel(x, y, MIN_CHANNEL_COLOR);
+				}
+			}
+		}
+	}
+
+	public void thresholdWithHysteresis(double t1, double t2) {
+		double blackColor = MIN_CHANNEL_COLOR;
+		double whiteColor = MAX_CHANNEL_COLOR;
+		
+		Channel thresholdedChannelOutsider = clone();
+		for( int x = 0 ; x < width ; x++ ) {
+			for( int y = 0 ; y < height ; y++) {
+				double pixel = this.getPixel(x, y);
+				double colorToApply = pixel;
+				if(pixel < t1) {
+					//Incorrect pixels
+					colorToApply = blackColor;
+				} else if(pixel > t2) {
+					//Correct pixels (Border pixels)
+					colorToApply = whiteColor;
+				}
+				thresholdedChannelOutsider.setPixel(x, y, colorToApply);
+			}
+		}
+		
+		Channel thresholdedChannelInBetween = thresholdedChannelOutsider.clone();
+		for( int x = 0 ; x < width ; x++ ) {
+			for( int y = 0 ; y < height; y++) {
+				double pixel = this.getPixel(x, y);
+				if(pixel >= t1 && pixel <= t2) {
+					//Analyze if the pixel is neighbour of a border (a correct pixel)
+					boolean isBorderNeighbor1 = y > 0 && thresholdedChannelOutsider.getPixel(x, y - 1) == whiteColor;
+					boolean isBorderNeighbor2 = x > 0 && thresholdedChannelOutsider.getPixel(x - 1, y) == whiteColor;
+					boolean isBorderNeighbor3 = y < height - 1 && thresholdedChannelOutsider.getPixel(x, y + 1) == whiteColor;
+					boolean isBorderNeighbor4 = x < width - 1 && thresholdedChannelOutsider.getPixel(x + 1, y) == whiteColor;
+					if(isBorderNeighbor1 || isBorderNeighbor2 || isBorderNeighbor3 || isBorderNeighbor4) {
+						thresholdedChannelInBetween.setPixel(x, y, whiteColor);
+					} else {
+						thresholdedChannelInBetween.setPixel(x, y, blackColor);
+					}
+				}
+			}
+		}
+		
+		this.channel = thresholdedChannelInBetween.channel;
 	}
 }
