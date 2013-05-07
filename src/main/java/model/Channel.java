@@ -854,12 +854,15 @@ public class Channel implements Cloneable {
 		channelToModify.applyMask(MaskFactory
 				.buildGaussianMask(maskSize, sigma));
 
+		// Step 2: Applies sobel masks.
 		TwoMaskContainer mc = MaskFactory.buildSobelMasks();
 		Channel G1 = channelToModify.clone();
 		G1.applyMask(mc.getDXMask());
 		Channel G2 = channelToModify.clone();
 		G2.applyMask(mc.getDYMask());
 
+		// Step 3: Get gradient angle to estimate the perpendicular direction to
+		// the border.
 		Channel direction = new Channel(width, height);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -876,11 +879,18 @@ public class Channel implements Cloneable {
 
 		G1.synthesize(SynthesizationType.ABS, G2);
 		channelToModify.channel = G1.channel;
+		
+		
+		//??????
 		channelToModify.suppressNoMaxs(direction);
 		double globalThresholdValue = channelToModify.getGlobalThresholdValue();
 		channelToModify.thresholdWithHysteresis(globalThresholdValue,
 				globalThresholdValue + 30);
 		return channelToModify;
+	}
+
+	public void suppressNoMaxs() {
+		suppressNoMaxs(this);
 	}
 
 	private void suppressNoMaxs(Channel directionChannel) {
@@ -894,6 +904,7 @@ public class Channel implements Cloneable {
 				double direction = directionChannel.getPixel(x, y);
 				double neighbor1 = 0;
 				double neighbor2 = 0;
+				//Get neighbours
 				if (direction >= -90 && direction < -45) {
 					neighbor1 = getPixel(x, y - 1);
 					neighbor2 = getPixel(x, y + 1);
@@ -908,6 +919,7 @@ public class Channel implements Cloneable {
 					neighbor2 = getPixel(x - 1, y - 1);
 				}
 
+				//If neighbours are greater than the pixels, erase them from borders.
 				if (neighbor1 > pixel || neighbor2 > pixel) {
 					setPixel(x, y, MIN_CHANNEL_COLOR);
 				}
@@ -918,34 +930,41 @@ public class Channel implements Cloneable {
 	public void thresholdWithHysteresis(double t1, double t2) {
 		double blackColor = MIN_CHANNEL_COLOR;
 		double whiteColor = MAX_CHANNEL_COLOR;
-		
+
 		Channel thresholdedChannelOutsider = clone();
-		for( int x = 0 ; x < width ; x++ ) {
-			for( int y = 0 ; y < height ; y++) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				double pixel = this.getPixel(x, y);
 				double colorToApply = pixel;
-				if(pixel < t1) {
-					//Incorrect pixels
+				if (pixel < t1) {
+					// Incorrect pixels
 					colorToApply = blackColor;
-				} else if(pixel > t2) {
-					//Correct pixels (Border pixels)
+				} else if (pixel > t2) {
+					// Correct pixels (Border pixels)
 					colorToApply = whiteColor;
 				}
 				thresholdedChannelOutsider.setPixel(x, y, colorToApply);
 			}
 		}
-		
-		Channel thresholdedChannelInBetween = thresholdedChannelOutsider.clone();
-		for( int x = 0 ; x < width ; x++ ) {
-			for( int y = 0 ; y < height; y++) {
+
+		Channel thresholdedChannelInBetween = thresholdedChannelOutsider
+				.clone();
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				double pixel = this.getPixel(x, y);
-				if(pixel >= t1 && pixel <= t2) {
-					//Analyze if the pixel is neighbour of a border (a correct pixel)
-					boolean isBorderNeighbor1 = y > 0 && thresholdedChannelOutsider.getPixel(x, y - 1) == whiteColor;
-					boolean isBorderNeighbor2 = x > 0 && thresholdedChannelOutsider.getPixel(x - 1, y) == whiteColor;
-					boolean isBorderNeighbor3 = y < height - 1 && thresholdedChannelOutsider.getPixel(x, y + 1) == whiteColor;
-					boolean isBorderNeighbor4 = x < width - 1 && thresholdedChannelOutsider.getPixel(x + 1, y) == whiteColor;
-					if(isBorderNeighbor1 || isBorderNeighbor2 || isBorderNeighbor3 || isBorderNeighbor4) {
+				if (pixel >= t1 && pixel <= t2) {
+					// Analyze if the pixel is neighbour of a border (a correct
+					// pixel)
+					boolean isBorderNeighbor1 = y > 0
+							&& thresholdedChannelOutsider.getPixel(x, y - 1) == whiteColor;
+					boolean isBorderNeighbor2 = x > 0
+							&& thresholdedChannelOutsider.getPixel(x - 1, y) == whiteColor;
+					boolean isBorderNeighbor3 = y < height - 1
+							&& thresholdedChannelOutsider.getPixel(x, y + 1) == whiteColor;
+					boolean isBorderNeighbor4 = x < width - 1
+							&& thresholdedChannelOutsider.getPixel(x + 1, y) == whiteColor;
+					if (isBorderNeighbor1 || isBorderNeighbor2
+							|| isBorderNeighbor3 || isBorderNeighbor4) {
 						thresholdedChannelInBetween.setPixel(x, y, whiteColor);
 					} else {
 						thresholdedChannelInBetween.setPixel(x, y, blackColor);
@@ -953,7 +972,7 @@ public class Channel implements Cloneable {
 				}
 			}
 		}
-		
+
 		this.channel = thresholdedChannelInBetween.channel;
 	}
 }

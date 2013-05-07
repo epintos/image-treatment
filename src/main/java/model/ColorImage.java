@@ -471,6 +471,12 @@ public class ColorImage implements Image, Cloneable {
 	}
 
 	@Override
+	public void suppressNoMaxs() {
+		this.red.suppressNoMaxs();
+		this.green.suppressNoMaxs();
+		this.blue.suppressNoMaxs();
+	}
+	@Override
 	public void thresholdWithHysteresis(double t1,
 			double t2) {
 		this.red.thresholdWithHysteresis(t1, t2);

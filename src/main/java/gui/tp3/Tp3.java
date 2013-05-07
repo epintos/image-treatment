@@ -22,6 +22,18 @@ public class Tp3 extends JMenu {
 		super("TP 3");
 		this.setEnabled(true);
 
+		JMenuItem supressNoMaxs = new JMenuItem("Supresión de No Máximos");
+		supressNoMaxs.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+				if (imageLoaded(panel)) {
+					panel.getWorkingImage().suppressNoMaxs();
+					panel.repaint();
+				}
+			}
+		});
+
 		JMenuItem thresholdWithHysteresis = new JMenuItem(
 				"Umbral con histéresis");
 		thresholdWithHysteresis.addActionListener(new ActionListener() {
@@ -72,6 +84,9 @@ public class Tp3 extends JMenu {
 				}
 			}
 		});
+
+		this.add(supressNoMaxs);
+		this.add(new JSeparator());
 		this.add(thresholdWithHysteresis);
 		this.add(new JSeparator());
 		this.add(canny);
