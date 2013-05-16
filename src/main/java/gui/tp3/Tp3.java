@@ -3,16 +3,11 @@ package gui.tp3;
 import gui.MessageFrame;
 import gui.Panel;
 import gui.Window;
+import model.Image;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JDialog;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
-
-import model.Image;
 
 public class Tp3 extends JMenu {
 
@@ -98,7 +93,18 @@ public class Tp3 extends JMenu {
 			}
 		});
 
-		this.add(supressNoMaxs);
+        JMenuItem tracking = new JMenuItem("Tracking de Imágenes");
+        tracking.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+                JDialog trackingDialog = new TrackingDialog(panel);
+                trackingDialog.setVisible(true);
+            }
+        });
+
+
+        this.add(supressNoMaxs);
 		this.add(new JSeparator());
 		this.add(thresholdWithHysteresis);
 		this.add(new JSeparator());
@@ -109,8 +115,9 @@ public class Tp3 extends JMenu {
 		this.add(houghForLines);
 		this.add(houghForCircles);
 		this.add(new JSeparator());
+        this.add(tracking);
 
-	}
+    }
 
 	private boolean imageLoaded(Panel panel) {
 		Image panelImage = panel.getWorkingImage();

@@ -1,13 +1,16 @@
 package model;
 
 import java.awt.Point;
+import java.util.List;
 
 import model.borderDetector.BorderDetector;
 import model.mask.Mask;
 
 public interface Image {
 
-	/**
+    void tracking(List<Point> selection);
+
+    /**
 	 * Color channels
 	 */
 	public static enum ColorChannel {

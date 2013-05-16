@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Panel extends JPanel {
 
@@ -13,8 +15,9 @@ public class Panel extends JPanel {
 	private Image workingImage = null;
 	private Image image = null;
     private Image lastImg = null;
+    private List<Point> mask;
 
-	/**
+    /**
 	 * Paints an image in the panel
 	 */
 	public void paintComponent(Graphics g) {
@@ -29,6 +32,14 @@ public class Panel extends JPanel {
 			this.getTopLevelAncestor().setSize(workingImage.getWidth() + 7,
 					workingImage.getHeight() + 53);
 		}
+
+        if(mask != null){
+            for(Point p: mask){
+                g.setColor(Color.RED);
+                g.drawRect(p.x, p.y, 1, 1);
+            }
+
+        }
 	}
 
 	/**
@@ -92,6 +103,7 @@ public class Panel extends JPanel {
         Action undoAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 setWorkingImage(getImage());
+                mask = null;
                 repaint();
             }
         };
@@ -113,5 +125,23 @@ public class Panel extends JPanel {
             i.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), UNDO);
             i.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), REDO);
         }
+    }
+
+    public List<Point> getMask() {
+        if(mask == null)
+            return null;
+        Point p1 = mask.get(0);
+        Point p2 = mask.get(1);
+        this.mask = new ArrayList<Point>();
+        for(int y = Math.min(p1.y, p2.y); y <= Math.max(p1.y, p2.y); y++){
+            for(int x = Math.min(p1.x, p2.x); x <= Math.max(p1.x, p2.x); x++){
+                mask.add(new Point(x, y));
+            }
+        }
+        return mask;
+    }
+
+    public void loadMask(List<Point> o) {
+        this.mask = o;
     }
 }

@@ -1,15 +1,15 @@
 package model;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-
+import app.ColorUtilities;
 import model.borderDetector.BorderDetector;
 import model.mask.FourMaskContainer;
 import model.mask.Mask;
 import model.mask.MaskFactory;
 import model.mask.TwoMaskContainer;
-import app.ColorUtilities;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class ColorImage implements Image, Cloneable {
 
@@ -497,6 +497,94 @@ public class ColorImage implements Image, Cloneable {
 		this.green.applySusanMask(detectBorders, detectCorners);
 		this.blue.applySusanMask(detectBorders, detectCorners);
 	}
-	
+
+
+    @Override
+    public void tracking(List<Point> selection) {
+        TitaFunction tita = new TitaFunction(selection, this.red.getHeight(), this.red.getWidth());
+        int times = (int)(1.5 * Math.max(this.red.getHeight(), this.red.getWidth()));
+        boolean changes = true;
+        List<Point> in = tita.getIn();
+        List<Point> out = tita.getOut();
+        double[] averageIn = getAverage(in);
+        double[] averageOut = getAverage(out);
+
+        while((times > 0) && changes){
+            changes = false;
+            List<Point> lOut = tita.getlOut();
+            for(Point p: lOut){
+                if( Fd(p, averageIn, averageOut) > 0){
+                    tita.setlIn(p);
+                    for(Point y: TitaFunction.N4(p)){
+                        if(tita.isOut(y)){
+                            tita.setlOut(y);
+                        }
+                    }
+                    for(Point y: TitaFunction.N4(p)){
+                        if(tita.islIn(y)){
+                            tita.setIn(y);
+                        }
+                    }
+                    changes = true;
+                }
+            }
+            List<Point> lIn = tita.getlIn();
+            for(Point p: lIn){
+                if( Fd(p, averageIn, averageOut) < 0){
+                    tita.setlOut(p);
+                    for(Point y: TitaFunction.N4(p)){
+                        if(tita.isIn(y)){
+                            tita.setlIn(y);
+                        }
+                    }
+                    for(Point y: TitaFunction.N4(p)){
+                        if(tita.islOut(y)){
+                            tita.setOut(y);
+                        }
+                    }
+                    changes = true;
+                }
+            }
+            times--;
+        }
+        selection.clear();
+        selection.addAll(tita.getIn());
+    }
+
+    private double[] getAverage(List<Point> l){
+        double[] ret = new double[3];
+        ret[0] = 0;
+        ret[1] = 0;
+        ret[2] = 0;
+        for(Point c: l){
+            ret[0]+=this.red.getPixel(c.x, c.y);
+        }
+        ret[0]=ret[0]/l.size();
+
+        for(Point c: l){
+            ret[1]+=this.green.getPixel(c.x, c.y);
+        }
+        ret[1]=ret[1]/l.size();
+
+        for(Point c: l){
+            ret[2]+=this.blue.getPixel(c.x, c.y);
+        }
+        ret[2]=ret[2]/l.size();
+
+        return ret;
+    }
+
+    private double Fd(Point p, double[] averageIn, double[] averageOut) {
+        double p1, p2;
+        double red, green, blue;
+        red = this.red.getPixel(p.x, p.y);
+        green = this.green.getPixel(p.x, p.y);
+        blue =  this.blue.getPixel(p.x, p.y);
+
+        p1 = Math.sqrt(Math.pow((averageIn[0] - red), 2) + Math.pow((averageIn[1] - green), 2) + Math.pow((averageIn[2] - blue), 2));
+        p2 = Math.sqrt(Math.pow((averageOut[0] - red), 2) + Math.pow((averageOut[1] - green), 2) + Math.pow((averageOut[2] - blue), 2));
+        return p2 - p1;
+    }
+
 
 }

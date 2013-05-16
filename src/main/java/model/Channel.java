@@ -940,7 +940,7 @@ public class Channel implements Cloneable {
 		}
 
 		Channel thresholdedChannelInBetween = thresholdedChannelOutsider
-				.clone();
+			.clone();
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				double pixel = this.getPixel(x, y);
