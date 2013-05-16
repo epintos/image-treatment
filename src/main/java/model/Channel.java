@@ -1,20 +1,14 @@
 package model;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 import model.borderDetector.BorderDetector;
 import model.mask.Mask;
 import model.mask.MaskFactory;
 import model.mask.TwoMaskContainer;
-
 import org.jfree.data.Range;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class Channel implements Cloneable {
 
@@ -878,7 +872,7 @@ public class Channel implements Cloneable {
 		G1.synthesize(SynthesizationType.ABS, G2);
 		channelToModify.channel = G1.channel;
 
-		// ??????
+        // TODO: Add parameters for threshold, sure we need to use a global threshold?
 		channelToModify.suppressNoMaxs(direction);
 		double globalThresholdValue = channelToModify.getGlobalThresholdValue();
 		channelToModify.thresholdWithHysteresis(globalThresholdValue,
@@ -984,8 +978,8 @@ public class Channel implements Cloneable {
 			for (int y = 0; y < height; y++) {
 				double newPixelValue = blackColor;
 				double s_ro = applySusanPixelMask(x, y, mask);
-				if (detectBorders && isBorder(s_ro) || detectCorners
-						&& isCorner(s_ro)) {
+				if ((detectBorders && isBorder(s_ro)) || (detectCorners
+						&& isCorner(s_ro))) {
 					newPixelValue = whiteColor;
 				}
 				newChannel.setPixel(x, y, newPixelValue);
@@ -1016,7 +1010,7 @@ public class Channel implements Cloneable {
 		boolean ignoreByY = y < mask.getHeight() / 2
 				|| y > this.getHeight() - mask.getHeight() / 2;
 		if (ignoreByX || ignoreByY) {
-			return this.getPixel(x, y);
+			return 1;
 		}
 
 		// Step 2.
