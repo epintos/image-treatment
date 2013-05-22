@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Panel extends JPanel {
@@ -128,16 +127,6 @@ public class Panel extends JPanel {
     }
 
     public List<Point> getMask() {
-        if(mask == null)
-            return null;
-        Point p1 = mask.get(0);
-        Point p2 = mask.get(1);
-        this.mask = new ArrayList<Point>();
-        for(int y = Math.min(p1.y, p2.y); y <= Math.max(p1.y, p2.y); y++){
-            for(int x = Math.min(p1.x, p2.x); x <= Math.max(p1.x, p2.x); x++){
-                mask.add(new Point(x, y));
-            }
-        }
         return mask;
     }
 

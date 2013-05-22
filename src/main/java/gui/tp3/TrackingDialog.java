@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class TrackingDialog extends JDialog {
     List<Point> mask = new ArrayList<Point>();
+    private Runnable onClick = null;
 
     public TrackingDialog(final Panel panel) {
         setTitle("Tracking");
@@ -52,16 +53,20 @@ public class TrackingDialog extends JDialog {
                     panel.repaint();
                     if(mask.size() == 2){
                         okButton.setEnabled(true);
-                        panel.removeMouseListener(panel.getMouseListeners()[0]);
+                        panel.removeMouseListener(this);
                     }
                 }
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {}
+
             @Override
             public void mouseExited(MouseEvent e) {}
+
             @Override
             public void mousePressed(MouseEvent e) {}
+
             @Override
             public void mouseReleased(MouseEvent e) {}
         };
@@ -72,8 +77,11 @@ public class TrackingDialog extends JDialog {
             public void actionPerformed(ActionEvent e){
                 model.Image aux = ((ColorImage)panel.getImage()).clone();
                 aux.applyMask(MaskFactory.buildGaussianMask(5, 5));
-                aux.tracking(panel.getMask());
+                aux.tracking(panel.getMask(), null);
                 panel.repaint();
+                if (onClick != null) {
+                    onClick.run();
+                }
                 panel.removeMouseListener(listener);
                 dispose();
             }
@@ -84,5 +92,13 @@ public class TrackingDialog extends JDialog {
         pan1.add(msg);
         this.add(pan1);
         this.add(okButton);
+    }
+
+    public Runnable getOnClick() {
+        return onClick;
+    }
+
+    public void setOnClick(Runnable onClick) {
+        this.onClick = onClick;
     }
 }

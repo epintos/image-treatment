@@ -20,9 +20,9 @@ public class ColorImage implements Image, Cloneable {
 	private Channel blue;
 
 	public ColorImage(int height, int width, ImageFormat format, ImageType type) {
-		if (format == null) {
-			throw new IllegalArgumentException("ImageFormat can't be null");
-		}
+//		if (format == null) {
+//			throw new IllegalArgumentException("ImageFormat can't be null");
+//		}
 
 		// Initialize a channel for each RGB color
 		this.red = new Channel(width, height);
@@ -500,13 +500,15 @@ public class ColorImage implements Image, Cloneable {
 
 
     @Override
-    public void tracking(List<Point> selection) {
+    public double[] tracking(List<Point> selection, double[] avgIn) {
         TitaFunction tita = new TitaFunction(selection, this.red.getHeight(), this.red.getWidth());
         int times = (int)(1.5 * Math.max(this.red.getHeight(), this.red.getWidth()));
         boolean changes = true;
         List<Point> in = tita.getIn();
         List<Point> out = tita.getOut();
-        double[] averageIn = getAverage(in);
+
+
+        double[] averageIn = (avgIn == null) ? getAverage(in) : avgIn;
         double[] averageOut = getAverage(out);
 
         while((times > 0) && changes){
@@ -549,7 +551,10 @@ public class ColorImage implements Image, Cloneable {
         }
         selection.clear();
         selection.addAll(tita.getIn());
+
+        return averageIn;
     }
+
 
     private double[] getAverage(List<Point> l){
         double[] ret = new double[3];

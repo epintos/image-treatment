@@ -13,15 +13,6 @@ public class TitaFunction {
     private int height;
     private int width;
 
-    public static List<Point> N4(Point p) {
-        List<Point> resp = new ArrayList<Point>();
-        resp.add(new Point(p.x, p.y-1));
-        resp.add(new Point(p.x-1, p.y));
-        resp.add(new Point(p.x+1,p.y));
-        resp.add(new Point(p.x, p.y+1));
-        return resp;
-    }
-
     public TitaFunction(List<Point> selection, int height, int width) {
         values = new int[height][width];
         this.height = height;
@@ -33,24 +24,39 @@ public class TitaFunction {
         }
 
         for(Point c: selection){
-            values[c.y][c.x] = -3;
+            if (!outOfBounds(c)) {
+                values[c.y][c.x] = -3;
+            }
         }
         List<Point> in = this.getIn();
         for(Point c: in){
             for(Point n: N4(c)){
-                if(values[n.y][n.x] == 3){
-                    values[n.y][n.x] = -1;
+                if (!outOfBounds(n)) {
+                    if(values[n.y][n.x] == 3){
+                        values[n.y][n.x] = -1;
+                    }
                 }
             }
         }
         List<Point> lIn = this.getlIn();
         for(Point c: lIn){
             for(Point n: N4(c)){
-                if(values[n.y][n.x] == 3){
-                    values[n.y][n.x] = 1;
+                if (!outOfBounds(n)) {
+                    if(values[n.y][n.x] == 3){
+                        values[n.y][n.x] = 1;
+                    }
                 }
             }
         }
+    }
+
+    public static List<Point> N4(Point p) {
+        List<Point> resp = new ArrayList<Point>();
+        resp.add(new Point(p.x, p.y-1));
+        resp.add(new Point(p.x-1, p.y));
+        resp.add(new Point(p.x+1,p.y));
+        resp.add(new Point(p.x, p.y+1));
+        return resp;
     }
 
     public boolean isOut(Point c){
@@ -81,30 +87,6 @@ public class TitaFunction {
         return values[c.y][c.x] == -1;
     }
 
-    public void setOut(Point c){
-        if(outOfBounds(c))
-            return;
-        values[c.y][c.x] = 3;
-    }
-
-    public void setlOut(Point c){
-        if(outOfBounds(c))
-            return;
-        values[c.y][c.x] = 1;
-    }
-
-    public void setIn(Point c){
-        if(outOfBounds(c))
-            return;
-        values[c.y][c.x] = -3;
-    }
-
-    public void setlIn(Point c){
-        if(outOfBounds(c))
-            return;
-        values[c.y][c.x] = -1;
-    }
-
     public List<Point> getlOut() {
         List<Point> ret = new ArrayList<Point>();
         for(int x = 0; x < height; x++){
@@ -114,6 +96,12 @@ public class TitaFunction {
                 }
         }
         return ret;
+    }
+
+    public void setlOut(Point c){
+        if(outOfBounds(c))
+            return;
+        values[c.y][c.x] = 1;
     }
 
     public List<Point> getlIn() {
@@ -127,6 +115,12 @@ public class TitaFunction {
         return ret;
     }
 
+    public void setlIn(Point c){
+        if(outOfBounds(c))
+            return;
+        values[c.y][c.x] = -1;
+    }
+
     public List<Point> getIn() {
         List<Point> ret = new ArrayList<Point>();
         for(int x = 0; x < height; x++){
@@ -138,6 +132,12 @@ public class TitaFunction {
         return ret;
     }
 
+    public void setIn(Point c){
+        if(outOfBounds(c))
+            return;
+        values[c.y][c.x] = -3;
+    }
+
     public List<Point> getOut() {
         List<Point> ret = new ArrayList<Point>();
         for(int x = 0; x < height; x++){
@@ -147,6 +147,12 @@ public class TitaFunction {
                 }
         }
         return ret;
+    }
+
+    public void setOut(Point c){
+        if(outOfBounds(c))
+            return;
+        values[c.y][c.x] = 3;
     }
 
     @Override

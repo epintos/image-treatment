@@ -8,7 +8,7 @@ import model.mask.Mask;
 
 public interface Image {
 
-    void tracking(List<Point> selection);
+    double[] tracking(List<Point> selection, double[] averageIn);
 
     /**
 	 * Color channels
