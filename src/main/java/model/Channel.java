@@ -746,7 +746,7 @@ public class Channel implements Cloneable {
 
 		// TODO: Verificar si no es el min aca
 		double maxRad = Math.max(width, height);
-		Range rRange = new Range(epsilon, maxRad);
+		Range rRange = new Range(0, 30);
 
 		int aSize = (int) (Math.abs(aRange.getLength()));
 		int bSize = (int) (Math.abs(bRange.getLength()));
@@ -881,6 +881,32 @@ public class Channel implements Cloneable {
 	}
 
 	public void suppressNoMaxs() {
+		// Step 2: Applies sobel masks.
+		TwoMaskContainer mc = MaskFactory.buildSobelMasks();
+		Channel G1 = this.clone();
+		G1.applyMask(mc.getDXMask());
+		Channel G2 = this.clone();
+		G2.applyMask(mc.getDYMask());
+
+		// Step 3: Get gradient angle to estimate the perpendicular direction to
+		// the border.
+		Channel direction = new Channel(width, height);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double pxG1 = G1.getPixel(x, y);
+				double pxG2 = G2.getPixel(x, y);
+				double anAngle = 0;
+				if (pxG2 != 0) {
+					anAngle = Math.atan(pxG1 / pxG2);
+				}
+				anAngle *= (180 / Math.PI);
+				direction.setPixel(x, y, anAngle);
+			}
+		}
+
+		G1.synthesize(SynthesizationType.ABS, G2);
+		this.channel = G1.channel;
+
 		suppressNoMaxs(this);
 	}
 
@@ -968,7 +994,7 @@ public class Channel implements Cloneable {
 		this.channel = thresholdedChannelInBetween.channel;
 	}
 
-	public void applySusanMask(boolean detectBorders, boolean detectCorners) {
+	public void applySusanMask(boolean detectBorders, boolean detectCorners, int borderColor) {
 		double blackColor = MIN_CHANNEL_COLOR;
 		double whiteColor = MAX_CHANNEL_COLOR;
 
@@ -976,11 +1002,11 @@ public class Channel implements Cloneable {
 		Channel newChannel = new Channel(this.width, this.height);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				double newPixelValue = blackColor;
+				double newPixelValue = getPixel(x, y);
 				double s_ro = applySusanPixelMask(x, y, mask);
 				if ((detectBorders && isBorder(s_ro)) || (detectCorners
 						&& isCorner(s_ro))) {
-					newPixelValue = whiteColor;
+					newPixelValue = borderColor;
 				}
 				newChannel.setPixel(x, y, newPixelValue);
 			}
