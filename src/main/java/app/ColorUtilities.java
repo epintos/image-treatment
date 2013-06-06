@@ -1,16 +1,17 @@
 package app;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
 import model.Image;
-
 import org.apache.sanselan.ImageFormat;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 
 public class ColorUtilities {
 
@@ -26,17 +27,27 @@ public class ColorUtilities {
 		return new Color(rgb).getBlue();
 	}
 
-	public static void populateEmptyBufferedImage(BufferedImage emptyImage,
+	public static BufferedImage populateEmptyBufferedImage(
 			Image image) {
-		int height = image.getHeight();
-		int width = image.getWidth();
+//		int height = image.getHeight();
+//		int width = image.getWidth();
+//
+//		for (int x = 0; x < width; x++) {
+//			for (int y = 0; y < height; y++) {
+//				int rgbPixel = image.getRGBPixel(x, y);
+//				emptyImage.setRGB(x, y, rgbPixel);
+//			}
+//		}
+//        Graphics g = emptyImage.getGraphics();
+//
+//        g.drawImage(image.getBufferedImage(), image.getWidth(), image.getHeight(), null);
+//
+//        g.dispose();
 
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				int rgbPixel = image.getRGBPixel(x, y);
-				emptyImage.setRGB(x, y, rgbPixel);
-			}
-		}
+        ColorModel cm = image.getBufferedImage().getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = image.getBufferedImage().copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 
 	public static int toBufferedImageType(Image.ImageType type) {

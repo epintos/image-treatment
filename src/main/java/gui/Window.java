@@ -9,11 +9,15 @@ public class Window extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private Panel panel = new Panel();
+	private Panel panel = new Panel(this);
 
 	private Menu menuBar = new Menu();
 
+    private GraphicsConfiguration config;
+
 	public Window() {
+
+        config = getGraphicsConfiguration();
 		setTitle("TPS Analisis y Tratamiento de Imagenes");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(1, 1, 250, 275);
@@ -41,4 +45,7 @@ public class Window extends JFrame {
 		((Tp0) menuBar.getComponent(0)).saveImage.setEnabled(true);
 	}
 
+    public GraphicsConfiguration getConfig() {
+        return config;
+    }
 }

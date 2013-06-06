@@ -2,6 +2,7 @@ package gui.tp3;
 
 import gui.Panel;
 import model.ColorImage;
+import model.DrawingContainer;
 import model.mask.MaskFactory;
 
 import javax.swing.*;
@@ -11,14 +12,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by cristian@redmintlabs.com on 16/05/13 at 12:05
  */
 public class TrackingDialog extends JDialog {
-    List<Point> mask = new ArrayList<Point>();
     private Runnable onClick = null;
+    private DrawingContainer drawingContainer = new DrawingContainer();
 
     public TrackingDialog(final Panel panel) {
         setTitle("Tracking");
@@ -40,6 +40,10 @@ public class TrackingDialog extends JDialog {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 50, 250, 50);
 
+        drawingContainer.inner = new ArrayList<Point>();
+        drawingContainer.innerBorder = new ArrayList<Point>();
+        drawingContainer.in = new ArrayList<Point>();
+
         final MouseListener listener = new MouseListener(){
             @Override
             public void mouseClicked(MouseEvent event) {
@@ -47,11 +51,10 @@ public class TrackingDialog extends JDialog {
                 int y = event.getY();
                 model.Image img = panel.getImage();
                 if(x >= 0 && y >= 0 && x < img.getWidth() && y < img.getHeight()){
-
-                    mask.add(new Point(x, y));
-                    panel.loadMask(mask);
+                    drawingContainer.inner.add(new Point(x, y));
+                    panel.loadTracker(drawingContainer);
                     panel.repaint();
-                    if(mask.size() == 2){
+                    if(drawingContainer.inner.size() == 2){
                         okButton.setEnabled(true);
                         panel.removeMouseListener(this);
                     }
@@ -77,7 +80,7 @@ public class TrackingDialog extends JDialog {
             public void actionPerformed(ActionEvent e){
                 model.Image aux = ((ColorImage)panel.getImage()).clone();
                 aux.applyMask(MaskFactory.buildGaussianMask(5, 5));
-                aux.tracking(panel.getMask(), null);
+                aux.tracking(panel.getDrawingContainer(), panel, true);
                 panel.repaint();
                 if (onClick != null) {
                     onClick.run();

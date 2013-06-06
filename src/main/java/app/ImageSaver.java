@@ -19,11 +19,9 @@ public class ImageSaver {
 		String[] cadena = (arch.getName()).split("\\.");
 		String extension = cadena[cadena.length-1];
 
-        BufferedImage bi;
         ImageFormat format;
 
-        bi = new BufferedImage(image.getWidth(), image.getHeight(), ColorUtilities.toBufferedImageType(image.getType()));
-        ColorUtilities.populateEmptyBufferedImage(bi, image);
+        BufferedImage bi = ColorUtilities.populateEmptyBufferedImage(image);
         if(!extension.equals("raw")){
 			format = ColorUtilities.toSanselanImageFormat(image.getImageFormat());
             Sanselan.writeImage(bi, arch, format, null);

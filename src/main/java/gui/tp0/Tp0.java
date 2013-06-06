@@ -48,6 +48,7 @@ public class Tp0 extends JMenu {
 					try {
 						image = ImageLoader.loadImage(arch);
 					} catch (Exception ex) {
+                        ex.printStackTrace();
 						new MessageFrame("No se pudo cargar la imagen");
 					}
 

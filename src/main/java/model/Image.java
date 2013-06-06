@@ -1,14 +1,19 @@
 package model;
 
 import java.awt.Point;
-import java.util.List;
+import java.awt.image.BufferedImage;
 
+import gui.Panel;
 import model.borderDetector.BorderDetector;
 import model.mask.Mask;
 
 public interface Image {
 
-    double[] tracking(List<Point> selection, double[] averageIn);
+    void tracking(DrawingContainer drawingContainer, Panel panel, boolean first);
+
+    BufferedImage getBufferedImage();
+
+    void detectFeatures(DrawingContainer container);
 
     /**
 	 * Color channels

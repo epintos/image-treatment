@@ -1,19 +1,18 @@
 package app;
 
+import model.ColorImage;
+import model.Image;
+import org.apache.sanselan.ImageFormat;
+import org.apache.sanselan.ImageInfo;
+import org.apache.sanselan.ImageReadException;
+import org.apache.sanselan.Sanselan;
+
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import model.ColorImage;
-import model.Image;
-
-import org.apache.sanselan.ImageFormat;
-import org.apache.sanselan.ImageInfo;
-import org.apache.sanselan.ImageReadException;
-import org.apache.sanselan.Sanselan;
 
 public class ImageLoader {
 
@@ -40,9 +39,9 @@ public class ImageLoader {
 		}
 
 		if (bi.getType() == BufferedImage.TYPE_INT_RGB) {
-			return new ColorImage(bi, format, Image.ImageType.RGB);
+			return new ColorImage(bi, format, Image.ImageType.RGB, false);
 		} else if (bi.getType() == BufferedImage.TYPE_BYTE_GRAY) {
-			return new ColorImage(bi, format, Image.ImageType.GRAYSCALE);
+			return new ColorImage(bi, format, Image.ImageType.GRAYSCALE, false);
 		} else {
 			throw new IllegalStateException("Image wasn't RGB nor Grayscale");
 		}

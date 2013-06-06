@@ -1,11 +1,14 @@
 package gui.tp3;
 
 import com.xuggle.xuggler.*;
+import com.xuggle.xuggler.video.ConverterFactory;
+import com.xuggle.xuggler.video.IConverter;
 import gui.MessageFrame;
 import gui.Panel;
 import gui.Window;
 import model.ColorImage;
 import model.Image;
+import model.mask.Mask;
 import model.mask.MaskFactory;
 
 import javax.swing.*;
@@ -13,90 +16,94 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class Tp3 extends JMenu {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public Tp3() {
-		super("TP 3");
-		this.setEnabled(true);
+    public Tp3() {
+        super("TP 3");
+        this.setEnabled(true);
 
-		JMenuItem supressNoMaxs = new JMenuItem("Supresión de No Máximos");
-		supressNoMaxs.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
-				if (imageLoaded(panel)) {
-					panel.getWorkingImage().suppressNoMaxs();
-					panel.repaint();
-				}
-			}
-		});
+        JMenuItem supressNoMaxs = new JMenuItem("Supresión de No Máximos");
+        supressNoMaxs.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+                if (imageLoaded(panel)) {
+                    panel.getWorkingImage().suppressNoMaxs();
+                    panel.repaint();
+                }
+            }
+        });
 
-		JMenuItem thresholdWithHysteresis = new JMenuItem(
-				"Umbral con histéresis");
-		thresholdWithHysteresis.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
-				if (imageLoaded(panel)) {
-					JDialog thresholdWithHysteresisDialog = new ThresholdWithHysteresisDialog(
-							panel);
-					thresholdWithHysteresisDialog.setVisible(true);
-				}
-			}
-		});
+        JMenuItem thresholdWithHysteresis = new JMenuItem(
+                "Umbral con histéresis");
+        thresholdWithHysteresis.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+                if (imageLoaded(panel)) {
+                    JDialog thresholdWithHysteresisDialog = new ThresholdWithHysteresisDialog(
+                            panel);
+                    thresholdWithHysteresisDialog.setVisible(true);
+                }
+            }
+        });
 
-		JMenuItem canny = new JMenuItem("Canny");
-		canny.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
-				if (imageLoaded(panel)) {
-					panel.getWorkingImage().applyCannyBorderDetection();
-					panel.repaint();
-				}
-			}
-		});
+        JMenuItem canny = new JMenuItem("Canny");
+        canny.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+                if (imageLoaded(panel)) {
+                    panel.getWorkingImage().applyCannyBorderDetection();
+                    panel.repaint();
+                }
+            }
+        });
 
-		JMenuItem susan = new JMenuItem("Susan");
-		susan.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
-				if (imageLoaded(panel)) {
-					JDialog susanBorderDetectorDialog = new SusanBorderDetectorDialog(
-							panel);
-					susanBorderDetectorDialog.setVisible(true);
-				}
-			}
-		});
+        JMenuItem susan = new JMenuItem("Susan");
+        susan.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+                if (imageLoaded(panel)) {
+                    JDialog susanBorderDetectorDialog = new SusanBorderDetectorDialog(
+                            panel);
+                    susanBorderDetectorDialog.setVisible(true);
+                }
+            }
+        });
 
-		JMenuItem houghForLines = new JMenuItem("Hough para Líneas");
-		houghForLines.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
-				if (imageLoaded(panel)) {
-					panel.getWorkingImage().houghTransformForLines();
-					panel.repaint();
-				}
+        JMenuItem houghForLines = new JMenuItem("Hough para Líneas");
+        houghForLines.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+                if (imageLoaded(panel)) {
+                    panel.getWorkingImage().houghTransformForLines();
+                    panel.repaint();
+                }
 
-			}
-		});
+            }
+        });
 
-		JMenuItem houghForCircles = new JMenuItem("Hough para círulos");
-		houghForCircles.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Panel panel = (((Window) getTopLevelAncestor()).getPanel());
-				if (imageLoaded(panel)) {
-					panel.getWorkingImage().houghTransformForCircles();
-					panel.repaint();
-				}
-			}
-		});
+        JMenuItem houghForCircles = new JMenuItem("Hough para círulos");
+        houghForCircles.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Panel panel = (((Window) getTopLevelAncestor()).getPanel());
+                if (imageLoaded(panel)) {
+                    panel.getWorkingImage().houghTransformForCircles();
+                    panel.repaint();
+                }
+            }
+        });
 
         JMenuItem tracking = new JMenuItem("Tracking de Imágenes");
         tracking.addActionListener(new ActionListener() {
@@ -112,7 +119,9 @@ public class Tp3 extends JMenu {
         video.addActionListener(new ActionListener() {
             public Panel panel;
             boolean firstCall = true;
+            BufferedImage currentImage;
             private Object lock = "";
+            private BlockingQueue<BufferedImage> frames = new LinkedBlockingQueue<BufferedImage>(10);
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -129,6 +138,8 @@ public class Tp3 extends JMenu {
                             if (container.open(filename, IContainer.Type.READ, null) < 0) {
                                 throw new IllegalArgumentException("could not open file: " + filename);
                             }
+
+                            ;
 
                             int numStreams = container.getNumStreams();
 
@@ -150,6 +161,11 @@ public class Tp3 extends JMenu {
                             if (videoStreamId == -1)
                                 throw new RuntimeException("could not find video stream in container: "
                                         + filename);
+
+                            IConverter myConverter =
+                                    ConverterFactory.createConverter(ConverterFactory.XUGGLER_BGR_24,
+                                            IPixelFormat.Type.BGR24, videoCoder.getWidth(), videoCoder.getHeight());
+
 
                      /*
                      * Now we have found the video stream in this file.  Let's open up our decoder so it can
@@ -272,10 +288,9 @@ public class Tp3 extends JMenu {
                                             }
 
                                             // And finally, convert the BGR24 to an Java buffered image
-                                            BufferedImage javaImage = Utils.videoPictureToImage(newPic);
+                                            BufferedImage javaImage = myConverter.toImage(newPic);
 
-                                            // and display it on the Java Swing window
-                                            updateJavaWindow(javaImage);
+                                            frames.put(javaImage);
                                         }
                                     }
                                 } else {
@@ -297,81 +312,86 @@ public class Tp3 extends JMenu {
                 });
 
                 t.start();
-            }
 
-            private void updateJavaWindow(final BufferedImage javaImage) {
-                SwingUtilities.invokeLater(new Runnable() {
+
+                final Mask mask = MaskFactory.buildGaussianMask(5, 5);
+
+                final CountDownLatch latch = new CountDownLatch(1);
+
+                new Thread(new Runnable() {
                     double[] avgIn = null;
+                    ColorImage img = null;
 
                     @Override
                     public void run() {
-                        ColorImage img = new ColorImage(javaImage, null, Image.ImageType.RGB);
+                        try {
+                            do {
 
 
-                        if (firstCall) {
-                            panel.setImage(img);
-                            panel.setWorkingImage(img);
-                            panel.repaint();
-                            TrackingDialog trackingDialog = new TrackingDialog(panel);
-                            trackingDialog.setVisible(true);
+                                BufferedImage javaImage = frames.poll(1, TimeUnit.MINUTES);
+//                                frames.clear();
 
-                            trackingDialog.setOnClick(new Runnable() {
-                                @Override
-                                public void run() {
-                                    firstCall = false;
-                                    unlock();
+                                if (img == null) {
+                                    img = new ColorImage(javaImage, null, Image.ImageType.RGB, true);
+                                } else {
+                                    img = ColorImage.reuse(img, javaImage);
                                 }
-                            });
-                        } else {
-                            panel.setWorkingImage(img);
-                            img.applyMask(MaskFactory.buildGaussianMask(5, 5));
-                            avgIn = img.tracking(panel.getMask(), avgIn);
-                            panel.repaint();
-                            unlock();
-                        }
 
-                    }
 
-                    private void unlock() {
-                        synchronized (lock) {
-                            lock.notifyAll();
+                                if (firstCall) {
+                                    panel.setImage(img);
+                                    firstCall = false;
+                                    panel.setWorkingImage(img);
+                                    panel.repaint();
+                                    TrackingDialog trackingDialog = new TrackingDialog(panel);
+                                    trackingDialog.setVisible(true);
+                                    trackingDialog.setOnClick(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            firstCall = false;
+                                            latch.countDown();
+                                        }
+                                    });
+                                    latch.await();
+                                } else {
+                                    panel.setWorkingImage(img.clone());
+                                    img.applyMask(mask);
+                                    img.tracking(panel.getDrawingContainer(), panel, false);
+                                }
+
+
+                            } while (true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
-                });
-                synchronized (lock) {
-                    try {
-                        lock.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                }).start();
             }
-
         });
 
 
         this.add(supressNoMaxs);
-		this.add(new JSeparator());
-		this.add(thresholdWithHysteresis);
-		this.add(new JSeparator());
-		this.add(canny);
-		this.add(new JSeparator());
-		this.add(susan);
-		this.add(new JSeparator());
-		this.add(houghForLines);
-		this.add(houghForCircles);
-		this.add(new JSeparator());
+        this.add(new JSeparator());
+        this.add(thresholdWithHysteresis);
+        this.add(new JSeparator());
+        this.add(canny);
+        this.add(new JSeparator());
+        this.add(susan);
+        this.add(new JSeparator());
+        this.add(houghForLines);
+        this.add(houghForCircles);
+        this.add(new JSeparator());
         this.add(tracking);
         this.add(video);
 
     }
 
-	private boolean imageLoaded(Panel panel) {
-		Image panelImage = panel.getWorkingImage();
-		if (panelImage == null) {
-			new MessageFrame("Debe cargarse una imagen antes");
-			return false;
-		}
-		return true;
-	}
+    private boolean imageLoaded(Panel panel) {
+        Image panelImage = panel.getWorkingImage();
+        if (panelImage == null) {
+            new MessageFrame("Debe cargarse una imagen antes");
+            return false;
+        }
+        return true;
+    }
 }

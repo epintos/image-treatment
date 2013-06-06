@@ -1,15 +1,19 @@
 package model;
 
 import app.ColorUtilities;
+import gui.Panel;
 import model.borderDetector.BorderDetector;
 import model.mask.FourMaskContainer;
 import model.mask.Mask;
 import model.mask.MaskFactory;
 import model.mask.TwoMaskContainer;
+import mpi.cbg.fly.Feature;
+import mpi.cbg.fly.SIFT;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Vector;
 
 public class ColorImage implements Image, Cloneable {
 
@@ -18,8 +22,10 @@ public class ColorImage implements Image, Cloneable {
 	private Channel red;
 	private Channel green;
 	private Channel blue;
+    private BufferedImage bufferedImage;
+    private Boolean video;
 
-	public ColorImage(int height, int width, ImageFormat format, ImageType type) {
+    public ColorImage(int height, int width, ImageFormat format, ImageType type) {
 //		if (format == null) {
 //			throw new IllegalArgumentException("ImageFormat can't be null");
 //		}
@@ -33,20 +39,41 @@ public class ColorImage implements Image, Cloneable {
 		this.type = type;
 	}
 
-	public ColorImage(BufferedImage bi, ImageFormat format, ImageType type) {
+	public ColorImage(BufferedImage bi, ImageFormat format, ImageType type, Boolean video) {
 		this(bi.getHeight(), bi.getWidth(), format, type);
-		for (int x = 0; x < bi.getWidth(); x++) {
-			for (int y = 0; y < bi.getHeight(); y++) {
-				Color c = new Color(bi.getRGB(x, y));
-
-				red.setPixel(x, y, c.getRed());
-				green.setPixel(x, y, c.getGreen());
-				blue.setPixel(x, y, c.getBlue());
-			}
-		}
+        bufferedImage = bi;
+        this.video = video;
+        initRGB(bi);
 	}
 
-	@Override
+    public static ColorImage reuse(ColorImage img, BufferedImage newImg) {
+        img.video = true;
+        img.bufferedImage = newImg;
+        img.initRGB(newImg);
+        return img;
+    }
+
+    private void initRGB(BufferedImage bi) {
+        int[] rgbData = bi.getRGB(0,0, bi.getWidth(), bi.getHeight(),
+                null, 0,bi.getWidth());
+
+        int colorRed;
+        int colorGreen;
+        int colorBlue;
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
+                colorRed = (rgbData[(y * bi.getWidth()) + x] >> 16) & 0xFF;
+                colorGreen = (rgbData[(y * bi.getWidth()) + x] >> 8) & 0xFF;
+                colorBlue = (rgbData[(y * bi.getWidth()) + x]) & 0xFF;
+
+                red.setPixel(x, y, colorRed);
+                green.setPixel(x, y, colorGreen);
+                blue.setPixel(x, y, colorBlue);
+            }
+        }
+    }
+
+    @Override
 	public void setRGBPixel(int x, int y, int rgb) {
 		this.setPixel(x, y, ColorChannel.RED, ColorUtilities.getRedFromRGB(rgb));
 		this.setPixel(x, y, ColorChannel.GREEN,
@@ -309,11 +336,9 @@ public class ColorImage implements Image, Cloneable {
 
 	@Override
 	public ColorImage clone() {
-		BufferedImage bi = new BufferedImage(this.getWidth(), this.getHeight(),
-				ColorUtilities.toBufferedImageType(this.getType()));
-		ColorUtilities.populateEmptyBufferedImage(bi, this);
+        BufferedImage bi = ColorUtilities.populateEmptyBufferedImage(this);
 
-		return new ColorImage(bi, format, type);
+		return new ColorImage(bi, format, type, video);
 	}
 
 	@Override
@@ -500,16 +525,20 @@ public class ColorImage implements Image, Cloneable {
 
 
     @Override
-    public double[] tracking(List<Point> selection, double[] avgIn) {
-        TitaFunction tita = new TitaFunction(selection, this.red.getHeight(), this.red.getWidth());
+    public void tracking(DrawingContainer drawingContainer, Panel panel, boolean first) {
+        if (first) {
+            return;
+        }
+        TitaFunction tita = new TitaFunction(drawingContainer.inner, this.red.getHeight(), this.red.getWidth());
         int times = (int)(1.5 * Math.max(this.red.getHeight(), this.red.getWidth()));
         boolean changes = true;
         List<Point> in = tita.getIn();
         List<Point> out = tita.getOut();
 
-
-        double[] averageIn = (avgIn == null) ? getAverage(in) : avgIn;
-        double[] averageOut = getAverage(out);
+        double[] averageIn = drawingContainer.avgIn =
+                (drawingContainer.avgIn == null) ? getAverage(in) : drawingContainer.avgIn;
+        double[] averageOut = drawingContainer.avgOut =
+                (drawingContainer.avgOut == null) ? getAverage(out) : drawingContainer.avgOut;
 
         while((times > 0) && changes){
             changes = false;
@@ -545,14 +574,31 @@ public class ColorImage implements Image, Cloneable {
                         }
                     }
                     changes = true;
+
                 }
             }
-            times--;
-        }
-        selection.clear();
-        selection.addAll(tita.getIn());
 
-        return averageIn;
+            drawingContainer.inner.clear();
+            drawingContainer.in.clear();
+            drawingContainer.in.addAll(tita.getlOut());
+            drawingContainer.inner.addAll(tita.getIn());
+            panel.repaint();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            times--;
+
+        }
+
+
+        drawingContainer.inner.clear();
+        drawingContainer.in.clear();
+        drawingContainer.in.addAll(tita.getlOut());
+        drawingContainer.inner.addAll(tita.getIn());
+        panel.repaint();
     }
 
 
@@ -592,4 +638,32 @@ public class ColorImage implements Image, Cloneable {
     }
 
 
+    @Override
+    public BufferedImage getBufferedImage() {
+//        if (!video) {
+
+        if (bufferedImage == null) {
+            bufferedImage = new BufferedImage(getWidth(), getHeight(), 1);
+        }
+            for (int x = 0; x < getWidth(); x++) {
+                for (int y = 0; y < getHeight(); y++) {
+                    bufferedImage.setRGB(x, y, getRGBPixel(x, y));
+                }
+            }
+//        }
+
+        return bufferedImage;
+    }
+
+    @Override
+    public void detectFeatures(DrawingContainer container) {
+        try {
+            Vector<Feature> features = SIFT.getFeatures(getBufferedImage());
+            for (Feature feature : features) {
+                container.in.add(new Point((int)feature.location[0],(int) feature.location[1]));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }

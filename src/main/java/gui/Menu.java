@@ -4,8 +4,9 @@ import gui.tp0.Tp0;
 import gui.tp1.Tp1;
 import gui.tp2.Tp2;
 import gui.tp3.Tp3;
+import gui.tp4.Tp4;
 
-import javax.swing.JMenuBar;
+import javax.swing.*;
 
 public class Menu extends JMenuBar {
 
@@ -24,6 +25,9 @@ public class Menu extends JMenuBar {
 		
 		// Menu for TP3
 		this.add(new Tp3());
+
+        // Menu for TP3
+        this.add(new Tp4());
 	}
 
 }
