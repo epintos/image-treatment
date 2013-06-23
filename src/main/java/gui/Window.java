@@ -20,7 +20,7 @@ public class Window extends JFrame {
         config = getGraphicsConfiguration();
 		setTitle("TPS Analisis y Tratamiento de Imagenes");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(1, 1, 250, 275);
+		setBounds(1, 1, 900, 800);
 		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(size.width / 3 - getWidth() / 3, size.height / 3
 				- getHeight() / 2);

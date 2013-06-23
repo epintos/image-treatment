@@ -872,7 +872,8 @@ public class Channel implements Cloneable {
 		G1.synthesize(SynthesizationType.ABS, G2);
 		channelToModify.channel = G1.channel;
 
-        // TODO: Add parameters for threshold, sure we need to use a global threshold?
+		// TODO: Add parameters for threshold, sure we need to use a global
+		// threshold?
 		channelToModify.suppressNoMaxs(direction);
 		double globalThresholdValue = channelToModify.getGlobalThresholdValue();
 		channelToModify.thresholdWithHysteresis(globalThresholdValue,
@@ -966,7 +967,7 @@ public class Channel implements Cloneable {
 		}
 
 		Channel thresholdedChannelInBetween = thresholdedChannelOutsider
-			.clone();
+				.clone();
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				double pixel = this.getPixel(x, y);
@@ -994,7 +995,8 @@ public class Channel implements Cloneable {
 		this.channel = thresholdedChannelInBetween.channel;
 	}
 
-	public void applySusanMask(boolean detectBorders, boolean detectCorners, int borderColor) {
+	public void applySusanMask(boolean detectBorders, boolean detectCorners,
+			int borderColor) {
 		double blackColor = MIN_CHANNEL_COLOR;
 		double whiteColor = MAX_CHANNEL_COLOR;
 
@@ -1004,8 +1006,8 @@ public class Channel implements Cloneable {
 			for (int y = 0; y < height; y++) {
 				double newPixelValue = getPixel(x, y);
 				double s_ro = applySusanPixelMask(x, y, mask);
-				if ((detectBorders && isBorder(s_ro)) || (detectCorners
-						&& isCorner(s_ro))) {
+				if ((detectBorders && isBorder(s_ro))
+						|| (detectCorners && isCorner(s_ro))) {
 					newPixelValue = borderColor;
 				}
 				newChannel.setPixel(x, y, newPixelValue);
@@ -1058,4 +1060,73 @@ public class Channel implements Cloneable {
 		double s_ro = 1 - n_ro / N;
 		return s_ro;
 	}
+
+	public void applyHarrisCornerDetector(int maskSize, double sigma) {
+		applyMask(MaskFactory.buildGaussianMask(maskSize, sigma));
+		TwoMaskContainer sobelOperator = MaskFactory.buildSobelMasks();
+		double[] iX, iY;
+		double[] iX2, iY2, iXiY;
+		double[] hXY;
+		int wh = width * height;
+
+		Channel Dx = this.clone();
+		Channel Dy = this.clone();
+		Dx.applyMask(sobelOperator.getDXMask());
+		Dy.applyMask(sobelOperator.getDYMask());
+		iX = Dx.channel;
+		iY = Dy.channel;
+
+		iX2 = new double[iX.length];
+		iY2 = new double[iY.length];
+		iXiY = new double[iX.length];
+		hXY = new double[iX.length];
+
+		for (int i = 0; i < iX2.length; i++) {
+			iX2[i] = iX[i] * iX[i];
+			iY2[i] = iY[i] * iY[i];
+			iXiY[i] = iX[i] * iY[i];
+		}
+
+		for (int i = 0; i < wh; i++) {
+			hXY[i] = iX2[i] * iY2[i] - iXiY[i] * iXiY[i]
+					/ (iX2[i] + iY2[i] + Double.MAX_VALUE);
+		}
+
+		findLocalMax(hXY, width, height);
+
+		this.channel = hXY;
+	}
+
+	private void findLocalMax(double[] hXY, int w, int h) {
+		for (int i = 0; i < w * h; i++) {
+			if (i < w || i >= w * h - w || i % w == 0 || i % w == w - 1) {
+				hXY[i] = 0d;
+			} else {
+				if (!isCornerLocalMax(hXY, i, w, h)) {
+					hXY[i] = 0;
+				} else {
+					hXY[i] = 255;
+				}
+			}
+		}
+	}
+
+	private boolean isCornerLocalMax(double[] hXY, int idx, int w, int h) {
+		boolean isMax = true;
+		int voffset;
+		int hoffset;
+		for (int j = 0; j < 3 && isMax == true; j++) {
+			voffset = (j - 1) * w;
+			for (int i = 0; i < 3 && isMax == true; i++) {
+				hoffset = i - 1;
+				if (i != 1 || j != 1) {
+					if (hXY[idx] <= hXY[idx + voffset + hoffset]) {
+						isMax = false;
+					}
+				}
+			}
+		}
+		return isMax;
+	}
+
 }

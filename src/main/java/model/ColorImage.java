@@ -1,7 +1,13 @@
 package model;
 
-import app.ColorUtilities;
 import gui.Panel;
+
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Vector;
+
 import model.borderDetector.BorderDetector;
 import model.mask.FourMaskContainer;
 import model.mask.Mask;
@@ -9,11 +15,9 @@ import model.mask.MaskFactory;
 import model.mask.TwoMaskContainer;
 import mpi.cbg.fly.Feature;
 import mpi.cbg.fly.SIFT;
+import app.ColorUtilities;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.Vector;
+
 
 public class ColorImage implements Image, Cloneable {
 
@@ -666,4 +670,12 @@ public class ColorImage implements Image, Cloneable {
             System.out.println(e);
         }
     }
+    
+	@Override
+	public void applyHarrisCornerDetector(int size, Double sigma) {
+		this.red.applyHarrisCornerDetector(size, sigma);
+		this.green.applyHarrisCornerDetector(size, sigma);
+		this.blue.applyHarrisCornerDetector(size, sigma);		
+	}
+    
 }
