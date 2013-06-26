@@ -253,5 +253,7 @@ public interface Image {
 
 	public void houghTransformForCircles();
 	
+	/*********************** TP4 ************************/	
+	
 	public void applyHarrisCornerDetector(int size, Double sigma);
 }

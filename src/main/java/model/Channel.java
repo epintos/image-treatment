@@ -997,8 +997,6 @@ public class Channel implements Cloneable {
 
 	public void applySusanMask(boolean detectBorders, boolean detectCorners,
 			int borderColor) {
-		double blackColor = MIN_CHANNEL_COLOR;
-		double whiteColor = MAX_CHANNEL_COLOR;
 
 		Mask mask = MaskFactory.buildSusanMask();
 		Channel newChannel = new Channel(this.width, this.height);
