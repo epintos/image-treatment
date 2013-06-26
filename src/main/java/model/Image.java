@@ -258,7 +258,7 @@ public interface Image {
 	
 	/*********************** TP4 ************************/	
 	
-	public void applyHarrisCornerDetector(int size, Double sigma);
+	public void applyHarrisCornerDetector(int masksize, double sigma, double r, double k);
 	
 	public void setFinalFeatures(List<Feature> features, DrawingContainer container);
 }

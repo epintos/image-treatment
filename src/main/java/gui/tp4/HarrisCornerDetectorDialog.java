@@ -19,39 +19,63 @@ public class HarrisCornerDetectorDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	public HarrisCornerDetectorDialog(final Panel panel){
+	public HarrisCornerDetectorDialog(final Panel panel) {
 		setTitle("Harris");
-		setBounds(1, 1, 250, 125);
+		setBounds(1, 1, 250, 250);
 		Dimension size = getToolkit().getScreenSize();
-		setLocation(size.width/3 - getWidth()/3, size.height/3 - getHeight()/3);
+		setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+				- getHeight() / 3);
 		this.setResizable(false);
 		setLayout(null);
 
 		JPanel pan1 = new JPanel();
 		pan1.setBorder(BorderFactory.createTitledBorder("Detectar esquinas"));
-		pan1.setBounds(0, 0, 250, 60);
+		pan1.setBounds(0, 0, 250, 200);
 
+		JLabel maskSizeLabel = new JLabel("Mask Size ");
+		final JTextField maskSize = new JTextField("0.5");
+		maskSize.setColumns(3);
 
-		JLabel coordLabel1 = new JLabel("Sigma ");
-		final JTextField  threshold = new JTextField("0.5");
+		JLabel sigmaLabel = new JLabel("Sigma");
+		final JTextField sigma = new JTextField("0.5");
+		sigma.setColumns(3);
+
+		JLabel kLabel = new JLabel("k");
+		final JTextField k = new JTextField("0.5");
+		k.setColumns(3);
+
+		JLabel thresholdLabel = new JLabel("Threshold");
+		final JTextField threshold = new JTextField("0.5");
 		threshold.setColumns(3);
-
 
 		JButton okButton = new JButton("OK");
 		okButton.setSize(250, 40);
-		okButton.setBounds(0, 60, 250, 40);
-		okButton.addActionListener(new ActionListener(){
+		okButton.setBounds(0, 200, 250, 40);
+		okButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e){
+			public void actionPerformed(ActionEvent e) {
 
 				Image panelImage = panel.getWorkingImage();
-				panelImage.applyHarrisCornerDetector(3, Double.valueOf(threshold.getText()));
+				panelImage.applyHarrisCornerDetector(
+						Integer.parseInt(maskSize.getText()),
+						Double.valueOf(sigma.getText()),
+						Double.valueOf(threshold.getText()),
+						Double.valueOf(k.getText()));
 				panel.repaint();
 				dispose();
 			}
 		});
 
-		pan1.add(coordLabel1);
+		pan1.add(maskSizeLabel);
+		pan1.add(maskSize);
+
+		pan1.add(sigmaLabel);
+		pan1.add(sigma);
+
+		pan1.add(kLabel);
+		pan1.add(k);
+
+		pan1.add(thresholdLabel);
 		pan1.add(threshold);
 
 		this.add(pan1);
