@@ -1088,8 +1088,10 @@ public class Channel implements Cloneable {
 		}
 
 		for (int i = 0; i < wh; i++) {
-			hXY[i] = iX2[i] * iY2[i] - iXiY[i] * iXiY[i]
-					/ (iX2[i] + iY2[i] + Double.MAX_VALUE);
+			double det = iX2[i] * iY2[i] - iXiY[i] * iXiY[i];
+			double trace = iX2[i] + iY2[i];
+			hXY[i] = det - 0.05 * trace*trace;
+					
 		}
 
 		findLocalMax(hXY, width, height);

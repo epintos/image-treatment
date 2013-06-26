@@ -59,9 +59,9 @@ public class Tp4 extends JMenu {
                 	Image secondaryImage = getSecondaryImage(commonTypes);
                 	Vector<Feature> f1 = SIFT.getFeatures(panel.getWorkingImage().getBufferedImage());
                 	Vector<Feature> f2 = SIFT.getFeatures(secondaryImage.getBufferedImage());
-                	int hits = analyzeFeatures(f1, f2);
-                	System.out.println(hits);
-                    panel.getWorkingImage().detectFeatures(panel.getDrawingContainer());
+                	List<Feature> hits = analyzeFeatures(f1, f2);
+                	System.out.println(hits.size());
+                    panel.getWorkingImage().setFinalFeatures(hits, panel.getDrawingContainer());
                     panel.repaint();
                 }
             }
@@ -72,13 +72,12 @@ public class Tp4 extends JMenu {
     }
 
     
-    protected int analyzeFeatures(Vector<Feature> f1, Vector<Feature> f2) {
-//    	List<Feature> hits = new ArrayList<>();
-    	int hits = 0;
+    protected List<Feature> analyzeFeatures(Vector<Feature> f1, Vector<Feature> f2) {
+    	List<Feature> hits = new ArrayList<>();
     	for(Feature feature: f1) {
     		for(Feature inner: f2) {
     			if(feature.descriptorDistance(inner) < 0.1) {
-    				hits++;
+    				hits.add(feature);
     			}
     		}
     	}

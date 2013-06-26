@@ -1,11 +1,14 @@
 package model;
 
+import gui.Panel;
+
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
-import gui.Panel;
 import model.borderDetector.BorderDetector;
 import model.mask.Mask;
+import mpi.cbg.fly.Feature;
 
 public interface Image {
 
@@ -254,4 +257,6 @@ public interface Image {
 	public void houghTransformForCircles();
 	
 	public void applyHarrisCornerDetector(int size, Double sigma);
+	
+	public void setFinalFeatures(List<Feature> features, DrawingContainer container);
 }

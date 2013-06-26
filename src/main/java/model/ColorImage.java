@@ -671,6 +671,12 @@ public class ColorImage implements Image, Cloneable {
         }
     }
     
+    public void setFinalFeatures(List<Feature> features, DrawingContainer container) {
+    	for (Feature feature : features) {
+            container.in.add(new Point((int)feature.location[0],(int) feature.location[1]));
+        }
+    }
+    
 	@Override
 	public void applyHarrisCornerDetector(int size, Double sigma) {
 		this.red.applyHarrisCornerDetector(size, sigma);
