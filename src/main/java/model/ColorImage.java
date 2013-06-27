@@ -682,7 +682,17 @@ public class ColorImage implements Image, Cloneable {
 		List<java.awt.Point> points = red.applyHarrisCornerDetector(masksize, sigma, r, k);
 		for (java.awt.Point point : points) {
 			System.out.println(point.x + " " + point.y);
-			this.setRGBPixel(point.x, point.y, Color.RED.getRGB());
+			paintSquare(point);
+		}
+	}
+	
+	private void paintSquare(Point point) {
+		for(int i = -1; i < 2; i++) {
+			for(int j = -1; j < 2; j++) {
+				if(red.validPixel(point.x + i, point.y + j)) {
+					this.setRGBPixel(point.x+i, point.y+j, Color.RED.getRGB());
+				}
+			}
 		}
 	}
     
